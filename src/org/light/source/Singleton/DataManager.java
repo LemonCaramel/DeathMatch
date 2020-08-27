@@ -5,8 +5,9 @@ import org.bukkit.Location;
 public class DataManager {
 
     private int rounds;
-    private int kills;
+    private int killtolevel;
     private int time; //초단위
+    private int minimum;
     private Location[] locations; //2개
     private static DataManager manager;
 
@@ -17,9 +18,11 @@ public class DataManager {
 
     private DataManager(){
         super();
-        kills = 0;
+        killtolevel = 0;
         rounds = 0;
         time = 0;
+        minimum = 0;
+        locations = new Location[2];
     }
 
     public static DataManager getInstance(){
@@ -30,8 +33,8 @@ public class DataManager {
         this.rounds = rounds;
     }
 
-    public void setKills(int kills) {
-        this.kills = kills;
+    public void setKilltolevel(int killtolevel) {
+        this.killtolevel = killtolevel;
     }
 
     public void setTime(int time) {
@@ -42,8 +45,8 @@ public class DataManager {
         return rounds;
     }
 
-    public int getKills() {
-        return kills;
+    public int getKilltolevel() {
+        return killtolevel;
     }
 
     public int getTime() {
@@ -53,12 +56,21 @@ public class DataManager {
     public Location[] getLocations() {
         if (locations == null || locations.length != 2)
             return null;
+        if (locations[0] == null || locations[1] == null)
+            return null;
         return locations;
     }
 
-    public void setLocations(Location[] locations) {
-        this.locations = locations;
+    public void setLocations(Location location, int index) {
+        this.locations[index-1] = location;
     }
 
+    public int getMinimumUser() {
+        return minimum;
+    }
+
+    public void setMinimumUser(int minimum) {
+        this.minimum = minimum;
+    }
 
 }
