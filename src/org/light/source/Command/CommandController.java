@@ -67,7 +67,7 @@ public class CommandController implements CommandExecutor {
                                 if (args.length >= 2 && (args[1].equalsIgnoreCase("라운드") || args[1].equalsIgnoreCase("킬") || args[1].equalsIgnoreCase("시간") || args[1].equalsIgnoreCase("최소인원") || args[1].equalsIgnoreCase("위치"))){
                                     if (args[1].equalsIgnoreCase("라운드")){
                                         if (args.length != 3)
-                                            p.sendMessage(first + "&c/데스매치 설정 라운드 <수치>");
+                                            p.sendMessage(first + "§c/데스매치 설정 라운드 <수치>");
                                         else{
                                             try{
                                                 int value = Integer.parseInt(args[2]);
