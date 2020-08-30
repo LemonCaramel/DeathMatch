@@ -98,8 +98,8 @@ public class CommandController implements CommandExecutor {
                                         else{
                                             try{
                                                 int value = Integer.parseInt(args[2]);
-                                                if (value <= 0)
-                                                    p.sendMessage(first + "§c수치는 0이하의 값으로 설정할 수 없습니다..");
+                                                if (value <= 1)
+                                                    p.sendMessage(first + "§c수치는 1이하의 값으로 설정할 수 없습니다..");
                                                 else {
                                                     DataManager.getInstance().setKilltolevel(value);
                                                     p.sendMessage(first + "§f데스매치 레벨업당 킬수가 §6" + value + "§f킬로 지정되었습니다.");

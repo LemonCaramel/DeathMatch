@@ -2,6 +2,7 @@ package org.light.source.Listener;
 
 import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -40,7 +41,7 @@ public class EventManager implements Listener {
                         target.getInventory().setItem(0, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(mananger.getKills() / DataManager.getInstance().getKilltolevel())));
                         if (DataManager.getInstance().getWeaponName(-1) != null)
                             target.getInventory().setItem(1, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(-1)));
-                        target.teleport(GameManager.getInstance().getTeleportLocation(DataManager.getInstance().getLocations()[0], DataManager.getInstance().getLocations()[1]));
+                        event.setRespawnLocation(GameManager.getInstance().getTeleportLocation(DataManager.getInstance().getLocations()[0], DataManager.getInstance().getLocations()[1]));
                     }
                 }
             }
@@ -56,8 +57,12 @@ public class EventManager implements Listener {
                 if (knife != null && CrackShotApi.getCSID(killer.getInventory().getItemInMainHand()).equalsIgnoreCase(knife)){
                     //칼로 죽였을경우 킬 수치 감소
                     for (UserMananger mananger : GameManager.getInstance().getUserlist()){
-                        if (mananger.getUUID().equals(victim.getUniqueId()) && mananger.getKills() != 0)
-                            mananger.setKills(mananger.getKills()-1);
+                        if (mananger.getUUID().equals(victim.getUniqueId()) && mananger.getKills() != 0) {
+                            mananger.setKills(mananger.getKills() - 1);
+                            //레벨다운
+                            if (mananger.getKills() != 0 && (mananger.getKills() + 1) / DataManager.getInstance().getKilltolevel() != mananger.getKills() / DataManager.getInstance().getKilltolevel())
+                                sendLevelDown(victim, (mananger.getKills() + 1) / DataManager.getInstance().getKilltolevel(), mananger.getKills()/ DataManager.getInstance().getKilltolevel());
+                        }
                         else if (mananger.getUUID().equals(killer.getUniqueId()))
                             mananger.setKills(mananger.getKills()+1);
                     }
@@ -89,14 +94,22 @@ public class EventManager implements Listener {
                         }
                     }
                 }
+                event.setDeathMessage("§c[ §fDeathMatch §6] §c" + killer.getName() + " §7➾ §b" + victim.getName());
                 RatingManager.getInstance().updateRank();
+                event.getDrops().clear();
+
             }
 
         }
     }
 
     public void sendLevelUp(Player p, int back, int to){
-        p.sendTitle("§c[ §fDeathMatch §6] §bLevel UP!", "§6" + back + " §f=> §b" + to);
+        p.sendTitle("§c[ §fDeathMatch §6] §bLevel UP!", "§6" + back + " §f=> §b" + to, 5,50,5);
+        p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
     }
 
+    public void sendLevelDown(Player p, int now, int to){
+        p.sendTitle("§c[ §fDeathMatch §6] §cLevel Down..", "§6" + now + " §f=> §b" + to, 5,50,5);
+        p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 1.0f);
+    }
 }

@@ -124,8 +124,7 @@ public class GameManager {
             else if (!isgaming && getusercount() >= DataManager.getInstance().getMinimumUser())
                 value = "§c[ §fDeathMatch §6] §a게임 시작 준비중입니다.. §f" + userlist.size() + " §7/ §6" + DataManager.getInstance().getMinimumUser();
             else
-                value = "§c[ §fDeathMatch §6] §b1. " + RatingManager.getInstance().getFirst() + " §c2. " + RatingManager.getInstance().getSecond() + " §63. " + RatingManager.getInstance().getThird();
-            //To-Do
+                value = "§c[ §fDeathMatch §6] §b1. " + RatingManager.changeNick(RatingManager.getInstance().getFirst()) + " §fLV. §6" + RatingManager.getLV(RatingManager.getInstance().getFirstKill()) + " §8| §c2. " + RatingManager.changeNick(RatingManager.getInstance().getSecond()) + " §fLV. §6" + RatingManager.getLV(RatingManager.getInstance().getSecondKill()) + " §8| §a3. " + RatingManager.changeNick(RatingManager.getInstance().getThird()) + " §fLV. §6" + RatingManager.getLV(RatingManager.getInstance().getThirdKill()) + " §8| §e" + target.getName() + " §fLV. §6" + RatingManager.getLV(mananger.getKills());
             target.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(value));
 
         }
@@ -173,7 +172,7 @@ public class GameManager {
 
     public boolean canstart(){
         DataManager manager = DataManager.getInstance();
-        if (manager.getTime() >= 10 && manager.getKilltolevel() >= 1 && manager.getLocations() != null && manager.getRounds() >= 1 && manager.getListSize() == manager.getRounds() + 1)
+        if (manager.getMinimumUser() > 1 && manager.getTime() >= 10 && manager.getKilltolevel() >= 2 && manager.getLocations() != null && manager.getRounds() >= 1 && manager.getListSize() == manager.getRounds() + 1)
             return true;
         return false;
     }

@@ -95,4 +95,9 @@ public class DataManager {
         }
         return returnValue;
     }
+
+    public HashMap<Integer,String> getWeapons(){
+        return weapons;
+    }
+
 }

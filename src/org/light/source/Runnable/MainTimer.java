@@ -1,6 +1,7 @@
 package org.light.source.Runnable;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -50,7 +51,13 @@ public class MainTimer extends BukkitRunnable {
         else{
             bossBar.setTitle("§c[ §fDeathMatch §6] §5Timer §7: §6" + (maxSecond - now) + "§fs");
             bossBar.setProgress(calcProgress(maxSecond, now));
-
+            if (maxSecond - now <= 5){
+                Bukkit.broadcastMessage("§c[ §fDeathMatch §6] §f게임 종료까지 §6" + (maxSecond-now) + "§f초 남았습니다!");
+                for (UserMananger mananger : userlist){
+                    Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
+                    target.playSound(target.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1.0f, 1.0f);
+                }
+            }
         }
         now++;
     }
