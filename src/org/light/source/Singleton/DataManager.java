@@ -1,6 +1,10 @@
 package org.light.source.Singleton;
 
 import org.bukkit.Location;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DataManager {
 
@@ -9,6 +13,7 @@ public class DataManager {
     private int time; //초단위
     private int minimum;
     private Location[] locations; //2개
+    private HashMap<Integer,String> weapons; //rounds개를 가져야함
     private static DataManager manager;
 
 
@@ -23,6 +28,7 @@ public class DataManager {
         time = 0;
         minimum = 0;
         locations = new Location[2];
+        weapons = new HashMap<>();
     }
 
     public static DataManager getInstance(){
@@ -73,4 +79,20 @@ public class DataManager {
         this.minimum = minimum;
     }
 
+    public String getWeaponName(int index){
+        return weapons.get(index);
+    }
+
+    public void setWeapon(int index, String weaponName){
+        weapons.put(index, weaponName);
+    }
+
+    public int getListSize(){
+        int i = 0, returnValue = 0;
+        while (weapons.get(i) != null){
+            returnValue++;
+            i++;
+        }
+        return returnValue;
+    }
 }

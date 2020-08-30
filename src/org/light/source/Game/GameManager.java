@@ -11,7 +11,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.light.source.DeathMatch;
 import org.light.source.Runnable.Countdown;
 import org.light.source.Runnable.MainTimer;
+import org.light.source.Singleton.CrackShotApi;
 import org.light.source.Singleton.DataManager;
+import org.light.source.Singleton.RatingManager;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -55,22 +57,27 @@ public class GameManager {
             p.getWorld().setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
             p.getWorld().setDifficulty(Difficulty.PEACEFUL);
         }
-        for (UserMananger mananger : userlist){
-            Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-            target.sendMessage("§c[ §fDeathMatch §6] §b" + p.getName() + "§f님이 §c데스매치§f에 참여하셨습니다.");
+        if (!canstart()){
+            p.sendMessage("§c[ §fDeathMatch §6] §c데스매치 기초설정이 끝나지 않아 참여하실 수 없습니다.");
         }
-        userlist.add(new UserMananger(p.getUniqueId()));
-        if (isgaming){
-            setPlayer(p);
-        }
-        else if (canstart() && getusercount() >= DataManager.getInstance().getMinimumUser()){
+        else {
             for (UserMananger mananger : userlist) {
                 Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-                target.playSound(target.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
-                target.sendTitle("§c[ §fDeathMatch §6] §b시작 준비!", "§c최소 인원이 충족되어 곧 게임이 시작됩니다.", 5,20,5);
+                target.sendMessage("§c[ §fDeathMatch §6] §b" + p.getName() + "§f님이 §c데스매치§f에 참여하셨습니다.");
             }
-            countRunnable = new Countdown(userlist);
-            Bukkit.getScheduler().runTaskLaterAsynchronously(Plugin, ()->countRunnable.runTaskTimer(Plugin, 0L, 2L), 20L);
+            userlist.add(new UserMananger(p.getUniqueId()));
+            if (isgaming) {
+                setPlayer(p);
+            }
+            else if (getusercount() >= DataManager.getInstance().getMinimumUser()) {
+                for (UserMananger mananger : userlist) {
+                    Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
+                    target.playSound(target.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
+                    target.sendTitle("§c[ §fDeathMatch §6] §b시작 준비!", "§c최소 인원이 충족되어 곧 게임이 시작됩니다.", 5, 20, 5);
+                }
+                countRunnable = new Countdown(userlist);
+                Bukkit.getScheduler().runTaskLaterAsynchronously(Plugin, () -> countRunnable.runTaskTimer(Plugin, 0L, 2L), 20L);
+            }
         }
     }
 
@@ -81,6 +88,8 @@ public class GameManager {
             Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
             target.sendMessage("§c[ §fDeathMatch §6] §b" + p.getName() + "§f님이 §c데스매치§f에서 퇴장하셨습니다.");
         }
+        if (isgaming)
+            RatingManager.getInstance().updateRank();
         if (canstart() && getusercount() + 1 == DataManager.getInstance().getMinimumUser()){
             if (!isgaming) {
                 if (countRunnable != null)
@@ -115,7 +124,7 @@ public class GameManager {
             else if (!isgaming && getusercount() >= DataManager.getInstance().getMinimumUser())
                 value = "§c[ §fDeathMatch §6] §a게임 시작 준비중입니다.. §f" + userlist.size() + " §7/ §6" + DataManager.getInstance().getMinimumUser();
             else
-                value = "§c[ §fDeathMatch §6] §c현재 게임이 진행중입니다.. §f" + userlist.size() + " §7/ §6" + DataManager.getInstance().getMinimumUser();
+                value = "§c[ §fDeathMatch §6] §b1. " + RatingManager.getInstance().getFirst() + " §c2. " + RatingManager.getInstance().getSecond() + " §63. " + RatingManager.getInstance().getThird();
             //To-Do
             target.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(value));
 
@@ -145,6 +154,7 @@ public class GameManager {
             Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
             setPlayer(target);
         }});
+        RatingManager.getInstance().updateRank();
     }
 
     public void stop(){
@@ -163,7 +173,7 @@ public class GameManager {
 
     public boolean canstart(){
         DataManager manager = DataManager.getInstance();
-        if (manager.getTime() >= 10 && manager.getKilltolevel() >= 1 && manager.getLocations() != null && manager.getRounds() >= 1)
+        if (manager.getTime() >= 10 && manager.getKilltolevel() >= 1 && manager.getLocations() != null && manager.getRounds() >= 1 && manager.getListSize() == manager.getRounds() + 1)
             return true;
         return false;
     }
@@ -174,6 +184,9 @@ public class GameManager {
         p.getInventory().clear();
         p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 10, 5, true, false));
         p.teleport(getTeleportLocation(DataManager.getInstance().getLocations()[0], DataManager.getInstance().getLocations()[1]));
+        p.getInventory().setItem(0, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(0)));
+        if (DataManager.getInstance().getWeaponName(-1) != null)
+            p.getInventory().setItem(1, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(-1)));
     }
 
     public Location getTeleportLocation(Location first, Location second){

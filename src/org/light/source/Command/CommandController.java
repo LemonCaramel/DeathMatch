@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.light.source.DeathMatch;
 import org.light.source.Game.GameManager;
 import org.light.source.Game.UserMananger;
+import org.light.source.Singleton.CrackShotApi;
 import org.light.source.Singleton.DataManager;
 
 public class CommandController implements CommandExecutor {
@@ -51,12 +52,20 @@ public class CommandController implements CommandExecutor {
                     else{
                         if (p.hasPermission("DeathMatch.Control")){
                             if (args[0].equalsIgnoreCase("관리")){
-                                if (args.length >= 2 && (args[1].equalsIgnoreCase("확인") || args[1].equalsIgnoreCase("추방") || args[1].equalsIgnoreCase("변수설정"))){
+                                if (args.length >= 2 && (args[1].equalsIgnoreCase("확인") || args[1].equalsIgnoreCase("추방"))){
                                     if (args[1].equalsIgnoreCase("확인")){
                                         currentDataInfo(p);
                                     }
-                                    else{
-
+                                    else if (args[1].equalsIgnoreCase("추방")) {
+                                        if (args.length == 3) {
+                                            Player target = Bukkit.getServer().getPlayer(args[2]);
+                                            if (target == null || !GameManager.getInstance().contains(target.getUniqueId()))
+                                                p.sendMessage(first + "§4해당 플레이어는 온라인이 아니거나 게임에 참여하지 않은 상태입니다.");
+                                            else
+                                                GameManager.getInstance().removePlayer(target);
+                                        } else {
+                                            p.sendMessage(first + "§c추방할 플레이어를 입력해주세요");
+                                        }
                                     }
                                 }
                                 else{
@@ -64,7 +73,7 @@ public class CommandController implements CommandExecutor {
                                 }
                             }
                             else if (args[0].equalsIgnoreCase("설정")){
-                                if (args.length >= 2 && (args[1].equalsIgnoreCase("라운드") || args[1].equalsIgnoreCase("킬") || args[1].equalsIgnoreCase("시간") || args[1].equalsIgnoreCase("최소인원") || args[1].equalsIgnoreCase("위치"))){
+                                if (args.length >= 2 && (args[1].equalsIgnoreCase("라운드") || args[1].equalsIgnoreCase("킬") || args[1].equalsIgnoreCase("시간") || args[1].equalsIgnoreCase("최소인원") || args[1].equalsIgnoreCase("위치") || args[1].equalsIgnoreCase("총기"))){
                                     if (args[1].equalsIgnoreCase("라운드")){
                                         if (args.length != 3)
                                             p.sendMessage(first + "§c/데스매치 설정 라운드 <수치>");
@@ -155,13 +164,41 @@ public class CommandController implements CommandExecutor {
                                             }
                                         }
                                     }
+                                    else if (args[1].equalsIgnoreCase("총기")) {
+                                        if (args.length != 3)
+                                            p.sendMessage(first + "§c/데스매치 설정 총기 <라운드 (시작 총기 = 0, 근접무기 = -1)>");
+                                        else{
+                                            try{
+                                                int value = Integer.parseInt(args[2]);
+                                                if (value < -1)
+                                                    p.sendMessage(first + "§c총기 라운드 값은 -1미만이 올 수 없습니다.");
+                                                else if (DataManager.getInstance().getRounds() == 0)
+                                                    p.sendMessage(first + "§c라운드값이 설정되어 있지 않습니다.");
+                                                else if (DataManager.getInstance().getRounds() < value)
+                                                    p.sendMessage(first + "§c설정되어 있는 라운드값보다 더 큰 값을 입력하셨습니다.");
+                                                else if (CrackShotApi.getCSID(p.getInventory().getItemInMainHand()) == null)
+                                                    p.sendMessage(first + "§c현재 들고 있는 아이템이 크랙샷 아이템이 아닙니다.");
+                                                else {
+                                                    String weaponName = CrackShotApi.getCSID(p.getInventory().getItemInMainHand());
+                                                    DataManager.getInstance().setWeapon(value,weaponName);
+                                                    p.sendMessage(first + "§b" + value + "§f번째 데스매치 총기가 §c" + weaponName + " §f으로 지정되었습니다.");
+                                                }
+                                            }
+                                            catch (NumberFormatException e){
+                                                p.sendMessage(first + "§c올바른 수치를 입력해주세요.");
+                                            }
+                                        }
+                                    }
                                 }
                                 else{
                                     valuesettinginfo(p);
                                 }
                             }
                             else if (args[0].equalsIgnoreCase("강제종료")){
-                                //To-Do
+                                if (GameManager.getInstance().isgaming()) {
+                                    Bukkit.broadcastMessage(first + "§4관리자에 의해 데스매치가 강제종료 되었습니다.");
+                                    GameManager.getInstance().stop();
+                                }
                             }
                         }
                         else{
@@ -193,7 +230,7 @@ public class CommandController implements CommandExecutor {
     }
 
     public void settingInfo(Player p){
-        p.sendMessage(first + "§b/데스매치 관리 <확인/추방/변수설정>");
+        p.sendMessage(first + "§b/데스매치 관리 <확인/추방>");
     }
 
     public void currentDataInfo(Player p){
@@ -207,6 +244,12 @@ public class CommandController implements CommandExecutor {
         else{
             p.sendMessage(first + "§7Location §a1 §7: " + locationToString(DataManager.getInstance().getLocations()[0]));
             p.sendMessage(first + "§7Location §b2 §7: " + locationToString(DataManager.getInstance().getLocations()[1]));
+        }
+        if (DataManager.getInstance().getRounds() != 0){
+            for (int i = 0; i <= DataManager.getInstance().getRounds(); i++){
+                p.sendMessage(first + "§6Weapon §7- §f" + i + ". §8: §f" + changeWeaponValue(DataManager.getInstance().getWeaponName(i)));
+            }
+            p.sendMessage(first + "§bMelee Weapon §7: §f" + changeWeaponValue(DataManager.getInstance().getWeaponName(-1)));
         }
         p.sendMessage(" ");
     }
@@ -226,8 +269,14 @@ public class CommandController implements CommandExecutor {
         p.sendMessage(" ");
     }
 
+    public String changeWeaponValue(String value){
+        if (value == null)
+            return "§4X";
+        else
+            return value;
+    }
     public void valuesettinginfo(Player p){
-        p.sendMessage(first + "§c/데스매치 설정 <라운드/킬/시간/최소인원/위치> <값/1/2>");
+        p.sendMessage(first + "§c/데스매치 설정 <라운드/킬/시간/최소인원/위치/총기> <값/1/2>");
     }
 
     public String locationToString(Location loc){
