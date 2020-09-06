@@ -139,35 +139,40 @@ public class GameManager {
     }
     public boolean contains(UUID uuid){
         for (UserMananger mananger : userlist){
-            if (mananger.getUUID() == uuid)
+            if (mananger.getUUID().equals(uuid))
                 return true;
         }
         return false;
     }
     public void start(){
-        setGameState(true);
-
-        gameRunnable = new MainTimer(DataManager.getInstance().getTime(), userlist);
-        gameRunnable.runTaskTimerAsynchronously(Plugin, 0L, 20L);
-        Bukkit.getServer().getScheduler().runTask(Plugin, ()->{for (UserMananger mananger : userlist){
-            Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-            setPlayer(target);
-        }});
-        RatingManager.getInstance().updateRank();
+        if (!isgaming) {
+            setGameState(true);
+            gameRunnable = new MainTimer(DataManager.getInstance().getTime(), userlist);
+            gameRunnable.runTaskTimerAsynchronously(Plugin, 0L, 20L);
+            Bukkit.getServer().getScheduler().runTask(Plugin, () -> {
+                for (UserMananger mananger : userlist) {
+                    Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
+                    setPlayer(target);
+                }
+            });
+            RatingManager.getInstance().updateRank();
+        }
     }
 
-    public void stop(){
-        setGameState(false);
-        for (UserMananger mananger : userlist){
-            Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-            Bukkit.getServer().getScheduler().runTask(Plugin, ()->target.teleport(target.getWorld().getSpawnLocation()));
-            target.getInventory().clear();
-            target.setHealth(20.0);
-            gameRunnable.getbossbarInstance().removeAll();
+    public void stop() {
+        if (isgaming) {
+            setGameState(false);
+            for (UserMananger mananger : userlist) {
+                Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
+                Bukkit.getServer().getScheduler().runTask(Plugin, () -> target.teleport(target.getWorld().getSpawnLocation()));
+                target.getInventory().clear();
+                target.setHealth(20.0);
+                gameRunnable.getbossbarInstance().removeAll();
+            }
+            gameRunnable.cancel();
+            gameRunnable = null;
+            userlist.clear();
         }
-        gameRunnable.cancel();
-        gameRunnable = null;
-        userlist.clear();
     }
 
     public boolean canstart(){
