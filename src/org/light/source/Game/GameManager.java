@@ -68,15 +68,18 @@ public class GameManager {
             userlist.add(new UserMananger(p.getUniqueId()));
             if (isgaming) {
                 setPlayer(p);
+                RatingManager.getInstance().updateRank();
             }
             else if (getusercount() >= DataManager.getInstance().getMinimumUser()) {
-                for (UserMananger mananger : userlist) {
-                    Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-                    target.playSound(target.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
-                    target.sendTitle("§c[ §fDeathMatch §6] §b시작 준비!", "§c최소 인원이 충족되어 곧 게임이 시작됩니다.", 5, 20, 5);
+                if (countRunnable == null) {
+                    for (UserMananger mananger : userlist) {
+                        Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
+                        target.playSound(target.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
+                        target.sendTitle("§c[ §fDeathMatch §6] §b시작 준비!", "§c최소 인원이 충족되어 곧 게임이 시작됩니다.", 5, 20, 5);
+                    }
+                    countRunnable = new Countdown(userlist);
+                    Bukkit.getScheduler().runTaskLaterAsynchronously(Plugin, () -> countRunnable.runTaskTimer(Plugin, 0L, 2L), 20L);
                 }
-                countRunnable = new Countdown(userlist);
-                Bukkit.getScheduler().runTaskLaterAsynchronously(Plugin, () -> countRunnable.runTaskTimer(Plugin, 0L, 2L), 20L);
             }
         }
     }
@@ -88,8 +91,12 @@ public class GameManager {
             Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
             target.sendMessage("§c[ §fDeathMatch §6] §b" + p.getName() + "§f님이 §c데스매치§f에서 퇴장하셨습니다.");
         }
-        if (isgaming)
+        if (isgaming) {
             RatingManager.getInstance().updateRank();
+            p.teleport(p.getWorld().getSpawnLocation());
+            p.getInventory().clear();
+            p.setHealth(20.0);
+        }
         if (canstart() && getusercount() + 1 == DataManager.getInstance().getMinimumUser()){
             if (!isgaming) {
                 if (countRunnable != null)
@@ -171,6 +178,7 @@ public class GameManager {
             }
             gameRunnable.cancel();
             gameRunnable = null;
+            countRunnable = null;
             userlist.clear();
         }
     }
