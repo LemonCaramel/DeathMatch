@@ -54,7 +54,7 @@ public class EventManager implements Listener {
             Player victim = event.getEntity();
             if (GameManager.getInstance().contains(killer.getUniqueId()) && GameManager.getInstance().contains(victim.getUniqueId())){
                 String knife = DataManager.getInstance().getWeaponName(-1);
-                if (knife != null && CrackShotApi.getCSID(killer.getInventory().getItemInMainHand()).equalsIgnoreCase(knife)){
+                if (knife != null && CrackShotApi.getCSID(killer.getInventory().getItemInMainHand()) != null && CrackShotApi.getCSID(killer.getInventory().getItemInMainHand()).equalsIgnoreCase(knife)){
                     //칼로 죽였을경우 킬 수치 감소
                     for (UserMananger mananger : GameManager.getInstance().getUserlist()){
                         if (mananger.getUUID().equals(victim.getUniqueId()) && mananger.getKills() != 0) {
