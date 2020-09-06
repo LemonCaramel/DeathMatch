@@ -15,7 +15,10 @@ public class DataManager {
     private Location[] locations; //2개
     private HashMap<Integer,String> weapons; //rounds개를 가져야함
     private static DataManager manager;
-
+    private int joinMoney;
+    private int firstReward;
+    private int secondReward;
+    private int thirdReward;
 
     static {
         manager = new DataManager();
@@ -27,6 +30,10 @@ public class DataManager {
         rounds = 0;
         time = 0;
         minimum = 0;
+        joinMoney = 0;
+        firstReward = 0;
+        secondReward = 0;
+        thirdReward = 0;
         locations = new Location[2];
         weapons = new HashMap<>();
     }
@@ -100,4 +107,35 @@ public class DataManager {
         return weapons;
     }
 
+    public int getJoinMoney(){
+        return joinMoney;
+    }
+
+    public void setJoinMoney(int reward){
+        joinMoney = reward;
+    }
+
+    public int getFirstReward(){
+        return firstReward;
+    }
+
+    public void setFirstReward(int reward){
+        firstReward = reward;
+    }
+
+    public int getSecondReward(){
+        return secondReward;
+    }
+
+    public void setSecondReward(int reward){
+        secondReward = reward;
+    }
+
+    public int getThirdReward(){
+        return thirdReward;
+    }
+
+    public void setThirdReward(int reward){
+        thirdReward = reward;
+    }
 }

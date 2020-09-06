@@ -9,10 +9,12 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.light.source.DeathMatch;
+import org.light.source.Log.MinimizeLogger;
 import org.light.source.Runnable.Countdown;
 import org.light.source.Runnable.MainTimer;
 import org.light.source.Singleton.CrackShotApi;
 import org.light.source.Singleton.DataManager;
+import org.light.source.Singleton.EconomyApi;
 import org.light.source.Singleton.RatingManager;
 
 import java.util.ArrayList;
@@ -175,7 +177,13 @@ public class GameManager {
                 target.getInventory().clear();
                 target.setHealth(20.0);
                 gameRunnable.getbossbarInstance().removeAll();
+                if (DataManager.getInstance().getJoinMoney() != 0 && getusercount() >= DataManager.getInstance().getMinimumUser()) {
+                    target.sendMessage("§c[ §fDeathMatch §6] §f참여 보상 §6" + DataManager.getInstance().getJoinMoney() + "§f원을 흭득하셨습니다!");
+                    EconomyApi.getInstance().giveMoney(target, DataManager.getInstance().getJoinMoney());
+                    MinimizeLogger.getInstance().appendLog(target.getName() + "님이 데스매치에 참여해 " + DataManager.getInstance().getJoinMoney() + "원을 흭득함");
+                }
             }
+            giveRatingReward();
             gameRunnable.cancel();
             gameRunnable = null;
             countRunnable = null;
@@ -248,5 +256,28 @@ public class GameManager {
             min.setZ(min.getZ()+add);
         }
         return min;
+    }
+
+    public void giveRatingReward(){
+        if (userlist.size() >= 5){
+            if (RatingManager.getInstance().getFirst() != null && DataManager.getInstance().getFirstReward() != 0){
+                Player first = Bukkit.getPlayer(RatingManager.getInstance().getFirst());
+                EconomyApi.getInstance().giveMoney(first, DataManager.getInstance().getFirstReward());
+                first.sendMessage("§c[ §fDeathMatch §6] §b1위를 하셔서 추가 보상 §6" + DataManager.getInstance().getFirstReward() + "§f원을 흭득하셨습니다!");
+                MinimizeLogger.getInstance().appendLog(first.getName() + "님이 데스매치에서 1등을 하여 " + DataManager.getInstance().getFirstReward() + "원을 흭득함");
+            }
+            if (RatingManager.getInstance().getSecond() != null && DataManager.getInstance().getSecondReward() != 0){
+                Player second = Bukkit.getPlayer(RatingManager.getInstance().getSecond());
+                EconomyApi.getInstance().giveMoney(second, DataManager.getInstance().getSecondReward());
+                second.sendMessage("§c[ §fDeathMatch §6] §a2위를 하셔서 추가 보상 §6" + DataManager.getInstance().getSecondReward() + "§f원을 흭득하셨습니다!");
+                MinimizeLogger.getInstance().appendLog(second.getName() + "님이 데스매치에서 2등을 하여 " + DataManager.getInstance().getSecondReward() + "원을 흭득함");
+            }
+            if (RatingManager.getInstance().getThird() != null && DataManager.getInstance().getThirdReward() != 0){
+                Player third = Bukkit.getPlayer(RatingManager.getInstance().getThird());
+                EconomyApi.getInstance().giveMoney(third, DataManager.getInstance().getThirdReward());
+                third.sendMessage("§c[ §fDeathMatch §6] §c3위를 하셔서 추가 보상 §6" + DataManager.getInstance().getThirdReward() + "§f원을 흭득하셨습니다!");
+                MinimizeLogger.getInstance().appendLog(third.getName() + "님이 데스매치에서 3등을 하여 " + DataManager.getInstance().getThirdReward() + "원을 흭득함");
+            }
+        }
     }
 }

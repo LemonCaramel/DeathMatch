@@ -1,5 +1,6 @@
 package org.light.source.Command;
 
+import moe.caramel.counterzombie.database.GameVars;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -9,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.light.source.DeathMatch;
 import org.light.source.Game.GameManager;
 import org.light.source.Game.UserMananger;
+import org.light.source.Log.MinimizeLogger;
 import org.light.source.Singleton.CrackShotApi;
 import org.light.source.Singleton.DataManager;
 
@@ -29,6 +31,10 @@ public class CommandController implements CommandExecutor {
         if (s.equalsIgnoreCase("데스매치")){
             if (sender instanceof Player){
                 Player p = (Player) sender;
+                /*if (GameVars.GamePlayers.contains(p.getUniqueId()) || GameVars.WaitPlayers.contains(p.getUniqueId())){
+                    p.sendMessage(first + "§c게임 참여중에는 플레이 하실 수 없습니다.");
+                    return true;
+                }*/
                 if (args.length >= 1 && correctArg(args[0])){
                     if (args[0].equalsIgnoreCase("참여")){
                         if (GameManager.getInstance().contains(p.getUniqueId())) {
@@ -36,6 +42,7 @@ public class CommandController implements CommandExecutor {
                         }
                         else{
                             GameManager.getInstance().addPlayer(p);
+                            MinimizeLogger.getInstance().appendLog(p.getName() + "님이 데스매치에 참여함");
                         }
                     }
                     else if (args[0].equalsIgnoreCase("정보")){
@@ -44,6 +51,7 @@ public class CommandController implements CommandExecutor {
                     else if (args[0].equalsIgnoreCase("나가기")){
                         if (GameManager.getInstance().contains(p.getUniqueId())) {
                             GameManager.getInstance().removePlayer(p);
+                            MinimizeLogger.getInstance().appendLog(p.getName() + "님이 데스매치에서 퇴장함");
                         }
                         else {
                             p.sendMessage(first + "§6게임에 참여하지 않으셨습니다.");
@@ -61,8 +69,10 @@ public class CommandController implements CommandExecutor {
                                             Player target = Bukkit.getServer().getPlayer(args[2]);
                                             if (target == null || !GameManager.getInstance().contains(target.getUniqueId()))
                                                 p.sendMessage(first + "§4해당 플레이어는 온라인이 아니거나 게임에 참여하지 않은 상태입니다.");
-                                            else
+                                            else {
                                                 GameManager.getInstance().removePlayer(target);
+                                                MinimizeLogger.getInstance().appendLog(p.getName() + "님이 " + target.getName() + "님을 추방함");
+                                            }
                                         } else {
                                             p.sendMessage(first + "§c추방할 플레이어를 입력해주세요");
                                         }
@@ -73,7 +83,7 @@ public class CommandController implements CommandExecutor {
                                 }
                             }
                             else if (args[0].equalsIgnoreCase("설정")){
-                                if (args.length >= 2 && (args[1].equalsIgnoreCase("라운드") || args[1].equalsIgnoreCase("킬") || args[1].equalsIgnoreCase("시간") || args[1].equalsIgnoreCase("최소인원") || args[1].equalsIgnoreCase("위치") || args[1].equalsIgnoreCase("총기"))){
+                                if (args.length >= 2 && (args[1].equalsIgnoreCase("라운드") || args[1].equalsIgnoreCase("킬") || args[1].equalsIgnoreCase("시간") || args[1].equalsIgnoreCase("최소인원") || args[1].equalsIgnoreCase("위치") || args[1].equalsIgnoreCase("총기") || args[1].equalsIgnoreCase("참여보상") || args[1].equalsIgnoreCase("1위보상") || args[1].equalsIgnoreCase("2위보상") || args[1].equalsIgnoreCase("3위보상"))){
                                     if (args[1].equalsIgnoreCase("라운드")){
                                         if (args.length != 3)
                                             p.sendMessage(first + "§c/데스매치 설정 라운드 <수치>");
@@ -189,6 +199,78 @@ public class CommandController implements CommandExecutor {
                                             }
                                         }
                                     }
+                                    else if (args[1].equalsIgnoreCase("참여보상")){
+                                        if (args.length != 3)
+                                            p.sendMessage(first + "§c/데스매치 설정 참여보상 <수치>");
+                                        else{
+                                            try{
+                                                int value = Integer.parseInt(args[2]);
+                                                if (value <= -1)
+                                                    p.sendMessage(first + "§c수치는 -1이하의 값으로 설정할 수 없습니다..");
+                                                else {
+                                                    DataManager.getInstance().setJoinMoney(value);
+                                                    p.sendMessage(first + "§f데스매치 참여보상이 §6" + value + "§f원 으로 지정되었습니다.");
+                                                }
+                                            }
+                                            catch (NumberFormatException e){
+                                                p.sendMessage(first + "§c올바른 수치를 입력해주세요.");
+                                            }
+                                        }
+                                    }
+                                    else if (args[1].equalsIgnoreCase("1위보상")){
+                                        if (args.length != 3)
+                                            p.sendMessage(first + "§c/데스매치 설정 1위보상 <수치>");
+                                        else{
+                                            try{
+                                                int value = Integer.parseInt(args[2]);
+                                                if (value <= -1)
+                                                    p.sendMessage(first + "§c수치는 -1이하의 값으로 설정할 수 없습니다..");
+                                                else {
+                                                    DataManager.getInstance().setFirstReward(value);
+                                                    p.sendMessage(first + "§f데스매치 1위보상이 §6" + value + "§f원 으로 지정되었습니다.");
+                                                }
+                                            }
+                                            catch (NumberFormatException e){
+                                                p.sendMessage(first + "§c올바른 수치를 입력해주세요.");
+                                            }
+                                        }
+                                    }
+                                    else if (args[1].equalsIgnoreCase("2위보상")){
+                                        if (args.length != 3)
+                                            p.sendMessage(first + "§c/데스매치 설정 2위보상 <수치>");
+                                        else{
+                                            try{
+                                                int value = Integer.parseInt(args[2]);
+                                                if (value <= -1)
+                                                    p.sendMessage(first + "§c수치는 -1이하의 값으로 설정할 수 없습니다..");
+                                                else {
+                                                    DataManager.getInstance().setSecondReward(value);
+                                                    p.sendMessage(first + "§f데스매치 2위보상이 §6" + value + "§f원 으로 지정되었습니다.");
+                                                }
+                                            }
+                                            catch (NumberFormatException e){
+                                                p.sendMessage(first + "§c올바른 수치를 입력해주세요.");
+                                            }
+                                        }
+                                    }
+                                    else if (args[1].equalsIgnoreCase("3위보상")){
+                                        if (args.length != 3)
+                                            p.sendMessage(first + "§c/데스매치 설정 3위보상 <수치>");
+                                        else{
+                                            try{
+                                                int value = Integer.parseInt(args[2]);
+                                                if (value <= -1)
+                                                    p.sendMessage(first + "§c수치는 -1이하의 값으로 설정할 수 없습니다..");
+                                                else {
+                                                    DataManager.getInstance().setThirdReward(value);
+                                                    p.sendMessage(first + "§f데스매치 3위보상이 §6" + value + "§f원 으로 지정되었습니다.");
+                                                }
+                                            }
+                                            catch (NumberFormatException e){
+                                                p.sendMessage(first + "§c올바른 수치를 입력해주세요.");
+                                            }
+                                        }
+                                    }
                                 }
                                 else{
                                     valuesettinginfo(p);
@@ -198,6 +280,7 @@ public class CommandController implements CommandExecutor {
                                 if (GameManager.getInstance().isgaming()) {
                                     Bukkit.broadcastMessage(first + "§4관리자에 의해 데스매치가 강제종료 되었습니다.");
                                     GameManager.getInstance().stop();
+                                    MinimizeLogger.getInstance().appendLog(p.getName() + "님이 데스매치를 강제종료함");
                                 }
                             }
                         }
@@ -239,6 +322,10 @@ public class CommandController implements CommandExecutor {
         p.sendMessage(first + "§cKillToLevel §7: §6" + DataManager.getInstance().getKilltolevel() + "§f킬");
         p.sendMessage(first + "§aMaxTime §7: §6" + DataManager.getInstance().getTime() + "§f초");
         p.sendMessage(first + "§8MinimumUser §7: §6" + DataManager.getInstance().getMinimumUser() + "§f명");
+        p.sendMessage(first + "§f참여 보상 §7: §6" + DataManager.getInstance().getJoinMoney() + "§f원");
+        p.sendMessage(first + "§c1위 보상 §7: §6" + DataManager.getInstance().getFirstReward() + "§f원");
+        p.sendMessage(first + "§b2위 보상 §7: §6" + DataManager.getInstance().getSecondReward() + "§f원");
+        p.sendMessage(first + "§a3위 보상 §7: §6" + DataManager.getInstance().getThirdReward() + "§f원");
         if (DataManager.getInstance().getLocations() == null)
             p.sendMessage(first + "§7Location §7: §c설정되지 않음");
         else{
@@ -276,7 +363,7 @@ public class CommandController implements CommandExecutor {
             return value;
     }
     public void valuesettinginfo(Player p){
-        p.sendMessage(first + "§c/데스매치 설정 <라운드/킬/시간/최소인원/위치/총기> <값/1/2>");
+        p.sendMessage(first + "§c/데스매치 설정 <라운드/킬/시간/최소인원/위치/총기/참여보상/1위보상/2위보상/3위보상> <값/1/2>");
     }
 
     public String locationToString(Location loc){

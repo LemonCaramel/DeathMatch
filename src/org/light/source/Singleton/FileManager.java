@@ -39,6 +39,10 @@ public class FileManager {
         config.set("KillLevel", manager.getKilltolevel());
         config.set("Time", manager.getTime());
         config.set("RequireJoin", manager.getMinimumUser());
+        config.set("JoinReward", manager.getJoinMoney());
+        config.set("FirstReward", manager.getFirstReward());
+        config.set("SecondReward", manager.getSecondReward());
+        config.set("ThirdReward", manager.getThirdReward());
         if (manager.getLocations() != null){
             config.set("Location.1", manager.getLocations()[0]);
             config.set("Location.2", manager.getLocations()[1]);
@@ -66,6 +70,10 @@ public class FileManager {
         manager.setTime(config.getInt("Time"));
         manager.setKilltolevel(config.getInt("KillLevel"));
         manager.setMinimumUser(config.getInt("RequireJoin"));
+        manager.setJoinMoney(config.getInt("JoinReward"));
+        manager.setFirstReward(config.getInt("FirstReward"));
+        manager.setSecondReward(config.getInt("SecondReward"));
+        manager.setThirdReward(config.getInt("ThirdReward"));
         if (config.getLocation("Location.1") != null){
             manager.setLocations(config.getLocation("Location.1"),1);
             manager.setLocations(config.getLocation("Location.2"), 2);

@@ -82,19 +82,29 @@ public class EventManager implements Listener {
                 if (mgr != null) {
                     if (DataManager.getInstance().getRounds() * DataManager.getInstance().getKilltolevel() <= mgr.getKills()) {
                         //승리!
-                        Bukkit.broadcastMessage("§c[ §fDeathMatch §6] §b" + killer.getName() + "§f님이 §6" + DataManager.getInstance().getRounds() + " §f레벨을 달성하여 게임을 승리하셨습니다!");
+                        for (UserMananger mananger : GameManager.getInstance().getUserlist()) {
+                            Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
+                            target.sendMessage("§c[ §fDeathMatch §6] §b" + killer.getName() + "§f님이 §6" + DataManager.getInstance().getRounds() + " §f레벨을 달성하여 게임을 승리하셨습니다!");
+                        }
                         GameManager.getInstance().stop();
                     } else {
                         //레벨업 및 경고
                         if (mgr.getKills()-1 != 0 && (mgr.getKills() - 1) / DataManager.getInstance().getKilltolevel() != mgr.getKills() / DataManager.getInstance().getKilltolevel()) {
                             if (mgr.getKills() == DataManager.getInstance().getKilltolevel() * (DataManager.getInstance().getRounds() - 1))
-                                Bukkit.broadcastMessage("§c[ §fDeathMatch §6] §b" + killer.getName() + " §f님이 §6" + (DataManager.getInstance().getRounds() - 1) + "§f레벨에 도달하셨습니다!");
+                                for (UserMananger mananger : GameManager.getInstance().getUserlist()) {
+                                    Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
+                                    target.sendMessage("§c[ §fDeathMatch §6] §b" + killer.getName() + " §f님이 §6" + (DataManager.getInstance().getRounds() - 1) + "§f레벨에 도달하셨습니다!");
+                                }
                             killer.getInventory().setItem(0, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(mgr.getKills() / DataManager.getInstance().getKilltolevel())));
                             sendLevelUp(killer, (mgr.getKills() - 1) / DataManager.getInstance().getKilltolevel(), mgr.getKills() / DataManager.getInstance().getKilltolevel());
                         }
                     }
                 }
-                event.setDeathMessage("§c[ §fDeathMatch §6] §c" + killer.getName() + " §7➾ §b" + victim.getName());
+                event.setDeathMessage("");
+                for (UserMananger mananger : GameManager.getInstance().getUserlist()){
+                    Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
+                    target.sendMessage("§c[ §fDeathMatch §6] §c" + killer.getName() + " §7➾ §b" + victim.getName());
+                }
                 RatingManager.getInstance().updateRank();
                 event.getDrops().clear();
 

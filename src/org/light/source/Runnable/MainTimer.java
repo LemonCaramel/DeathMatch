@@ -26,7 +26,7 @@ public class MainTimer extends BukkitRunnable {
         this.maxSecond = maxSecond;
         this.userlist = userlist;
         now = 0;
-        bossBar = Bukkit.createBossBar("§c[ §fDeathMatch §6] §5Timer", BarColor.PURPLE, BarStyle.SOLID);
+        bossBar = Bukkit.createBossBar("§c[ §fDeathMatch §6] §5Timer", BarColor.RED, BarStyle.SOLID);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class MainTimer extends BukkitRunnable {
             //우승자 가리기
             for (UserMananger mananger : userlist){
                 Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-                target.sendMessage("§c[ §fDeathMatch §6] §b게임이 종료되었습니다!");
+                target.sendMessage("§c[ §fDeathMatch §6] §b시간이 다 되어 게임이 종료되었습니다!");
             }
             GameManager.getInstance().stop();
         }
@@ -52,10 +52,10 @@ public class MainTimer extends BukkitRunnable {
             bossBar.setTitle("§c[ §fDeathMatch §6] §5Timer §7: §6" + (maxSecond - now) + "§fs");
             bossBar.setProgress(calcProgress(maxSecond, now));
             if (maxSecond - now <= 5){
-                Bukkit.broadcastMessage("§c[ §fDeathMatch §6] §f게임 종료까지 §6" + (maxSecond-now) + "§f초 남았습니다!");
                 for (UserMananger mananger : userlist){
                     Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
                     target.playSound(target.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1.0f, 1.0f);
+                    target.sendMessage("§c[ §fDeathMatch §6] §f게임 종료까지 §6" + (maxSecond-now) + "§f초 남았습니다!");
                 }
             }
         }
