@@ -1,5 +1,6 @@
 package org.light.source.Singleton;
 
+import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -74,9 +75,9 @@ public class FileManager {
         manager.setFirstReward(config.getInt("FirstReward"));
         manager.setSecondReward(config.getInt("SecondReward"));
         manager.setThirdReward(config.getInt("ThirdReward"));
-        if (config.getLocation("Location.1") != null){
-            manager.setLocations(config.getLocation("Location.1"),1);
-            manager.setLocations(config.getLocation("Location.2"), 2);
+        if (config.get("Location.1") != null){
+            manager.setLocations((Location) config.get("Location.1"),1);
+            manager.setLocations((Location) config.get("Location.2"), 2);
         }
         for (int i = -1; i <= manager.getRounds(); i++){
             if (config.getString("Weapon." + i) != null)
