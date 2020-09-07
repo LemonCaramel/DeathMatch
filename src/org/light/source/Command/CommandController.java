@@ -1,6 +1,5 @@
 package org.light.source.Command;
 
-import moe.caramel.counterzombie.database.GameVars;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -31,10 +30,7 @@ public class CommandController implements CommandExecutor {
         if (s.equalsIgnoreCase("데스매치")){
             if (sender instanceof Player){
                 Player p = (Player) sender;
-                if (GameVars.GamePlayers.contains(p.getUniqueId()) || GameVars.WaitPlayers.contains(p.getUniqueId())){
-                    p.sendMessage(first + "§c게임 참여중에는 플레이 하실 수 없습니다.");
-                    return true;
-                }
+
                 if (args.length >= 1 && correctArg(args[0])){
                     if (args[0].equalsIgnoreCase("참여")){
                         if (GameManager.getInstance().contains(p.getUniqueId())) {
