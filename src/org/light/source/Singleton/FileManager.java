@@ -47,6 +47,7 @@ public class FileManager {
         if (manager.getLocations() != null){
             config.set("Location.1", manager.getLocations()[0]);
             config.set("Location.2", manager.getLocations()[1]);
+            config.set("Location.3", manager.getLocations()[2]);
         }
         if (manager.getWeapons().size() != 0){
             for (int i = -1; i <= manager.getRounds(); i++){
@@ -78,6 +79,7 @@ public class FileManager {
         if (config.get("Location.1") != null){
             manager.setLocations((Location) config.get("Location.1"),1);
             manager.setLocations((Location) config.get("Location.2"), 2);
+            manager.setLocations((Location) config.get("Location.3"),3);
         }
         for (int i = -1; i <= manager.getRounds(); i++){
             if (config.getString("Weapon." + i) != null)

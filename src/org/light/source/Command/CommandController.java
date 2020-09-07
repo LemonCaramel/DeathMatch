@@ -332,6 +332,7 @@ public class CommandController implements CommandExecutor {
         else{
             p.sendMessage(first + "§7Location §a1 §7: " + locationToString(DataManager.getInstance().getLocations()[0]));
             p.sendMessage(first + "§7Location §b2 §7: " + locationToString(DataManager.getInstance().getLocations()[1]));
+            p.sendMessage(first + "§6SpawnLocation §7: " + locationToString(DataManager.getInstance().getLocations()[2]));
         }
         if (DataManager.getInstance().getRounds() != 0){
             for (int i = 0; i < DataManager.getInstance().getRounds(); i++){
