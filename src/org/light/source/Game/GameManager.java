@@ -196,7 +196,7 @@ public class GameManager {
 
     public void setPlayer(Player p){
         p.setHealth(20.0);
-        p.setGameMode(GameMode.SURVIVAL);
+        p.setGameMode(GameMode.ADVENTURE);
         p.getInventory().clear();
         p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 10, 5, true, false));
         p.teleport(getTeleportLocation(DataManager.getInstance().getLocations()[0], DataManager.getInstance().getLocations()[1]));

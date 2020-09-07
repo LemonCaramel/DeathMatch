@@ -2,11 +2,14 @@ package org.light.source.Listener;
 
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.light.source.DeathMatch;
@@ -24,6 +27,12 @@ public class EventManager implements Listener {
         this.Plugin = Plugin;
     }
 
+
+    @EventHandler
+    public void onPhysics(PlayerInteractEvent event){
+        if (event.getAction() == Action.PHYSICAL && event.getClickedBlock().getType() == Material.FARMLAND)
+            event.setCancelled(true);
+    }
     @EventHandler
     public void onLeave(PlayerQuitEvent event){
         Player p = event.getPlayer();
