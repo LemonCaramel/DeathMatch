@@ -184,7 +184,7 @@ public class CommandController implements CommandExecutor {
                                                     p.sendMessage(first + "§c총기 라운드 값은 -1미만이 올 수 없습니다.");
                                                 else if (DataManager.getInstance().getRounds() == 0)
                                                     p.sendMessage(first + "§c라운드값이 설정되어 있지 않습니다.");
-                                                else if (DataManager.getInstance().getRounds() < value)
+                                                else if (DataManager.getInstance().getRounds() <= value)
                                                     p.sendMessage(first + "§c설정되어 있는 라운드값보다 더 큰 값을 입력하셨습니다.");
                                                 else if (CrackShotApi.getCSID(p.getInventory().getItemInMainHand()) == null)
                                                     p.sendMessage(first + "§c현재 들고 있는 아이템이 크랙샷 아이템이 아닙니다.");

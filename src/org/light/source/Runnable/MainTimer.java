@@ -54,7 +54,6 @@ public class MainTimer extends BukkitRunnable {
             if (maxSecond - now <= 5){
                 for (UserMananger mananger : userlist){
                     Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-                    target.playSound(target.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1.0f, 1.0f);
                     target.sendMessage("§c[ §fDeathMatch §6] §f게임 종료까지 §6" + (maxSecond-now) + "§f초 남았습니다!");
                 }
             }

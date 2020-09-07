@@ -38,8 +38,6 @@ public class Countdown extends BukkitRunnable {
         for (UserMananger mananger : userlist){
             Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
             target.sendTitle("§c[ §fDeathMatch §6] §b카운트 다운!", "§6" + value + "s §f초후 시작합니다.", 0,3,0);
-            if ((int)value == value)
-                target.playSound(target.getLocation(), Sound.BLOCK_NOTE_BLOCK_BELL, 1.0f, 1.0f);
         }
         countnum -= 2;
     }
