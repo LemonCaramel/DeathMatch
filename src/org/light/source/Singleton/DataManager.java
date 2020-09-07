@@ -34,7 +34,7 @@ public class DataManager {
         firstReward = 0;
         secondReward = 0;
         thirdReward = 0;
-        locations = new Location[2];
+        locations = new Location[3];
         weapons = new HashMap<>();
     }
 
@@ -67,9 +67,9 @@ public class DataManager {
     }
 
     public Location[] getLocations() {
-        if (locations == null || locations.length != 2)
+        if (locations == null || locations.length != 3)
             return null;
-        if (locations[0] == null || locations[1] == null)
+        if (locations[0] == null || locations[1] == null || locations[2] == null)
             return null;
         return locations;
     }

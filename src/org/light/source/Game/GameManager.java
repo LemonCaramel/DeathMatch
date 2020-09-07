@@ -92,8 +92,7 @@ public class GameManager {
         }
         if (isgaming) {
             RatingManager.getInstance().updateRank();
-            World lobby = Bukkit.getWorld("lobby");
-            p.teleport(lobby.getSpawnLocation());
+            p.teleport(DataManager.getInstance().getLocations()[2]);
             p.getInventory().clear();
             p.setHealth(20.0);
             gameRunnable.getbossbarInstance().removePlayer(p);
@@ -113,8 +112,7 @@ public class GameManager {
                     Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
                     target.sendMessage("§c[ §fDeathMatch §6] §c데스매치 최소인원을 만족하지 못해 게임이 중단되었습니다.");
                 }
-                World lobby = Bukkit.getWorld("lobby");
-                p.teleport(lobby.getSpawnLocation());
+                p.teleport(DataManager.getInstance().getLocations()[2]);
                 p.getInventory().clear();
                 p.setHealth(20.0);
                 gameRunnable.cancel();
@@ -173,8 +171,7 @@ public class GameManager {
             setGameState(false);
             for (UserMananger mananger : userlist) {
                 Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-                World lobby = Bukkit.getWorld("lobby");
-                Bukkit.getServer().getScheduler().runTask(Plugin, () -> target.teleport(lobby.getSpawnLocation()));
+                Bukkit.getServer().getScheduler().runTask(Plugin, () -> target.teleport(DataManager.getInstance().getLocations()[2]));
                 target.getInventory().clear();
                 target.setHealth(20.0);
                 gameRunnable.getbossbarInstance().removeAll();
@@ -256,6 +253,8 @@ public class GameManager {
             double add = Math.random()*(gapz-1) + 1;
             min.setZ(min.getZ()+add);
         }
+        if (min.getBlock().getType() != Material.AIR)
+            min = getTeleportLocation(first, second);
         return min;
     }
 

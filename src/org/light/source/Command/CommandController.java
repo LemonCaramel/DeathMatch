@@ -12,6 +12,7 @@ import org.light.source.Game.UserMananger;
 import org.light.source.Log.MinimizeLogger;
 import org.light.source.Singleton.CrackShotApi;
 import org.light.source.Singleton.DataManager;
+import org.light.source.Singleton.FileManager;
 
 public class CommandController implements CommandExecutor {
 
@@ -154,12 +155,12 @@ public class CommandController implements CommandExecutor {
                                     }
                                     else if (args[1].equalsIgnoreCase("위치")) {
                                         if (args.length != 3)
-                                            p.sendMessage(first + "§c/데스매치 설정 위치 <1/2>");
+                                            p.sendMessage(first + "§c/데스매치 설정 위치 <1/2/3>");
                                         else{
                                             try{
                                                 int value = Integer.parseInt(args[2]);
-                                                if (value != 1 && value != 2)
-                                                    p.sendMessage(first + "§c위치 값은 1또는 2가 와야합니다.");
+                                                if (value >= 1 && value <= 3)
+                                                    p.sendMessage(first + "§c위치 값은 1~3이 와야합니다.");
                                                 else {
                                                     DataManager.getInstance().setLocations(p.getLocation(), value);
                                                     p.sendMessage(first + "§f데스매치 구역 " + value + "이 §6" + locationToString(p.getLocation()) + "§f으로 지정되었습니다.");
@@ -279,6 +280,10 @@ public class CommandController implements CommandExecutor {
                                     MinimizeLogger.getInstance().appendLog(p.getName() + "님이 데스매치를 강제종료함");
                                 }
                             }
+                            else if (args[0].equalsIgnoreCase("리로드")){
+                                FileManager.getInstance().load();
+                                p.sendMessage(first + " §f콘피그 파일이 리로드 되었습니다.");
+                            }
                         }
                         else{
                             info(p);
@@ -299,13 +304,13 @@ public class CommandController implements CommandExecutor {
 
     public void info(Player p){
         if (p.hasPermission("DeathMatch.Control"))
-            p.sendMessage(first + "§f/데스매치 <참여/정보/나가기/관리/설정/강제종료>");
+            p.sendMessage(first + "§f/데스매치 <참여/정보/나가기/관리/설정/강제종료/리로드>");
         else
             p.sendMessage(first + "§f/데스매치 <참여/정보/나가기>");
     }
 
     public boolean correctArg(String value){
-        return value.equalsIgnoreCase("참여") || value.equalsIgnoreCase("정보") || value.equalsIgnoreCase("나가기") || value.equalsIgnoreCase("관리") || value.equalsIgnoreCase("설정") || value.equalsIgnoreCase("강제종료");
+        return value.equalsIgnoreCase("참여") || value.equalsIgnoreCase("정보") || value.equalsIgnoreCase("나가기") || value.equalsIgnoreCase("관리") || value.equalsIgnoreCase("설정") || value.equalsIgnoreCase("강제종료") || value.equalsIgnoreCase("리로드");
     }
 
     public void settingInfo(Player p){
