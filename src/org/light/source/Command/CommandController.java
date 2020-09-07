@@ -159,7 +159,7 @@ public class CommandController implements CommandExecutor {
                                         else{
                                             try{
                                                 int value = Integer.parseInt(args[2]);
-                                                if (value >= 1 && value <= 3)
+                                                if (value < 1 || value > 3)
                                                     p.sendMessage(first + "§c위치 값은 1~3이 와야합니다.");
                                                 else {
                                                     DataManager.getInstance().setLocations(p.getLocation(), value);
@@ -282,7 +282,7 @@ public class CommandController implements CommandExecutor {
                             }
                             else if (args[0].equalsIgnoreCase("리로드")){
                                 FileManager.getInstance().load();
-                                p.sendMessage(first + " §f콘피그 파일이 리로드 되었습니다.");
+                                p.sendMessage(first + "§f콘피그 파일이 리로드 되었습니다.");
                             }
                         }
                         else{
@@ -369,7 +369,7 @@ public class CommandController implements CommandExecutor {
             return value;
     }
     public void valuesettinginfo(Player p){
-        p.sendMessage(first + "§c/데스매치 설정 <라운드/킬/시간/최소인원/위치/총기/참여보상/1위보상/2위보상/3위보상> <값/1/2>");
+        p.sendMessage(first + "§c/데스매치 설정 <라운드/킬/시간/최소인원/위치/총기/참여보상/1위보상/2위보상/3위보상> <값/1/2/3>");
     }
 
     public String locationToString(Location loc){
