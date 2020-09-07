@@ -329,7 +329,7 @@ public class CommandController implements CommandExecutor {
             p.sendMessage(first + "§7Location §b2 §7: " + locationToString(DataManager.getInstance().getLocations()[1]));
         }
         if (DataManager.getInstance().getRounds() != 0){
-            for (int i = 0; i <= DataManager.getInstance().getRounds(); i++){
+            for (int i = 0; i < DataManager.getInstance().getRounds(); i++){
                 p.sendMessage(first + "§6Weapon §7- §f" + i + ". §8: §f" + changeWeaponValue(DataManager.getInstance().getWeaponName(i)));
             }
             p.sendMessage(first + "§bMelee Weapon §7: §f" + changeWeaponValue(DataManager.getInstance().getWeaponName(-1)));

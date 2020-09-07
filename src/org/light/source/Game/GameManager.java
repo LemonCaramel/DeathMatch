@@ -189,7 +189,7 @@ public class GameManager {
 
     public boolean canstart(){
         DataManager manager = DataManager.getInstance();
-        if (manager.getMinimumUser() > 1 && manager.getTime() >= 10 && manager.getKilltolevel() >= 2 && manager.getLocations() != null && manager.getRounds() >= 1 && manager.getListSize() == manager.getRounds() + 1)
+        if (manager.getMinimumUser() > 1 && manager.getTime() >= 10 && manager.getKilltolevel() >= 2 && manager.getLocations() != null && manager.getRounds() >= 1 && manager.getListSize() >= manager.getRounds())
             return true;
         return false;
     }
