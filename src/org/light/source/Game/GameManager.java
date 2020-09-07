@@ -67,6 +67,7 @@ public class GameManager {
             if (isgaming) {
                 setPlayer(p);
                 RatingManager.getInstance().updateRank();
+                gameRunnable.getbossbarInstance().addPlayer(p);
             }
             else if (getusercount() >= DataManager.getInstance().getMinimumUser()) {
                 if (countRunnable == null) {
@@ -91,9 +92,11 @@ public class GameManager {
         }
         if (isgaming) {
             RatingManager.getInstance().updateRank();
-            p.teleport(p.getWorld().getSpawnLocation());
+            World lobby = Bukkit.getWorld("lobby");
+            p.teleport(lobby.getSpawnLocation());
             p.getInventory().clear();
             p.setHealth(20.0);
+            gameRunnable.getbossbarInstance().removePlayer(p);
         }
         if (canstart() && getusercount() + 1 == DataManager.getInstance().getMinimumUser()){
             if (!isgaming) {
@@ -110,7 +113,8 @@ public class GameManager {
                     Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
                     target.sendMessage("§c[ §fDeathMatch §6] §c데스매치 최소인원을 만족하지 못해 게임이 중단되었습니다.");
                 }
-                p.teleport(p.getWorld().getSpawnLocation());
+                World lobby = Bukkit.getWorld("lobby");
+                p.teleport(lobby.getSpawnLocation());
                 p.getInventory().clear();
                 p.setHealth(20.0);
                 gameRunnable.cancel();
@@ -169,7 +173,8 @@ public class GameManager {
             setGameState(false);
             for (UserMananger mananger : userlist) {
                 Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-                Bukkit.getServer().getScheduler().runTask(Plugin, () -> target.teleport(target.getWorld().getSpawnLocation()));
+                World lobby = Bukkit.getWorld("lobby");
+                Bukkit.getServer().getScheduler().runTask(Plugin, () -> target.teleport(lobby.getSpawnLocation()));
                 target.getInventory().clear();
                 target.setHealth(20.0);
                 gameRunnable.getbossbarInstance().removeAll();
