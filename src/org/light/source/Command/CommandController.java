@@ -352,6 +352,10 @@ public class CommandController implements CommandExecutor {
         }
         else {
             p.sendMessage(first + "§b게임 상태 §7: §c게임 진행중");
+            p.sendMessage(" ");
+            p.sendMessage(first + "§7참여 인원 §7: §b" + GameManager.getInstance().getusercount());
+            for (UserMananger mananger : GameManager.getInstance().getUserlist())
+                p.sendMessage("  §7-  §f" + Bukkit.getServer().getPlayer(mananger.getUUID()).getName());
         }
         p.sendMessage(" ");
     }

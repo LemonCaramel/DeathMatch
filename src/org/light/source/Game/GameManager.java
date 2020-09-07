@@ -55,10 +55,6 @@ public class GameManager {
    }
 
     public void addPlayer(Player p) {
-        if (!p.getWorld().getGameRuleValue(GameRule.DO_IMMEDIATE_RESPAWN) || p.getWorld().getDifficulty() != Difficulty.PEACEFUL){
-            p.getWorld().setGameRule(GameRule.DO_IMMEDIATE_RESPAWN, true);
-            p.getWorld().setDifficulty(Difficulty.PEACEFUL);
-        }
         if (!canstart()){
             p.sendMessage("§c[ §fDeathMatch §6] §c데스매치 기초설정이 끝나지 않아 참여하실 수 없습니다.");
         }
