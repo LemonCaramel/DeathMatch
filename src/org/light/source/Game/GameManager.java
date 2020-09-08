@@ -7,7 +7,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.light.source.DeathMatch;
 import org.light.source.Log.MinimizeLogger;
@@ -36,7 +35,7 @@ public class GameManager {
         userlist = new ArrayList<>();
         isgaming = false;
         Plugin = JavaPlugin.getPlugin(DeathMatch.class);
-        taskid = Bukkit.getScheduler().runTaskTimerAsynchronously(Plugin, this::sendActionBar, 0L, 20L).getTaskId();
+        taskid = Bukkit.getScheduler().runTaskTimerAsynchronously(Plugin, this::sendScore, 0L, 20L).getTaskId();
         countRunnable = null;
         gameRunnable = null;
         randomMap = 1;
@@ -133,7 +132,7 @@ public class GameManager {
         //게임 시작전인지 게임 중인지
     }
 
-    public void sendActionBar(){
+    public void sendScore(){
         Bukkit.getScheduler().runTask(Plugin, ()-> {
             for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                 if (!isgaming && (getusercount() < DataManager.getInstance().getMinimumUser() || DataManager.getInstance().getMinimumUser() == 0))
@@ -264,6 +263,7 @@ public class GameManager {
         if (gapy != 0){
             double add = Math.random()*(gapy-1) + 1;
             min.setY(min.getY()+add);
+            
         }
         if (gapz != 0){
             double add = Math.random()*(gapz-1) + 1;
