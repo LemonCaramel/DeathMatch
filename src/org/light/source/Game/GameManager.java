@@ -75,6 +75,7 @@ public class GameManager {
                         Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
                         target.playSound(target.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
                         target.sendTitle("§c[ §fDeathMatch §6] §b시작 준비!", "§c최소 인원이 충족되어 곧 게임이 시작됩니다.", 5, 20, 5);
+                        target.teleport(getTeleportLocation(DataManager.getInstance().getLocations()[0], DataManager.getInstance().getLocations()[1]));
                     }
                     countRunnable = new Countdown(userlist);
                     Bukkit.getScheduler().runTaskLaterAsynchronously(Plugin, () -> countRunnable.runTaskTimer(Plugin, 0L, 2L), 20L);
@@ -106,6 +107,7 @@ public class GameManager {
                 for (UserMananger mananger : userlist) {
                     Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
                     target.sendMessage("§c[ §fDeathMatch §6] §f최소인원을 만족하지 못해 게임 준비가 취소되었습니다.");
+                    target.teleport(DataManager.getInstance().getLocations()[2]);
                 }
             }
             else {
