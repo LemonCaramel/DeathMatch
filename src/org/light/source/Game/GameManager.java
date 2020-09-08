@@ -12,10 +12,7 @@ import org.light.source.DeathMatch;
 import org.light.source.Log.MinimizeLogger;
 import org.light.source.Runnable.Countdown;
 import org.light.source.Runnable.MainTimer;
-import org.light.source.Singleton.CrackShotApi;
-import org.light.source.Singleton.DataManager;
-import org.light.source.Singleton.EconomyApi;
-import org.light.source.Singleton.RatingManager;
+import org.light.source.Singleton.*;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -27,8 +24,8 @@ public class GameManager {
     private ArrayList<UserMananger> userlist;
     private DeathMatch Plugin;
     private int taskid;
-    private int counttaskid;
-    private BukkitRunnable countRunnable;
+    private int randomMap;
+    private Countdown countRunnable;
     private MainTimer gameRunnable;
 
     static {
@@ -41,7 +38,7 @@ public class GameManager {
         taskid = Bukkit.getScheduler().runTaskTimerAsynchronously(Plugin, this::sendActionBar, 0L, 20L).getTaskId();
         countRunnable = null;
         gameRunnable = null;
-        counttaskid = 0;
+        randomMap = 1;
     }
 
     public static GameManager getInstance(){
@@ -73,16 +70,19 @@ public class GameManager {
             }
             else if (getusercount() >= DataManager.getInstance().getMinimumUser()) {
                 if (countRunnable == null) {
+                    randomMap = ((int)(Math.random()*(DataManager.getInstance().getLocationAmount()-1)) + 1);
+                    while (randomMap % 2 != 1)
+                        randomMap = ((int)(Math.random()*(DataManager.getInstance().getLocationAmount()-1)) + 1);
                     for (UserMananger mananger : userlist) {
                         Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
                         target.playSound(target.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
                         target.sendTitle("§c[ §fDeathMatch §6] §b시작 준비!", "§c최소 인원이 충족되어 곧 게임이 시작됩니다.", 5, 20, 5);
-                        target.teleport(getTeleportLocation(DataManager.getInstance().getLocations()[0], DataManager.getInstance().getLocations()[1]));
+                        target.teleport(getTeleportLocation(DataManager.getInstance().getLocations()[randomMap], DataManager.getInstance().getLocations()[randomMap+1]));
                     }
                     countRunnable = new Countdown(userlist);
                     Bukkit.getScheduler().runTaskLaterAsynchronously(Plugin, () -> {
                         if (countRunnable != null) {
-                            counttaskid = countRunnable.runTaskTimer(Plugin, 0L, 2L).getTaskId();
+                            countRunnable.runTaskTimer(Plugin, 0L, 2L).getTaskId();
                         }}, 20L);
                 }
             }
@@ -98,7 +98,7 @@ public class GameManager {
         }
         if (isgaming) {
             RatingManager.getInstance().updateRank();
-            p.teleport(DataManager.getInstance().getLocations()[2]);
+            p.teleport(DataManager.getInstance().getLocations()[0]);
             p.getInventory().clear();
             p.setHealth(20.0);
             gameRunnable.getbossbarInstance().removePlayer(p);
@@ -106,22 +106,22 @@ public class GameManager {
         }
         if (canstart() && getusercount() + 1 == DataManager.getInstance().getMinimumUser()){
             if (!isgaming) {
-                if (countRunnable != null && counttaskid != 0 && Bukkit.getScheduler().isCurrentlyRunning(counttaskid))
+                if (countRunnable != null && countRunnable.countnum != 102)
                     countRunnable.cancel();
                 countRunnable = null;
-                counttaskid = 0;
                 for (UserMananger mananger : userlist) {
                     Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
                     target.sendMessage("§c[ §fDeathMatch §6] §f최소인원을 만족하지 못해 게임 준비가 취소되었습니다.");
-                    target.teleport(DataManager.getInstance().getLocations()[2]);
+                    target.teleport(DataManager.getInstance().getLocations()[0]);
                 }
+                p.teleport(DataManager.getInstance().getLocations()[0]);
             }
             else {
                 for (UserMananger mananger : userlist) {
                     Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
                     target.sendMessage("§c[ §fDeathMatch §6] §c데스매치 최소인원을 만족하지 못해 게임이 중단되었습니다.");
                 }
-                p.teleport(DataManager.getInstance().getLocations()[2]);
+                p.teleport(DataManager.getInstance().getLocations()[0]);
                 p.getInventory().clear();
                 p.setHealth(20.0);
                 p.removePotionEffect(PotionEffectType.WEAKNESS);
@@ -133,18 +133,18 @@ public class GameManager {
     }
 
     public void sendActionBar(){
-        for (UserMananger mananger : userlist) {
-            Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-            String value;
-            if (!isgaming && (getusercount() < DataManager.getInstance().getMinimumUser() || DataManager.getInstance().getMinimumUser() == 0))
-                value = "§c[ §fDeathMatch §6] §b플레이어의 참여를 기다리는 중입니다... §f" + userlist.size() + " §7/ §6" + DataManager.getInstance().getMinimumUser();
-            else if (!isgaming && getusercount() >= DataManager.getInstance().getMinimumUser())
-                value = "§c[ §fDeathMatch §6] §a게임 시작 준비중입니다.. §f" + userlist.size() + " §7/ §6" + DataManager.getInstance().getMinimumUser();
-            else
-                value = "§c[ §fDeathMatch §6] §b1. " + RatingManager.changeNick(RatingManager.getInstance().getFirst()) + " §fLV. §6" + RatingManager.getLV(RatingManager.getInstance().getFirstKill()) + " §8| §c2. " + RatingManager.changeNick(RatingManager.getInstance().getSecond()) + " §fLV. §6" + RatingManager.getLV(RatingManager.getInstance().getSecondKill()) + " §8| §a3. " + RatingManager.changeNick(RatingManager.getInstance().getThird()) + " §fLV. §6" + RatingManager.getLV(RatingManager.getInstance().getThirdKill()) + " §8| §e" + target.getName() + " §fLV. §6" + RatingManager.getLV(mananger.getKills());
-            target.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(value));
+        Bukkit.getScheduler().runTask(Plugin, ()-> {
+            for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+                if (!isgaming && (getusercount() < DataManager.getInstance().getMinimumUser() || DataManager.getInstance().getMinimumUser() == 0))
+                    ScoreboardObject.getInstance().sendScoreboard(1, player);
+                else if (!isgaming && getusercount() >= DataManager.getInstance().getMinimumUser())
+                    ScoreboardObject.getInstance().sendScoreboard(2, player);
+                else
+                    ScoreboardObject.getInstance().sendScoreboard(3, player);
+                }
+            }
+        );
 
-        }
     }
 
     public int getusercount(){
@@ -161,9 +161,13 @@ public class GameManager {
         }
         return false;
     }
+    public int getRandomNumber(){
+        return randomMap;
+    }
     public void start(){
         if (!isgaming) {
             setGameState(true);
+            Bukkit.broadcastMessage(randomMap + "값");
             gameRunnable = new MainTimer(DataManager.getInstance().getTime(), userlist);
             gameRunnable.runTaskTimerAsynchronously(Plugin, 0L, 20L);
             Bukkit.getServer().getScheduler().runTask(Plugin, () -> {
@@ -181,7 +185,7 @@ public class GameManager {
             setGameState(false);
             for (UserMananger mananger : userlist) {
                 Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-                Bukkit.getServer().getScheduler().runTask(Plugin, () -> target.teleport(DataManager.getInstance().getLocations()[2]));
+                Bukkit.getServer().getScheduler().runTask(Plugin, () -> target.teleport(DataManager.getInstance().getLocations()[0]));
                 target.getInventory().clear();
                 target.setHealth(20.0);
                 target.removePotionEffect(PotionEffectType.WEAKNESS);
@@ -213,7 +217,7 @@ public class GameManager {
         p.getInventory().clear();
         p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20, 5, true, false));
         p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 9999, 100,true,false));
-        p.teleport(getTeleportLocation(DataManager.getInstance().getLocations()[0], DataManager.getInstance().getLocations()[1]));
+        p.teleport(getTeleportLocation(DataManager.getInstance().getLocations()[randomMap], DataManager.getInstance().getLocations()[randomMap+1]));
         p.getInventory().setItem(0, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(0)));
         if (DataManager.getInstance().getWeaponName(-1) != null)
             p.getInventory().setItem(1, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(-1)));

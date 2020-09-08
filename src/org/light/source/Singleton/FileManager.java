@@ -44,10 +44,11 @@ public class FileManager {
         config.set("FirstReward", manager.getFirstReward());
         config.set("SecondReward", manager.getSecondReward());
         config.set("ThirdReward", manager.getThirdReward());
+        config.set("LocationAmount", manager.getLocationAmount());
         if (manager.getLocations() != null){
-            config.set("Location.1", manager.getLocations()[0]);
-            config.set("Location.2", manager.getLocations()[1]);
-            config.set("Location.3", manager.getLocations()[2]);
+            for (int i = 0; i < DataManager.getInstance().getLocationAmount(); i++){
+                config.set("Location." + (i+1), manager.getLocations()[i]);
+            }
         }
         if (manager.getWeapons().size() != 0){
             for (int i = -1; i <= manager.getRounds(); i++){
@@ -76,10 +77,11 @@ public class FileManager {
         manager.setFirstReward(config.getInt("FirstReward"));
         manager.setSecondReward(config.getInt("SecondReward"));
         manager.setThirdReward(config.getInt("ThirdReward"));
-        if (config.get("Location.1") != null){
-            manager.setLocations((Location) config.get("Location.1"),1);
-            manager.setLocations((Location) config.get("Location.2"), 2);
-            manager.setLocations((Location) config.get("Location.3"),3);
+        if (config.get("Location.1") != null && config.getInt("LocationAmount") != 0){
+            int amount = config.getInt("LocationAmount");
+            for (int i = 0; i < amount; i++){
+                DataManager.getInstance().setLocations((Location) config.get("Location." + (i+1)),i+1);
+            }
         }
         for (int i = -1; i <= manager.getRounds(); i++){
             if (config.getString("Weapon." + i) != null)

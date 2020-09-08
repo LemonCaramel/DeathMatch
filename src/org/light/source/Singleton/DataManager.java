@@ -1,5 +1,6 @@
 package org.light.source.Singleton;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.inventory.ItemStack;
 
@@ -34,7 +35,7 @@ public class DataManager {
         firstReward = 0;
         secondReward = 0;
         thirdReward = 0;
-        locations = new Location[3];
+        locations = new Location[21];
         weapons = new HashMap<>();
     }
 
@@ -67,9 +68,10 @@ public class DataManager {
     }
 
     public Location[] getLocations() {
-        if (locations == null || locations.length != 3)
+        if (locations == null)
             return null;
-        if (locations[0] == null || locations[1] == null || locations[2] == null)
+
+        if (getLocationAmount() % 2 != 1 || getLocationAmount() == 1)
             return null;
         return locations;
     }
@@ -101,6 +103,19 @@ public class DataManager {
             i++;
         }
         return returnValue;
+    }
+
+    public int getLocationAmount(){
+        int i = 0, count = 0;
+        while (locations[i] != null){
+            count++;
+            i++;
+        }
+        return count;
+    }
+
+    public void flushLocation(){
+        locations = new Location[locations.length];
     }
 
     public HashMap<Integer,String> getWeapons(){

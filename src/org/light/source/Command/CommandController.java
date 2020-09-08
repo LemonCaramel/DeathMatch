@@ -155,12 +155,12 @@ public class CommandController implements CommandExecutor {
                                     }
                                     else if (args[1].equalsIgnoreCase("위치")) {
                                         if (args.length != 3)
-                                            p.sendMessage(first + "§c/데스매치 설정 위치 <1/2/3>");
+                                            p.sendMessage(first + "§c/데스매치 설정 위치 <1~21>");
                                         else{
                                             try{
                                                 int value = Integer.parseInt(args[2]);
-                                                if (value < 1 || value > 3)
-                                                    p.sendMessage(first + "§c위치 값은 1~3이 와야합니다.");
+                                                if (value < 1 || value > 21)
+                                                    p.sendMessage(first + "§c위치 값은 1~21이 와야합니다.");
                                                 else {
                                                     DataManager.getInstance().setLocations(p.getLocation(), value);
                                                     p.sendMessage(first + "§f데스매치 구역 " + value + "이 §6" + locationToString(p.getLocation()) + "§f으로 지정되었습니다.");
@@ -281,6 +281,7 @@ public class CommandController implements CommandExecutor {
                                 }
                             }
                             else if (args[0].equalsIgnoreCase("리로드")){
+                                DataManager.getInstance().flushLocation();
                                 FileManager.getInstance().load();
                                 p.sendMessage(first + "§f콘피그 파일이 리로드 되었습니다.");
                             }
@@ -330,9 +331,10 @@ public class CommandController implements CommandExecutor {
         if (DataManager.getInstance().getLocations() == null)
             p.sendMessage(first + "§7Location §7: §c설정되지 않음");
         else{
-            p.sendMessage(first + "§7Location §a1 §7: " + locationToString(DataManager.getInstance().getLocations()[0]));
-            p.sendMessage(first + "§7Location §b2 §7: " + locationToString(DataManager.getInstance().getLocations()[1]));
-            p.sendMessage(first + "§6SpawnLocation §7: " + locationToString(DataManager.getInstance().getLocations()[2]));
+            for (int i = 1; i < DataManager.getInstance().getLocationAmount(); i++){
+                p.sendMessage(first + "§7Location §6" + (i+1) + " §7: " + locationToString(DataManager.getInstance().getLocations()[i]));
+            }
+            p.sendMessage(first + "§6SpawnLocation [ 1 ]  §7: " + locationToString(DataManager.getInstance().getLocations()[0]));
         }
         if (DataManager.getInstance().getRounds() != 0){
             for (int i = 0; i < DataManager.getInstance().getRounds(); i++){
@@ -369,7 +371,7 @@ public class CommandController implements CommandExecutor {
             return value;
     }
     public void valuesettinginfo(Player p){
-        p.sendMessage(first + "§c/데스매치 설정 <라운드/킬/시간/최소인원/위치/총기/참여보상/1위보상/2위보상/3위보상> <값/1/2/3>");
+        p.sendMessage(first + "§c/데스매치 설정 <라운드/킬/시간/최소인원/위치/총기/참여보상/1위보상/2위보상/3위보상> <값/1~21>");
     }
 
     public String locationToString(Location loc){

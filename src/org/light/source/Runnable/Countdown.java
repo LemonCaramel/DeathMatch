@@ -12,16 +12,18 @@ import java.util.ArrayList;
 
 public class Countdown extends BukkitRunnable {
 
-    private int countnum;
+    public int countnum;
     private ArrayList<UserMananger> userlist;
 
     public Countdown(ArrayList<UserMananger> userlist){
-        countnum = 100;
+        countnum = 102;
         this.userlist = userlist;
     }
 
     @Override
     public void run() {
+        if (countnum == 102)
+            countnum = 100;
         if (countnum <= 0) {
             if (GameManager.getInstance().getusercount() < DataManager.getInstance().getMinimumUser()){
                 for (UserMananger mananger : userlist){

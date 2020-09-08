@@ -112,7 +112,7 @@ public class EventManager implements Listener {
                             victim.getInventory().clear();
                             event.setDamage(0.0);
                             victim.setHealth(20.0);
-                            victim.teleport(GameManager.getInstance().getTeleportLocation(DataManager.getInstance().getLocations()[0], DataManager.getInstance().getLocations()[1]));
+                            victim.teleport(GameManager.getInstance().getTeleportLocation(DataManager.getInstance().getLocations()[GameManager.getInstance().getRandomNumber()], DataManager.getInstance().getLocations()[GameManager.getInstance().getRandomNumber()+1]));
                             victim.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20, 5, true, false));
                             victim.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 9999, 100,true,false));
                             victim.getInventory().setItem(0, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(victimgr.getKills() / DataManager.getInstance().getKilltolevel())));
@@ -134,7 +134,7 @@ public class EventManager implements Listener {
                         target.getInventory().setItem(0, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(mananger.getKills() / DataManager.getInstance().getKilltolevel())));
                         if (DataManager.getInstance().getWeaponName(-1) != null)
                             target.getInventory().setItem(1, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(-1)));
-                        Bukkit.getScheduler().runTaskLater(Plugin, ()-> target.teleport(GameManager.getInstance().getTeleportLocation(DataManager.getInstance().getLocations()[0], DataManager.getInstance().getLocations()[1])), 1L);
+                        Bukkit.getScheduler().runTaskLater(Plugin, ()-> target.teleport(GameManager.getInstance().getTeleportLocation(DataManager.getInstance().getLocations()[GameManager.getInstance().getRandomNumber()], DataManager.getInstance().getLocations()[GameManager.getInstance().getRandomNumber()+1])), 1L);
                     }
                 }
             }
