@@ -13,6 +13,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.light.source.DeathMatch;
 import org.light.source.Game.GameManager;
 import org.light.source.Game.UserMananger;
@@ -103,6 +105,8 @@ public class EventManager implements Listener {
                             event.setDamage(0.0);
                             victim.setHealth(20.0);
                             victim.teleport(GameManager.getInstance().getTeleportLocation(DataManager.getInstance().getLocations()[0], DataManager.getInstance().getLocations()[1]));
+                            victim.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20, 5, true, false));
+                            victim.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 9999, 100,true,false));
                             victim.getInventory().setItem(0, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(victimgr.getKills() / DataManager.getInstance().getKilltolevel())));
                             victim.getInventory().setItem(1, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(-1)));
 

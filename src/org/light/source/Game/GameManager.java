@@ -96,6 +96,7 @@ public class GameManager {
             p.getInventory().clear();
             p.setHealth(20.0);
             gameRunnable.getbossbarInstance().removePlayer(p);
+            p.removePotionEffect(PotionEffectType.WEAKNESS);
         }
         if (canstart() && getusercount() + 1 == DataManager.getInstance().getMinimumUser()){
             if (!isgaming) {
@@ -115,6 +116,7 @@ public class GameManager {
                 p.teleport(DataManager.getInstance().getLocations()[2]);
                 p.getInventory().clear();
                 p.setHealth(20.0);
+                p.removePotionEffect(PotionEffectType.WEAKNESS);
                 gameRunnable.cancel();
                 stop();
             }
@@ -174,6 +176,7 @@ public class GameManager {
                 Bukkit.getServer().getScheduler().runTask(Plugin, () -> target.teleport(DataManager.getInstance().getLocations()[2]));
                 target.getInventory().clear();
                 target.setHealth(20.0);
+                target.removePotionEffect(PotionEffectType.WEAKNESS);
                 gameRunnable.getbossbarInstance().removeAll();
                 if (DataManager.getInstance().getJoinMoney() != 0 && getusercount() >= DataManager.getInstance().getMinimumUser()) {
                     target.sendMessage("§c[ §fDeathMatch §6] §f참여 보상 §6" + DataManager.getInstance().getJoinMoney() + "§f원을 흭득하셨습니다!");
@@ -200,7 +203,8 @@ public class GameManager {
         p.setHealth(20.0);
         p.setGameMode(GameMode.ADVENTURE);
         p.getInventory().clear();
-        p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 10, 5, true, false));
+        p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20, 5, true, false));
+        p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 9999, 100,true,false));
         p.teleport(getTeleportLocation(DataManager.getInstance().getLocations()[0], DataManager.getInstance().getLocations()[1]));
         p.getInventory().setItem(0, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(0)));
         if (DataManager.getInstance().getWeaponName(-1) != null)
