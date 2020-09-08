@@ -2,6 +2,7 @@ package org.light.source.Listener;
 
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -10,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
@@ -30,6 +32,12 @@ public class EventManager implements Listener {
         this.Plugin = Plugin;
     }
 
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event){
+        Player target = event.getPlayer();
+        target.setGameMode(GameMode.ADVENTURE);
+    }
 
     @EventHandler
     public void onPhysics(PlayerInteractEvent event){
