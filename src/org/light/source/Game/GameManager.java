@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
 import org.light.source.DeathMatch;
 import org.light.source.Log.MinimizeLogger;
 import org.light.source.Runnable.Countdown;
@@ -167,7 +168,6 @@ public class GameManager {
     public void start(){
         if (!isgaming) {
             setGameState(true);
-            Bukkit.broadcastMessage(randomMap + "값");
             gameRunnable = new MainTimer(DataManager.getInstance().getTime(), userlist);
             gameRunnable.runTaskTimerAsynchronously(Plugin, 0L, 20L);
             Bukkit.getServer().getScheduler().runTask(Plugin, () -> {
@@ -269,7 +269,7 @@ public class GameManager {
             double add = Math.random()*(gapz-1) + 1;
             min.setZ(min.getZ()+add);
         }
-        if (min.getBlock().getType() != Material.AIR)
+        if (min.getBlock().getType() != Material.AIR || min.clone().add(new Vector(0,1,0)).getBlock().getType() != Material.AIR)
             min = getTeleportLocation(first, second);
         return min;
     }
