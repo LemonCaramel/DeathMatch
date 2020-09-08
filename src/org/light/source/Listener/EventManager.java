@@ -99,7 +99,7 @@ public class EventManager implements Listener {
                                 if (mgr.getKills() == DataManager.getInstance().getKilltolevel() * (DataManager.getInstance().getRounds() - 1))
                                     sendMsg("§c[ §fDeathMatch §6] §b" + killer.getName() + " §f님이 §6" + (DataManager.getInstance().getRounds() - 1) + "§f레벨에 도달하셨습니다!");
                                 killer.getInventory().setItem(0, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(to)));
-                                if (killer.getInventory().getHelmet().getType() == Material.PUMPKIN)
+                                if (killer.getInventory().getHelmet() != null)
                                     killer.getInventory().setHelmet(new ItemStack(Material.AIR));
                                 sendLevelUp(killer, back, to);
                             }

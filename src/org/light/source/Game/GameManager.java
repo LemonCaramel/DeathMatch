@@ -27,6 +27,7 @@ public class GameManager {
     private ArrayList<UserMananger> userlist;
     private DeathMatch Plugin;
     private int taskid;
+    private int counttaskid;
     private BukkitRunnable countRunnable;
     private MainTimer gameRunnable;
 
@@ -40,6 +41,7 @@ public class GameManager {
         taskid = Bukkit.getScheduler().runTaskTimerAsynchronously(Plugin, this::sendActionBar, 0L, 20L).getTaskId();
         countRunnable = null;
         gameRunnable = null;
+        counttaskid = 0;
     }
 
     public static GameManager getInstance(){
@@ -78,7 +80,10 @@ public class GameManager {
                         target.teleport(getTeleportLocation(DataManager.getInstance().getLocations()[0], DataManager.getInstance().getLocations()[1]));
                     }
                     countRunnable = new Countdown(userlist);
-                    Bukkit.getScheduler().runTaskLaterAsynchronously(Plugin, () -> countRunnable.runTaskTimer(Plugin, 0L, 2L), 20L);
+                    Bukkit.getScheduler().runTaskLaterAsynchronously(Plugin, () -> {
+                        if (countRunnable != null) {
+                            counttaskid = countRunnable.runTaskTimer(Plugin, 0L, 2L).getTaskId();
+                        }}, 20L);
                 }
             }
         }
@@ -101,9 +106,10 @@ public class GameManager {
         }
         if (canstart() && getusercount() + 1 == DataManager.getInstance().getMinimumUser()){
             if (!isgaming) {
-                if (countRunnable != null)
+                if (countRunnable != null && counttaskid != 0 && Bukkit.getScheduler().isCurrentlyRunning(counttaskid))
                     countRunnable.cancel();
                 countRunnable = null;
+                counttaskid = 0;
                 for (UserMananger mananger : userlist) {
                     Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
                     target.sendMessage("§c[ §fDeathMatch §6] §f최소인원을 만족하지 못해 게임 준비가 취소되었습니다.");
