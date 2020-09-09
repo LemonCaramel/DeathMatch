@@ -39,7 +39,7 @@ public class MainTimer extends BukkitRunnable {
                 bossBar.setTitle("§c[ §fDeathMatch §6] §5Timer §7: §6" + maxSecond + "§fs");
             }
         }
-        else if (now == maxSecond){
+        else if (now >= maxSecond){
             bossBar.removeAll();
             //우승자 가리기
             for (UserMananger mananger : userlist){
@@ -66,6 +66,9 @@ public class MainTimer extends BukkitRunnable {
     }
 
     private float calcProgress(int remain, int now){
-        return (float) (1.0 - (float)now / remain);
+         if ((1.0 - (float)now / remain) < 0)
+             return 0.0f;
+         else
+             return (float) (1.0 - (float)now / remain);
     }
 }
