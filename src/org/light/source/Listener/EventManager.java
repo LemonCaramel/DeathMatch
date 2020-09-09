@@ -11,10 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -34,6 +31,12 @@ public class EventManager implements Listener {
         this.Plugin = Plugin;
     }
 
+    @EventHandler
+    public void onDrop(PlayerDropItemEvent event){
+        if (CrackShotApi.getCSID(event.getItemDrop().getItemStack()) != null)
+            event.setCancelled(true);
+        
+    }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event){

@@ -17,6 +17,7 @@ import org.light.source.Singleton.*;
 
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class GameManager {
 
@@ -71,9 +72,9 @@ public class GameManager {
             }
             else if (getusercount() >= DataManager.getInstance().getMinimumUser()) {
                 if (countRunnable == null) {
-                    randomMap = ((int)(Math.random()*(DataManager.getInstance().getLocationAmount()-1)) + 1);
+                    randomMap = ThreadLocalRandom.current().nextInt(1,DataManager.getInstance().getLocationAmount());
                     while (randomMap % 2 != 1)
-                        randomMap = ((int)(Math.random()*(DataManager.getInstance().getLocationAmount()-1)) + 1);
+                        randomMap = ThreadLocalRandom.current().nextInt(1,DataManager.getInstance().getLocationAmount());
                     for (UserMananger mananger : userlist) {
                         Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
                         target.playSound(target.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
@@ -265,16 +266,16 @@ public class GameManager {
             return first;
         Location min = new Location(first.getWorld(),x,y,z);
         if (gapx != 0){
-            double add = Math.random()*(gapx-1) + 1;
+            int add = ThreadLocalRandom.current().nextInt(0,gapx+1);
             min.setX(min.getX()+add);
         }
         if (gapy != 0){
-            double add = Math.random()*(gapy-1) + 1;
+            int add = ThreadLocalRandom.current().nextInt(0,gapy+1);
             min.setY(min.getY()+add);
             
         }
         if (gapz != 0){
-            double add = Math.random()*(gapz-1) + 1;
+            int add = ThreadLocalRandom.current().nextInt(0,gapz+1);
             min.setZ(min.getZ()+add);
         }
         if (min.getBlock().getType() != Material.AIR || min.clone().add(new Vector(0,1,0)).getBlock().getType() != Material.AIR)
