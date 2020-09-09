@@ -192,7 +192,8 @@ public class GameManager {
                 target.getInventory().clear();
                 target.setHealth(20.0);
                 target.removePotionEffect(PotionEffectType.WEAKNESS);
-                CaramelUserData.getData().getUser(target.getUniqueId()).setInvincibility(true);
+                if (CaramelUserData.getData().getUser(target.getUniqueId()) != null)
+                    CaramelUserData.getData().getUser(target.getUniqueId()).setInvincibility(true);
                 gameRunnable.getbossbarInstance().removeAll();
                 if (DataManager.getInstance().getJoinMoney() != 0 && getusercount() >= DataManager.getInstance().getMinimumUser()) {
                     target.sendMessage("§c[ §fDeathMatch §6] §f참여 보상 §6" + DataManager.getInstance().getJoinMoney() + "§f원을 흭득하셨습니다!");
@@ -224,7 +225,9 @@ public class GameManager {
         p.teleport(getTeleportLocation(DataManager.getInstance().getLocations()[randomMap], DataManager.getInstance().getLocations()[randomMap+1]));
         p.getInventory().setItem(0, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(0)));
         if (CaramelUserData.getData().getUser(p.getUniqueId()) == null){
-            Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(Plugin, ()->CaramelUserData.getData().getUser(p.getUniqueId()).setInvincibility(false), 20L);
+            Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(Plugin, ()->{
+                if (CaramelUserData.getData().getUser(p.getUniqueId()) != null)
+                    CaramelUserData.getData().getUser(p.getUniqueId()).setInvincibility(false); }, 20L);
         }
         else{
             CaramelUserData.getData().getUser(p.getUniqueId()).setInvincibility(false);

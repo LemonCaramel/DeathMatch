@@ -50,11 +50,6 @@ public class EventManager implements Listener {
     }
 
     @EventHandler
-    public void onPhysics(PlayerInteractEvent event){
-        if (event.getAction() == Action.PHYSICAL && event.getClickedBlock().getType() == Material.FARMLAND)
-            event.setCancelled(true);
-    }
-    @EventHandler
     public void onLeave(PlayerQuitEvent event){
         Player p = event.getPlayer();
         if (GameManager.getInstance().contains(p.getUniqueId()))
