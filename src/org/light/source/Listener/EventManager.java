@@ -1,6 +1,7 @@
 package org.light.source.Listener;
 
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
+import moe.caramel.caramellibrarylegacy.user.CaramelUserData;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -39,6 +40,7 @@ public class EventManager implements Listener {
         Player target = event.getPlayer();
         target.setGameMode(GameMode.ADVENTURE);
         ScoreboardObject.getInstance().setScoreboard(target);
+        CaramelUserData.getData().getUser(target.getUniqueId()).setInvincibility(true);
     }
 
     @EventHandler

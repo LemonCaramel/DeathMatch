@@ -1,5 +1,6 @@
 package org.light.source.Game;
 
+import moe.caramel.caramellibrarylegacy.user.CaramelUserData;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
@@ -103,6 +104,7 @@ public class GameManager {
             p.setHealth(20.0);
             gameRunnable.getbossbarInstance().removePlayer(p);
             p.removePotionEffect(PotionEffectType.WEAKNESS);
+            CaramelUserData.getData().getUser(p.getUniqueId()).setInvincibility(true);
         }
         if (canstart() && getusercount() + 1 == DataManager.getInstance().getMinimumUser()){
             if (!isgaming) {
@@ -126,6 +128,7 @@ public class GameManager {
                 p.setHealth(20.0);
                 p.removePotionEffect(PotionEffectType.WEAKNESS);
                 gameRunnable.cancel();
+                CaramelUserData.getData().getUser(p.getUniqueId()).setInvincibility(true);
                 stop();
             }
         }
@@ -186,6 +189,7 @@ public class GameManager {
                 target.getInventory().clear();
                 target.setHealth(20.0);
                 target.removePotionEffect(PotionEffectType.WEAKNESS);
+                CaramelUserData.getData().getUser(target.getUniqueId()).setInvincibility(true);
                 gameRunnable.getbossbarInstance().removeAll();
                 if (DataManager.getInstance().getJoinMoney() != 0 && getusercount() >= DataManager.getInstance().getMinimumUser()) {
                     target.sendMessage("§c[ §fDeathMatch §6] §f참여 보상 §6" + DataManager.getInstance().getJoinMoney() + "§f원을 흭득하셨습니다!");
@@ -216,6 +220,7 @@ public class GameManager {
         p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 9999, 100,true,false));
         p.teleport(getTeleportLocation(DataManager.getInstance().getLocations()[randomMap], DataManager.getInstance().getLocations()[randomMap+1]));
         p.getInventory().setItem(0, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(0)));
+        CaramelUserData.getData().getUser(p.getUniqueId()).setInvincibility(false);
         if (DataManager.getInstance().getWeaponName(-1) != null)
             p.getInventory().setItem(1, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(-1)));
     }
