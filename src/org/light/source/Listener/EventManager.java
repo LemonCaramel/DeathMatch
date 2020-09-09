@@ -35,7 +35,7 @@ public class EventManager implements Listener {
     public void onDrop(PlayerDropItemEvent event){
         if (CrackShotApi.getCSID(event.getItemDrop().getItemStack()) != null)
             event.setCancelled(true);
-        
+
     }
 
     @EventHandler
