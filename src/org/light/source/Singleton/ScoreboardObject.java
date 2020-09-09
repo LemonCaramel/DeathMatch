@@ -5,84 +5,73 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.*;
 import org.light.source.Game.GameManager;
 
+import java.util.ArrayList;
+
 public class ScoreboardObject {
 
     private static ScoreboardObject instance;
     private ScoreboardManager boardManager;
     private Scoreboard wait;
     private Objective readyObject;
+    private ArrayList<String> current;
     static {
         instance = new ScoreboardObject();
     }
 
     private ScoreboardObject(){
+        current = new ArrayList<>();
         boardManager = Bukkit.getScoreboardManager();
         wait = boardManager.getNewScoreboard();
+        readyObject = wait.registerNewObjective("test", "dummy");
+        readyObject.setDisplaySlot(DisplaySlot.SIDEBAR);
+        readyObject.setDisplayName("§c[ §fDeathMatch §6]");
     }
 
     public static ScoreboardObject getInstance(){
         return instance;
     }
 
-    public void sendScoreboard(int value, Player p){
+    public void setScoreboard(Player p){
+        p.setScoreboard(wait);
+    }
+
+    public void sendScoreboard(int value){
+        ArrayList<String> Score = new ArrayList<>();
         if (value == 1){
             //시작전
-            if (readyObject != null)
-                readyObject.unregister();
-            readyObject = wait.registerNewObjective("test", "dummy");
-            readyObject.setDisplaySlot(DisplaySlot.SIDEBAR);
-            readyObject.setDisplayName("§c[ §fDeathMatch §6]");
-            Score onlineusers = readyObject.getScore("       §6온라인 §7: §e" + Bukkit.getServer().getOnlinePlayers().size() + "§f명");
-            Score blink = readyObject.getScore("                         ");
-            Score stat = readyObject.getScore("       §b진행도 §7: §6대기중..");
-            Score amount = readyObject.getScore("       §a참여자 §7: §6" + GameManager.getInstance().getusercount() + "§f명");
-            Score blink1 = readyObject.getScore("                        ");
-            onlineusers.setScore(5);
-            blink.setScore(4);
-            stat.setScore(3);
-            amount.setScore(2);
-            blink1.setScore(1);
-            p.setScoreboard(wait);
+            Score.add("       §6온라인 §7: §e" + Bukkit.getServer().getOnlinePlayers().size() + "§f명");
+            Score.add("                         ");
+            Score.add("       §b진행도 §7: §6대기중..");
+            Score.add("       §a참여자 §7: §6" + GameManager.getInstance().getusercount() + "§f명");
+            Score.add("                        ");
         }
         else if (value == 2){
-            //시작 준비
-            if (readyObject != null)
-                readyObject.unregister();
-            readyObject = wait.registerNewObjective("test", "dummy");
-            readyObject.setDisplaySlot(DisplaySlot.SIDEBAR);
-            readyObject.setDisplayName("§c[ §fDeathMatch §6]");
-            Score onlineusers = readyObject.getScore("       §6온라인 §7: §e" + Bukkit.getServer().getOnlinePlayers().size() + "§f명");
-            Score blink = readyObject.getScore("                         ");
-            Score stat = readyObject.getScore("       §b진행도 §7: §e준비중..");
-            Score amount = readyObject.getScore("       §a참여자 §7: §6" + GameManager.getInstance().getusercount() + "§f명");
-            Score blink1 = readyObject.getScore("                        ");
-            onlineusers.setScore(5);
-            blink.setScore(4);
-            stat.setScore(3);
-            amount.setScore(2);
-            blink1.setScore(1);
-            p.setScoreboard(wait);
+            //시작 대기준
+            Score.add("       §6온라인 §7: §e" + Bukkit.getServer().getOnlinePlayers().size() + "§f명");
+            Score.add("                         ");
+            Score.add("       §b진행도 §7: §e준비중..");
+            Score.add("       §a참여자 §7: §6" + GameManager.getInstance().getusercount() + "§f명");
+            Score.add("                        ");
         }
         else if (value == 3){
             //시작
-            if (readyObject != null)
-                readyObject.unregister();
-            readyObject = wait.registerNewObjective("test", "dummy");
-            readyObject.setDisplaySlot(DisplaySlot.SIDEBAR);
-            readyObject.setDisplayName("§c[ §fDeathMatch §6]");
-            Score onlineusers = readyObject.getScore("       §6온라인 §7: §e" + Bukkit.getServer().getOnlinePlayers().size() + "§f명");
-            Score blink = readyObject.getScore("                         ");
-            Score first = readyObject.getScore("§fLV. §6"  + RatingManager.getLV(RatingManager.getInstance().getFirstKill()) + " §b" + checkLength(RatingManager.changeNick(RatingManager.getInstance().getFirst())));
-            Score second = readyObject.getScore("§fLV. §6"  + RatingManager.getLV(RatingManager.getInstance().getSecondKill()) + " §c" + checkLength(RatingManager.changeNick(RatingManager.getInstance().getSecond())));
-            Score third = readyObject.getScore("§fLV. §6"  + RatingManager.getLV(RatingManager.getInstance().getThirdKill()) + " §6" + checkLength(RatingManager.changeNick(RatingManager.getInstance().getThird())));
-            Score blink2 = readyObject.getScore("                        ");
-            onlineusers.setScore(10);
-            blink.setScore(9);
-            first.setScore(5);
-            second.setScore(4);
-            third.setScore(3);
-            blink2.setScore(2);
-            p.setScoreboard(wait);
+            Score.add("       §6온라인 §7: §e" + Bukkit.getServer().getOnlinePlayers().size() + "§f명");
+            Score.add("                         ");
+            Score.add("§fLV. §6"  + RatingManager.getLV(RatingManager.getInstance().getFirstKill()) + " §b" + checkLength(RatingManager.changeNick(RatingManager.getInstance().getFirst())));
+            Score.add("§fLV. §6"  + RatingManager.getLV(RatingManager.getInstance().getSecondKill()) + " §c" + checkLength(RatingManager.changeNick(RatingManager.getInstance().getSecond())));
+            Score.add("§fLV. §6"  + RatingManager.getLV(RatingManager.getInstance().getThirdKill()) + " §6" + checkLength(RatingManager.changeNick(RatingManager.getInstance().getThird())));
+            Score.add("                        ");
+        }
+        if (current.isEmpty() || !current.containsAll(Score)){
+            int i = 0;
+            current.clear();
+            current.addAll(Score);
+            for (String entry : readyObject.getScoreboard().getEntries())
+                readyObject.getScoreboard().resetScores(entry);
+            for (String scoreval : Score) {
+                readyObject.getScore(scoreval).setScore(Score.size() - i);
+                i++;
+            }
         }
     }
 

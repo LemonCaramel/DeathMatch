@@ -134,15 +134,13 @@ public class GameManager {
 
     public void sendScore(){
         Bukkit.getScheduler().runTask(Plugin, ()-> {
-            for (Player player : Bukkit.getServer().getOnlinePlayers()) {
                 if (!isgaming && (getusercount() < DataManager.getInstance().getMinimumUser() || DataManager.getInstance().getMinimumUser() == 0))
-                    ScoreboardObject.getInstance().sendScoreboard(1, player);
+                    ScoreboardObject.getInstance().sendScoreboard(1);
                 else if (!isgaming && getusercount() >= DataManager.getInstance().getMinimumUser())
-                    ScoreboardObject.getInstance().sendScoreboard(2, player);
+                    ScoreboardObject.getInstance().sendScoreboard(2);
                 else
-                    ScoreboardObject.getInstance().sendScoreboard(3, player);
+                    ScoreboardObject.getInstance().sendScoreboard(3);
                 }
-            }
         );
 
     }

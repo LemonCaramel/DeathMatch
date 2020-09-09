@@ -23,6 +23,7 @@ import org.light.source.Game.UserMananger;
 import org.light.source.Singleton.CrackShotApi;
 import org.light.source.Singleton.DataManager;
 import org.light.source.Singleton.RatingManager;
+import org.light.source.Singleton.ScoreboardObject;
 
 public class EventManager implements Listener {
 
@@ -37,6 +38,7 @@ public class EventManager implements Listener {
     public void onJoin(PlayerJoinEvent event){
         Player target = event.getPlayer();
         target.setGameMode(GameMode.ADVENTURE);
+        ScoreboardObject.getInstance().setScoreboard(target);
     }
 
     @EventHandler
