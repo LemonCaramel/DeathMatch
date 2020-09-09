@@ -105,7 +105,8 @@ public class GameManager {
             p.setHealth(20.0);
             gameRunnable.getbossbarInstance().removePlayer(p);
             p.removePotionEffect(PotionEffectType.WEAKNESS);
-            CaramelUserData.getData().getUser(p.getUniqueId()).setInvincibility(true);
+            if (CaramelUserData.getData().getUser(p.getUniqueId()) != null)
+                CaramelUserData.getData().getUser(p.getUniqueId()).setInvincibility(true);
         }
         if (canstart() && getusercount() + 1 == DataManager.getInstance().getMinimumUser()){
             if (!isgaming) {
@@ -129,7 +130,8 @@ public class GameManager {
                 p.setHealth(20.0);
                 p.removePotionEffect(PotionEffectType.WEAKNESS);
                 gameRunnable.cancel();
-                CaramelUserData.getData().getUser(p.getUniqueId()).setInvincibility(true);
+                if (CaramelUserData.getData().getUser(p.getUniqueId()) != null)
+                    CaramelUserData.getData().getUser(p.getUniqueId()).setInvincibility(true);
                 stop();
             }
         }
