@@ -40,7 +40,10 @@ public class EventManager implements Listener {
         Player target = event.getPlayer();
         target.setGameMode(GameMode.ADVENTURE);
         ScoreboardObject.getInstance().setScoreboard(target);
-        CaramelUserData.getData().getUser(target.getUniqueId()).setInvincibility(true);
+        Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(Plugin, ()->{
+            if (CaramelUserData.getData().getUser(target.getUniqueId()) != null && !GameManager.getInstance().contains(target.getUniqueId()))
+                CaramelUserData.getData().getUser(target.getUniqueId()).setInvincibility(true);
+        }, 20L);
     }
 
     @EventHandler

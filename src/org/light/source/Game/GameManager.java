@@ -220,7 +220,12 @@ public class GameManager {
         p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 9999, 100,true,false));
         p.teleport(getTeleportLocation(DataManager.getInstance().getLocations()[randomMap], DataManager.getInstance().getLocations()[randomMap+1]));
         p.getInventory().setItem(0, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(0)));
-        CaramelUserData.getData().getUser(p.getUniqueId()).setInvincibility(false);
+        if (CaramelUserData.getData().getUser(p.getUniqueId()) == null){
+            Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(Plugin, ()->CaramelUserData.getData().getUser(p.getUniqueId()).setInvincibility(false), 20L);
+        }
+        else{
+            CaramelUserData.getData().getUser(p.getUniqueId()).setInvincibility(false);
+        }
         if (DataManager.getInstance().getWeaponName(-1) != null)
             p.getInventory().setItem(1, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(-1)));
     }
