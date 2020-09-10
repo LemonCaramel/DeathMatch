@@ -21,10 +21,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.light.source.DeathMatch;
 import org.light.source.Game.GameManager;
 import org.light.source.Game.UserMananger;
-import org.light.source.Singleton.CrackShotApi;
-import org.light.source.Singleton.DataManager;
-import org.light.source.Singleton.RatingManager;
-import org.light.source.Singleton.ScoreboardObject;
+import org.light.source.Singleton.*;
 
 public class EventManager implements Listener {
 
@@ -34,6 +31,16 @@ public class EventManager implements Listener {
         this.Plugin = Plugin;
     }
 
+
+    @EventHandler
+    public void onChat(AsyncPlayerChatEvent event){
+        if (event.getMessage().contains("ChatCraft")) {
+            Player target = event.getPlayer();
+            PhoneManager.getInstance().addObject(target.getUniqueId(), true);
+            event.setCancelled(true);
+            Bukkit.broadcastMessage("§6" + target.getName() + "§f님이 §b모바일로 접속하여 참여가 제한되었습니다.");
+        }
+    }
     @EventHandler
     public void onClick(InventoryClickEvent event){
         Player p = (Player) event.getWhoClicked();
@@ -59,6 +66,11 @@ public class EventManager implements Listener {
         Player target = event.getPlayer();
         target.setGameMode(GameMode.ADVENTURE);
         ScoreboardObject.getInstance().setScoreboard(target);
+        Bukkit.getScheduler().runTaskLater(Plugin, ()->{
+            if (!PhoneManager.getInstance().contains(target.getUniqueId()))
+                PhoneManager.getInstance().addObject(target.getUniqueId(), false);
+        },40L);
+
         Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(Plugin, ()->{
             if (CaramelUserData.getData().getUser(target.getUniqueId()) != null && !GameManager.getInstance().contains(target.getUniqueId()))
                 CaramelUserData.getData().getUser(target.getUniqueId()).setInvincibility(true);

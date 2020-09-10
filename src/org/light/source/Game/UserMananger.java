@@ -47,7 +47,7 @@ public class UserMananger {
     }
 
     public boolean calcKillStay(){
-        return System.currentTimeMillis() - getKillMaintain() <= DataManager.getInstance().getKillMaintain()*1000;
+        return System.currentTimeMillis() - getLastKillTime() <= DataManager.getInstance().getKillMaintain()*1000;
     }
 
 }
