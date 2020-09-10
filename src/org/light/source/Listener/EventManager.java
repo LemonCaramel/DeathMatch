@@ -2,6 +2,8 @@ package org.light.source.Listener;
 
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 import moe.caramel.caramellibrarylegacy.user.CaramelUserData;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -90,6 +92,18 @@ public class EventManager implements Listener {
                             mgr = mananger;
                         }
                     }
+                    RatingManager.getInstance().updateRank();
+                    for (UserMananger victimgr : GameManager.getInstance().getUserlist()) {
+                        if (victimgr.getUUID().equals(victim.getUniqueId())) {
+                            victim.getInventory().clear();
+                            event.setDamage(0.0);
+                            victim.setHealth(20.0);
+                            if (knife.equalsIgnoreCase(csval))
+                                sendRespawn(victim, killer.getName(), killer.getInventory().getItemInMainHand().getItemMeta().getDisplayName(), true);
+                            else
+                                sendRespawn(victim, killer.getName(), killer.getInventory().getItemInMainHand().getItemMeta().getDisplayName(), false);
+                        }
+                    }
                     if (mgr != null) {
                         if (DataManager.getInstance().getRounds() * DataManager.getInstance().getKilltolevel() <= mgr.getKills()) {
                             //승리!
@@ -111,20 +125,7 @@ public class EventManager implements Listener {
                         }
                     }
 
-                    RatingManager.getInstance().updateRank();
-                    for (UserMananger victimgr : GameManager.getInstance().getUserlist()) {
-                        if (victimgr.getUUID().equals(victim.getUniqueId())) {
-                            victim.getInventory().clear();
-                            event.setDamage(0.0);
-                            victim.setHealth(20.0);
-                            victim.teleport(GameManager.getInstance().getTeleportLocation(DataManager.getInstance().getLocations()[GameManager.getInstance().getRandomNumber()], DataManager.getInstance().getLocations()[GameManager.getInstance().getRandomNumber()+1]));
-                            victim.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20, 5, true, false));
-                            victim.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 9999, 100,true,false));
-                            victim.getInventory().setItem(0, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(victimgr.getKills() / DataManager.getInstance().getKilltolevel())));
-                            victim.getInventory().setItem(1, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(-1)));
 
-                        }
-                    }
                 }
             }
         }
@@ -139,10 +140,14 @@ public class EventManager implements Listener {
                         target.getInventory().setItem(0, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(mananger.getKills() / DataManager.getInstance().getKilltolevel())));
                         if (DataManager.getInstance().getWeaponName(-1) != null)
                             target.getInventory().setItem(1, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(-1)));
-                        Bukkit.getScheduler().runTaskLater(Plugin, ()-> target.teleport(GameManager.getInstance().getTeleportLocation(DataManager.getInstance().getLocations()[GameManager.getInstance().getRandomNumber()], DataManager.getInstance().getLocations()[GameManager.getInstance().getRandomNumber()+1])), 1L);
+                        sendRespawn(target, "MineCraft", "&cX <<x>>", false);
                     }
                 }
             }
+        }
+        else{
+            Player target = event.getPlayer();
+            Bukkit.getScheduler().runTaskLater(Plugin, ()-> target.teleport(DataManager.getInstance().getLocations()[0]), 1L);
         }
     }
 
@@ -160,5 +165,43 @@ public class EventManager implements Listener {
             Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
             target.sendMessage(msg);
         }
+    }
+
+    public void sendRespawn(Player victim, String killerName, String WeaponName, boolean melee){
+        //게임 끝날때 사망 리스폰 처리
+        victim.setGameMode(GameMode.SPECTATOR);
+        victim.playSound(victim.getLocation(), Sound.ENTITY_WITHER_DEATH, 1.0f, 1.0f);
+        if (melee)
+            victim.sendTitle("§c§oRespawn..", "&c" + killerName + " &7メ §6" + victim.getName(), 0,40,0);
+        else{
+            victim.sendTitle("§c§oRespawn..", "&c" + killerName + " &7➾ §6" + victim.getName(), 0,40,0);
+            victim.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§b사살무기 §7: " + WeaponName));
+        }
+        Bukkit.getScheduler().runTaskLater(Plugin, ()->{
+            //2초후 리스폰
+            if (GameManager.getInstance().isgaming()){
+                if (GameManager.getInstance().contains(victim.getUniqueId())){
+                    for (UserMananger victimgr : GameManager.getInstance().getUserlist()) {
+                        if (victimgr.getUUID().equals(victim.getUniqueId())) {
+                            victim.setHealth(20.0);
+                            victim.teleport(GameManager.getInstance().getTeleportLocation(DataManager.getInstance().getLocations()[GameManager.getInstance().getRandomNumber()], DataManager.getInstance().getLocations()[GameManager.getInstance().getRandomNumber() + 1]));
+                            victim.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 20, 5, true, false));
+                            victim.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 9999, 100, true, false));
+                            victim.getInventory().setItem(0, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(victimgr.getKills() / DataManager.getInstance().getKilltolevel())));
+                            victim.getInventory().setItem(1, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(-1)));
+                        }
+                    }
+                    victim.setGameMode(GameMode.ADVENTURE);
+                }
+                else{
+                    victim.teleport(DataManager.getInstance().getLocations()[0]);
+                    victim.setGameMode(GameMode.ADVENTURE);
+                }
+            }
+            else{
+                victim.teleport(DataManager.getInstance().getLocations()[0]);
+                victim.setGameMode(GameMode.ADVENTURE);
+            }
+        }, 40L);
     }
 }
