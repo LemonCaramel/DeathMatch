@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -33,6 +34,12 @@ public class EventManager implements Listener {
         this.Plugin = Plugin;
     }
 
+    @EventHandler
+    public void onClick(InventoryClickEvent event){
+        Player p = (Player) event.getWhoClicked();
+        if (GameManager.getInstance().contains(p.getUniqueId()) && GameManager.getInstance().isgaming())
+            event.setCancelled(true);
+    }
     @EventHandler
     public void onDrop(PlayerDropItemEvent event){
         if (CrackShotApi.getCSID(event.getItemDrop().getItemStack()) != null)
