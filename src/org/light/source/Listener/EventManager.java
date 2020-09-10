@@ -46,6 +46,13 @@ public class EventManager implements Listener {
             event.setCancelled(true);
 
     }
+    
+    @EventHandler
+    public void onOffhandMove(PlayerSwapHandItemsEvent event){
+        Player target = event.getPlayer();
+        if (GameManager.getInstance().isgaming() && GameManager.getInstance().contains(target.getUniqueId()))
+            event.setCancelled(true);
+    }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event){
