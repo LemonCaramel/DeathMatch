@@ -21,7 +21,10 @@ import org.bukkit.potion.PotionEffectType;
 import org.light.source.DeathMatch;
 import org.light.source.Game.GameManager;
 import org.light.source.Game.UserMananger;
+import org.light.source.Phone.PhoneObject;
 import org.light.source.Singleton.*;
+
+import java.util.Iterator;
 
 public class EventManager implements Listener {
 
@@ -35,10 +38,10 @@ public class EventManager implements Listener {
     @EventHandler
     public void onChat(AsyncPlayerChatEvent event){
         if (event.getMessage().contains("ChatCraft")) {
+            event.setCancelled(true);
             Player target = event.getPlayer();
             if (!PhoneManager.getInstance().contains(target.getUniqueId())) {
                 PhoneManager.getInstance().addObject(target.getUniqueId(), true);
-                event.setCancelled(true);
                 Bukkit.broadcastMessage("§6" + target.getName() + "§f님이 §b모바일로 접속하여 참여가 제한되었습니다.");
             }
             else
@@ -88,6 +91,9 @@ public class EventManager implements Listener {
         Player p = event.getPlayer();
         if (GameManager.getInstance().contains(p.getUniqueId()))
             GameManager.getInstance().removePlayer(p);
+        if (PhoneManager.getInstance().contains(p.getUniqueId())){
+            PhoneManager.getInstance().getPhoneObjects().removeIf(phoneObject -> phoneObject.getUuid().equals(p.getUniqueId()));
+        }
 
     }
 
