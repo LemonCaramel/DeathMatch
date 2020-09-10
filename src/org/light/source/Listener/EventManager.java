@@ -104,6 +104,7 @@ public class EventManager implements Listener {
                         if (mananger.getUUID().equals(killer.getUniqueId())) {
                             mananger.setKills(mananger.getKills() + 1);
                             mgr = mananger;
+                            killer.setHealth(20.0);
                         }
                     }
                     RatingManager.getInstance().updateRank();
