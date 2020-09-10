@@ -286,7 +286,7 @@ public class CommandController implements CommandExecutor {
                     }
                 }
                 else{
-                    p.sendMessage(first + " §f데이터 로딩중입니다. 잠시만 기다려주세요.");
+                    p.sendMessage(first + "§f데이터 로딩중입니다. 잠시만 기다려주세요.");
                 }
             }
             else{

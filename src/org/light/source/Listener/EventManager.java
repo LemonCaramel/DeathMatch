@@ -36,9 +36,14 @@ public class EventManager implements Listener {
     public void onChat(AsyncPlayerChatEvent event){
         if (event.getMessage().contains("ChatCraft")) {
             Player target = event.getPlayer();
-            PhoneManager.getInstance().addObject(target.getUniqueId(), true);
-            event.setCancelled(true);
-            Bukkit.broadcastMessage("§6" + target.getName() + "§f님이 §b모바일로 접속하여 참여가 제한되었습니다.");
+            if (!PhoneManager.getInstance().contains(target.getUniqueId())) {
+                PhoneManager.getInstance().addObject(target.getUniqueId(), true);
+                event.setCancelled(true);
+                Bukkit.broadcastMessage("§6" + target.getName() + "§f님이 §b모바일로 접속하여 참여가 제한되었습니다.");
+            }
+            else
+                target.sendMessage("§c고의로 치지마세요..");
+
         }
     }
     @EventHandler
@@ -66,15 +71,16 @@ public class EventManager implements Listener {
         Player target = event.getPlayer();
         target.setGameMode(GameMode.ADVENTURE);
         ScoreboardObject.getInstance().setScoreboard(target);
+        Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(Plugin, ()->{
+            if (CaramelUserData.getData().getUser(target.getUniqueId()) != null && !GameManager.getInstance().contains(target.getUniqueId()))
+                CaramelUserData.getData().getUser(target.getUniqueId()).setInvincibility(true);
+        }, 20L);
         Bukkit.getScheduler().runTaskLater(Plugin, ()->{
             if (!PhoneManager.getInstance().contains(target.getUniqueId()))
                 PhoneManager.getInstance().addObject(target.getUniqueId(), false);
         },40L);
 
-        Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(Plugin, ()->{
-            if (CaramelUserData.getData().getUser(target.getUniqueId()) != null && !GameManager.getInstance().contains(target.getUniqueId()))
-                CaramelUserData.getData().getUser(target.getUniqueId()).setInvincibility(true);
-        }, 20L);
+
     }
 
     @EventHandler
@@ -82,6 +88,7 @@ public class EventManager implements Listener {
         Player p = event.getPlayer();
         if (GameManager.getInstance().contains(p.getUniqueId()))
             GameManager.getInstance().removePlayer(p);
+
     }
 
     @EventHandler
