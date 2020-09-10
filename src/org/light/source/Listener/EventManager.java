@@ -46,7 +46,7 @@ public class EventManager implements Listener {
             event.setCancelled(true);
 
     }
-    
+
     @EventHandler
     public void onOffhandMove(PlayerSwapHandItemsEvent event){
         Player target = event.getPlayer();
@@ -190,7 +190,7 @@ public class EventManager implements Listener {
             victim.sendTitle("§c§oRespawn..", "§c" + killerName + " §7メ §6" + victim.getName(), 0,40,0);
         else{
             victim.sendTitle("§c§oRespawn..", "§c" + killerName + " §7➾ §6" + victim.getName(), 0,40,0);
-            victim.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§c&oUsing §8: " + WeaponName));
+            victim.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§c§oUsing §8: " + WeaponName));
         }
         Bukkit.getScheduler().runTaskLater(Plugin, ()->{
             //2초후 리스폰
