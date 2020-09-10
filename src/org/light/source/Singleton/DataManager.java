@@ -20,6 +20,7 @@ public class DataManager {
     private int firstReward;
     private int secondReward;
     private int thirdReward;
+    private int killMaintain;
 
     static {
         manager = new DataManager();
@@ -35,6 +36,7 @@ public class DataManager {
         firstReward = 0;
         secondReward = 0;
         thirdReward = 0;
+        killMaintain = 1;
         locations = new Location[21];
         weapons = new HashMap<>();
     }
@@ -152,5 +154,13 @@ public class DataManager {
 
     public void setThirdReward(int reward){
         thirdReward = reward;
+    }
+
+    public int getKillMaintain() {
+        return killMaintain;
+    }
+
+    public void setKillMaintain(int killMaintain) {
+        this.killMaintain = killMaintain;
     }
 }

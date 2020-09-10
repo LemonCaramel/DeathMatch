@@ -85,7 +85,7 @@ public class EventManager implements Listener {
             Player victim = (Player) event.getVictim();
             if (GameManager.getInstance().contains(killer.getUniqueId()) && GameManager.getInstance().contains(victim.getUniqueId())){
                 if (victim.getHealth() - event.getDamage() <= 0) {
-                    sendMsg("§c[ §fDeathMatch §6] §c" + killer.getName() + " §7➾ §b" + victim.getName());
+                    sendKillMsg(killer,"§c" + killer.getName() + " §7➾ §b" + victim.getName());
                     String knife = DataManager.getInstance().getWeaponName(-1);
                     String csval = CrackShotApi.getCSID(killer.getInventory().getItemInMainHand());
                     UserMananger mgr = null;
@@ -181,6 +181,42 @@ public class EventManager implements Listener {
             Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
             target.sendMessage(msg);
         }
+    }
+
+    public void sendKillMsg(Player killer, String msg){
+        for (UserMananger mananger : GameManager.getInstance().getUserlist()) {
+            if (mananger.getUUID().equals(killer.getUniqueId())){
+                if (mananger.calcKillStay()){
+                    //이어갈 수 있는경우
+                    mananger.setKillMaintain(mananger.getKillMaintain() + 1);
+                    mananger.setLastKillTime(System.currentTimeMillis());
+                    if (mananger.getKillMaintain() != 1){
+                        if (mananger.getKillMaintain() == 2)
+                           sendMsg("§e§oDouble Kill! " + msg);
+                        else if (mananger.getKillMaintain() == 3)
+                            sendMsg("§b§oTriple Kill! " + msg);
+                        else if (mananger.getKillMaintain() == 4)
+                            sendMsg("§a§oQuadra Kill! " + msg);
+                        else if (mananger.getKillMaintain() == 5)
+                            sendMsg("§d§oPenta Kill! " + msg);
+                        else if (mananger.getKillMaintain() == 6)
+                            sendMsg("§4§oHexa Kill! " + msg);
+                        else
+                            sendMsg("§6§oLegendary! " + msg);
+                    }
+                    else{
+                        sendMsg(msg);
+                    }
+                }
+                else{
+                    //아닌경우
+                    mananger.setLastKillTime(System.currentTimeMillis());
+                    mananger.setKillMaintain(0);
+                    sendMsg(msg);
+                }
+            }
+        }
+
     }
 
     public void sendRespawn(Player victim, String killerName, String WeaponName, boolean melee){

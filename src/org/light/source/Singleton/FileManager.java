@@ -45,6 +45,7 @@ public class FileManager {
         config.set("SecondReward", manager.getSecondReward());
         config.set("ThirdReward", manager.getThirdReward());
         config.set("LocationAmount", manager.getLocationAmount());
+        config.set("KillMaintain", manager.getKillMaintain());
         if (manager.getLocations() != null){
             for (int i = 0; i < DataManager.getInstance().getLocationAmount(); i++){
                 config.set("Location." + (i+1), manager.getLocations()[i]);
@@ -77,6 +78,7 @@ public class FileManager {
         manager.setFirstReward(config.getInt("FirstReward"));
         manager.setSecondReward(config.getInt("SecondReward"));
         manager.setThirdReward(config.getInt("ThirdReward"));
+        manager.setKillMaintain(config.getInt("KillMaintain"));
         if (config.get("Location.1") != null && config.getInt("LocationAmount") != 0){
             int amount = config.getInt("LocationAmount");
             for (int i = 0; i < amount; i++){

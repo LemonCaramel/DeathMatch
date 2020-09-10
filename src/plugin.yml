@@ -1,6 +1,6 @@
 main: org.light.source.DeathMatch
 name: DeathMatch
-version: 1.3
+version: 1.5
 depend: [CrackShot, Vault]
 commands:
   데스매치:
