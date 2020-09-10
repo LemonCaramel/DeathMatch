@@ -141,7 +141,7 @@ public class EventManager implements Listener {
                         target.getInventory().setItem(0, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(mananger.getKills() / DataManager.getInstance().getKilltolevel())));
                         if (DataManager.getInstance().getWeaponName(-1) != null)
                             target.getInventory().setItem(1, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(-1)));
-                        sendRespawn(target, "MineCraft", "§cX <<x>>", false);
+                        sendRespawn(target, "MineCraft", "§cX §7<<x>>", false);
                     }
                 }
             }
