@@ -197,6 +197,7 @@ public class GameManager {
                 target.setHealth(20.0);
                 target.removePotionEffect(PotionEffectType.WEAKNESS);
                 target.setLevel(0);
+                target.setExp(0.0f);
                 if (CaramelUserData.getData().getUser(target.getUniqueId()) != null)
                     CaramelUserData.getData().getUser(target.getUniqueId()).setInvincibility(true);
                 gameRunnable.getbossbarInstance().removeAll();
