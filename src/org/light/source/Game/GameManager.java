@@ -314,4 +314,11 @@ public class GameManager {
             }
         }
     }
+
+    public float calcLevelProgress(int level){
+        if (level > DataManager.getInstance().getRounds() || level < 0)
+            return 0.0f;
+        else
+            return (float)level / DataManager.getInstance().getRounds();
+    }
 }

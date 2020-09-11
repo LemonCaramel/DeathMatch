@@ -196,11 +196,13 @@ public class EventManager implements Listener {
         p.sendTitle("§c[ §fDeathMatch §6] §bLevel UP!", "§6" + back + " §f=> §b" + to, 5,50,5);
         p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
         p.setLevel(to);
+        p.setExp(GameManager.getInstance().calcLevelProgress(to));
     }
 
     public void sendLevelDown(Player p, int now, int to){
         p.sendTitle("§c[ §fDeathMatch §6] §cLevel Down..", "§6" + now + " §f=> §b" + to, 5,50,5);
         p.setLevel(to);
+        p.setExp(GameManager.getInstance().calcLevelProgress(to));
     }
 
     public void sendMsg(String msg){
