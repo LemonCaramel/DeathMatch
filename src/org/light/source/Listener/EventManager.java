@@ -246,6 +246,8 @@ public class EventManager implements Listener {
                         else
                             sendMsg("§6§oLegendary! " + msg);
                     }
+                    else
+                        sendMsg(msg);
                 }
                 else
                     sendMsg(msg);
