@@ -110,9 +110,9 @@ public class EventManager implements Listener {
             Player victim = (Player) event.getVictim();
             if (GameManager.getInstance().contains(killer.getUniqueId()) && GameManager.getInstance().contains(victim.getUniqueId())){
                 if (victim.getHealth() - event.getDamage() <= 0) {
-                    sendKillMsg(killer,"§c" + killer.getName() + " §7➾ §b" + victim.getName());
+                    sendKillMsg(killer,victim,"§c" + killer.getName() + " §7➾ §b" + victim.getName());
                     String knife = DataManager.getInstance().getWeaponName(-1);
-                    String csval = CrackShotApi.getCSID(killer.getInventory().getItemInMainHand());
+                    String csval = event.getWeaponTitle();
                     UserMananger mgr = null;
                     for (UserMananger mananger : GameManager.getInstance().getUserlist()) {
                         if (knife != null && csval != null && csval.equalsIgnoreCase(knife)) {
@@ -212,39 +212,47 @@ public class EventManager implements Listener {
         }
     }
 
-    public void sendKillMsg(Player killer, String msg){
+    public void sendKillMsg(Player killer, Player victim, String msg){
+        UserMananger killManager = null, victimManager = null;
         for (UserMananger mananger : GameManager.getInstance().getUserlist()) {
             if (mananger.getUUID().equals(killer.getUniqueId())){
-                if (mananger.calcKillStay()){
+                killManager = mananger;
+            }
+            else if (mananger.getUUID().equals(victim.getUniqueId())){
+                victimManager = mananger;
+            }
+        }
+        if (killManager != null && victimManager != null){
+            //죽은사람이 연속킬중일 경우
+            killManager.setKillMaintain(killManager.getKillMaintain() + 1);
+            if (victimManager.getKillMaintain() >= 2){
+                sendMsg("§4§oShutDown! " + msg);
+            }
+            else{
+                //아닌경우 그냥 출력
+                if (killManager.calcKillStay()) {
                     //이어갈 수 있는경우
-                    mananger.setKillMaintain(mananger.getKillMaintain() + 1);
-                    mananger.setLastKillTime(System.currentTimeMillis());
-                    if (mananger.getKillMaintain() != 1){
-                        if (mananger.getKillMaintain() == 2)
-                           sendMsg("§e§oDouble Kill! " + msg);
-                        else if (mananger.getKillMaintain() == 3)
+                    if (killManager.getKillMaintain() != 1) {
+                        if (killManager.getKillMaintain() == 2)
+                            sendMsg("§e§oDouble Kill! " + msg);
+                        else if (killManager.getKillMaintain() == 3)
                             sendMsg("§b§oTriple Kill! " + msg);
-                        else if (mananger.getKillMaintain() == 4)
+                        else if (killManager.getKillMaintain() == 4)
                             sendMsg("§a§oQuadra Kill! " + msg);
-                        else if (mananger.getKillMaintain() == 5)
+                        else if (killManager.getKillMaintain() == 5)
                             sendMsg("§d§oPenta Kill! " + msg);
-                        else if (mananger.getKillMaintain() == 6)
+                        else if (killManager.getKillMaintain() == 6)
                             sendMsg("§4§oHexa Kill! " + msg);
                         else
                             sendMsg("§6§oLegendary! " + msg);
                     }
-                    else{
-                        sendMsg(msg);
-                    }
                 }
-                else{
-                    //아닌경우
-                    mananger.setLastKillTime(System.currentTimeMillis());
-                    mananger.setKillMaintain(1);
+                else
                     sendMsg(msg);
                 }
+            victimManager.setKillMaintain(0);
+            killManager.setLastKillTime(System.currentTimeMillis());
             }
-        }
 
     }
 
