@@ -249,9 +249,11 @@ public class EventManager implements Listener {
                     else
                         sendMsg(msg);
                 }
-                else
+                else {
                     sendMsg(msg);
+                    killManager.setKillMaintain(1);
                 }
+            }
             victimManager.setKillMaintain(0);
             killManager.setLastKillTime(System.currentTimeMillis());
             }
