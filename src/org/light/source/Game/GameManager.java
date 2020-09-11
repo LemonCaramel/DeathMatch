@@ -105,6 +105,7 @@ public class GameManager {
             p.setHealth(20.0);
             gameRunnable.getbossbarInstance().removePlayer(p);
             p.removePotionEffect(PotionEffectType.WEAKNESS);
+            p.setLevel(0);
             if (CaramelUserData.getData().getUser(p.getUniqueId()) != null)
                 CaramelUserData.getData().getUser(p.getUniqueId()).setInvincibility(true);
         }
@@ -129,6 +130,7 @@ public class GameManager {
                 p.getInventory().clear();
                 p.setHealth(20.0);
                 p.removePotionEffect(PotionEffectType.WEAKNESS);
+                p.setLevel(0);
                 gameRunnable.cancel();
                 if (CaramelUserData.getData().getUser(p.getUniqueId()) != null)
                     CaramelUserData.getData().getUser(p.getUniqueId()).setInvincibility(true);
@@ -192,6 +194,7 @@ public class GameManager {
                 target.getInventory().clear();
                 target.setHealth(20.0);
                 target.removePotionEffect(PotionEffectType.WEAKNESS);
+                target.setLevel(0);
                 if (CaramelUserData.getData().getUser(target.getUniqueId()) != null)
                     CaramelUserData.getData().getUser(target.getUniqueId()).setInvincibility(true);
                 gameRunnable.getbossbarInstance().removeAll();
@@ -224,6 +227,7 @@ public class GameManager {
         p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 9999, 100,true,false));
         p.teleport(getTeleportLocation(DataManager.getInstance().getLocations()[randomMap], DataManager.getInstance().getLocations()[randomMap+1]));
         p.getInventory().setItem(0, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(0)));
+        p.setLevel(0);
         if (CaramelUserData.getData().getUser(p.getUniqueId()) == null){
             Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(Plugin, ()->{
                 if (CaramelUserData.getData().getUser(p.getUniqueId()) != null)

@@ -181,7 +181,7 @@ public class EventManager implements Listener {
                         target.getInventory().setItem(0, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(mananger.getKills() / DataManager.getInstance().getKilltolevel())));
                         if (DataManager.getInstance().getWeaponName(-1) != null)
                             target.getInventory().setItem(1, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(-1)));
-                        sendRespawn(target, "MineCraft", "§cX §7<<x>>", false);
+                        sendRespawn(target, "MineCraft", "§c<none> §7<<x>>", false);
                     }
                 }
             }
@@ -195,10 +195,12 @@ public class EventManager implements Listener {
     public void sendLevelUp(Player p, int back, int to){
         p.sendTitle("§c[ §fDeathMatch §6] §bLevel UP!", "§6" + back + " §f=> §b" + to, 5,50,5);
         p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
+        p.setLevel(to);
     }
 
     public void sendLevelDown(Player p, int now, int to){
         p.sendTitle("§c[ §fDeathMatch §6] §cLevel Down..", "§6" + now + " §f=> §b" + to, 5,50,5);
+        p.setLevel(to);
     }
 
     public void sendMsg(String msg){
@@ -236,7 +238,7 @@ public class EventManager implements Listener {
                 else{
                     //아닌경우
                     mananger.setLastKillTime(System.currentTimeMillis());
-                    mananger.setKillMaintain(0);
+                    mananger.setKillMaintain(1);
                     sendMsg(msg);
                 }
             }
