@@ -2,6 +2,7 @@ package org.light.source.Singleton;
 
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
@@ -35,7 +36,8 @@ public class EconomyApi {
     }
 
     public void giveMoney(Player p, double value){
-        economy.depositPlayer(p, value);
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(p.getUniqueId());
+        economy.depositPlayer(offlinePlayer, value);
     }
 
     public double currentMoney(Player p){
