@@ -189,29 +189,31 @@ public class GameManager {
 
     public void stop() {
         if (isgaming) {
-            setGameState(false);
-            for (UserMananger mananger : userlist) {
-                Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-                Bukkit.getServer().getScheduler().runTask(Plugin, () -> target.teleport(DataManager.getInstance().getLocations()[0]));
-                target.getInventory().clear();
-                target.setHealth(20.0);
-                target.removePotionEffect(PotionEffectType.WEAKNESS);
-                target.setLevel(0);
-                target.setExp(0.0f);
-                if (CaramelUserData.getData().getUser(target.getUniqueId()) != null)
-                    CaramelUserData.getData().getUser(target.getUniqueId()).setInvincibility(true);
-                gameRunnable.getbossbarInstance().removeAll();
-                if (DataManager.getInstance().getJoinMoney() != 0 && getusercount() >= DataManager.getInstance().getMinimumUser()) {
-                    target.sendMessage("§c[ §fDeathMatch §6] §f참여 보상 §6" + DataManager.getInstance().getJoinMoney() + "§f원을 흭득하셨습니다!");
-                    EconomyApi.getInstance().giveMoney(target, DataManager.getInstance().getJoinMoney());
-                    MinimizeLogger.getInstance().appendLog(target.getName() + "님이 데스매치에 참여해 " + DataManager.getInstance().getJoinMoney() + "원을 흭득함");
+            Bukkit.getScheduler().runTask(Plugin, ()->{
+                setGameState(false);
+                for (UserMananger mananger : userlist) {
+                    Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
+                    target.teleport(DataManager.getInstance().getLocations()[0]);
+                    target.getInventory().clear();
+                    target.setHealth(20.0);
+                    target.removePotionEffect(PotionEffectType.WEAKNESS);
+                    target.setLevel(0);
+                    target.setExp(0.0f);
+                    if (CaramelUserData.getData().getUser(target.getUniqueId()) != null)
+                        CaramelUserData.getData().getUser(target.getUniqueId()).setInvincibility(true);
+                    gameRunnable.getbossbarInstance().removeAll();
+                    if (DataManager.getInstance().getJoinMoney() != 0 && getusercount() >= DataManager.getInstance().getMinimumUser()) {
+                        target.sendMessage("§c[ §fDeathMatch §6] §f참여 보상 §6" + DataManager.getInstance().getJoinMoney() + "§f원을 흭득하셨습니다!");
+                        EconomyApi.getInstance().giveMoney(target, DataManager.getInstance().getJoinMoney());
+                        MinimizeLogger.getInstance().appendLog(target.getName() + "님이 데스매치에 참여해 " + DataManager.getInstance().getJoinMoney() + "원을 흭득함");
+                    }
                 }
-            }
-            giveRatingReward();
-            gameRunnable.cancel();
-            gameRunnable = null;
-            countRunnable = null;
-            userlist.clear();
+                giveRatingReward();
+                gameRunnable.cancel();
+                gameRunnable = null;
+                countRunnable = null;
+                userlist.clear();
+            });
         }
     }
 
