@@ -159,29 +159,6 @@ public class CommandController implements CommandExecutor {
                                                     p.sendMessage(first + "§c올바른 수치를 입력해주세요.");
                                                 }
                                             }
-                                        } else if (args[1].equalsIgnoreCase("총기")) {
-                                            if (args.length != 3)
-                                                p.sendMessage(first + "§c/데스매치 설정 총기 <라운드 (시작 총기 = 0, 근접무기 = -1)>");
-                                            else {
-                                                try {
-                                                    int value = Integer.parseInt(args[2]);
-                                                    if (value < -1)
-                                                        p.sendMessage(first + "§c총기 라운드 값은 -1미만이 올 수 없습니다.");
-                                                    else if (DataManager.getInstance().getRounds() == 0)
-                                                        p.sendMessage(first + "§c라운드값이 설정되어 있지 않습니다.");
-                                                    else if (DataManager.getInstance().getRounds() <= value)
-                                                        p.sendMessage(first + "§c설정되어 있는 라운드값보다 더 큰 값을 입력하셨습니다.");
-                                                    else if (CrackShotApi.getCSID(p.getInventory().getItemInMainHand()) == null)
-                                                        p.sendMessage(first + "§c현재 들고 있는 아이템이 크랙샷 아이템이 아닙니다.");
-                                                    else {
-                                                        String weaponName = CrackShotApi.getCSID(p.getInventory().getItemInMainHand());
-                                                        DataManager.getInstance().setWeapon(value, weaponName);
-                                                        p.sendMessage(first + "§b" + value + "§f번째 데스매치 총기가 §c" + weaponName + " §f으로 지정되었습니다.");
-                                                    }
-                                                } catch (NumberFormatException e) {
-                                                    p.sendMessage(first + "§c올바른 수치를 입력해주세요.");
-                                                }
-                                            }
                                         } else if (args[1].equalsIgnoreCase("참여보상")) {
                                             if (args.length != 3)
                                                 p.sendMessage(first + "§c/데스매치 설정 참여보상 <수치>");
@@ -331,12 +308,6 @@ public class CommandController implements CommandExecutor {
             }
             p.sendMessage(first + "§6SpawnLocation [ 1 ]  §7: " + locationToString(DataManager.getInstance().getLocations()[0]));
         }
-        if (DataManager.getInstance().getRounds() != 0){
-            for (int i = 0; i < DataManager.getInstance().getRounds(); i++){
-                p.sendMessage(first + "§6Weapon §7- §f" + i + ". §8: §f" + changeWeaponValue(DataManager.getInstance().getWeaponName(i)));
-            }
-            p.sendMessage(first + "§bMelee Weapon §7: §f" + changeWeaponValue(DataManager.getInstance().getWeaponName(-1)));
-        }
         p.sendMessage(" ");
     }
 
@@ -366,7 +337,7 @@ public class CommandController implements CommandExecutor {
             return value;
     }
     public void valuesettinginfo(Player p){
-        p.sendMessage(first + "§c/데스매치 설정 <라운드/킬/시간/최소인원/위치/총기/참여보상/1위보상/2위보상/3위보상/킬지속시간> <값/1~21>");
+        p.sendMessage(first + "§c/데스매치 설정 <라운드/킬/시간/최소인원/위치/참여보상/1위보상/2위보상/3위보상/킬지속시간> <값/1~21>");
     }
 
     public String locationToString(Location loc){

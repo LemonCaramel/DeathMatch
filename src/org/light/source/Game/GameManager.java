@@ -4,6 +4,7 @@ import moe.caramel.caramellibrarylegacy.user.CaramelUserData;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
@@ -103,6 +104,7 @@ public class GameManager {
             p.teleport(DataManager.getInstance().getLocations()[0]);
             p.getInventory().clear();
             p.setHealth(20.0);
+            p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
             gameRunnable.getbossbarInstance().removePlayer(p);
             p.removePotionEffect(PotionEffectType.WEAKNESS);
             p.setLevel(0);
@@ -130,6 +132,7 @@ public class GameManager {
                 p.teleport(DataManager.getInstance().getLocations()[0]);
                 p.getInventory().clear();
                 p.setHealth(20.0);
+                p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
                 p.removePotionEffect(PotionEffectType.WEAKNESS);
                 p.setLevel(0);
                 p.setExp(0.0f);
@@ -195,6 +198,7 @@ public class GameManager {
                     Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
                     target.teleport(DataManager.getInstance().getLocations()[0]);
                     target.getInventory().clear();
+                    target.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
                     target.setHealth(20.0);
                     target.removePotionEffect(PotionEffectType.WEAKNESS);
                     target.setLevel(0);
@@ -219,19 +223,20 @@ public class GameManager {
 
     public boolean canstart(){
         DataManager manager = DataManager.getInstance();
-        if (manager.getMinimumUser() > 1 && manager.getTime() >= 10 && manager.getKilltolevel() >= 2 && manager.getLocations() != null && manager.getRounds() >= 1 && manager.getListSize() >= manager.getRounds())
+        if (manager.getMinimumUser() > 1 && manager.getTime() >= 10 && manager.getKilltolevel() >= 2 && manager.getLocations() != null && manager.getRounds() >= 1)
             return true;
         return false;
     }
 
     public void setPlayer(Player p){
-        p.setHealth(20.0);
+        p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(80.0);
+        p.setHealth(80.0);
         p.setGameMode(GameMode.ADVENTURE);
         p.getInventory().clear();
-        p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 40, 5, true, false));
+        p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 60, 5, true, false));
         p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 9999, 100,true,false));
         p.teleport(getTeleportLocation(DataManager.getInstance().getLocations()[randomMap], DataManager.getInstance().getLocations()[randomMap+1]));
-        p.getInventory().setItem(0, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(0)));
+        p.getInventory().setItem(0, CrackShotApi.generateRandomWeapon());
         p.setLevel(0);
         p.setExp(0.0f);
         if (CaramelUserData.getData().getUser(p.getUniqueId()) == null){
@@ -242,8 +247,6 @@ public class GameManager {
         else{
             CaramelUserData.getData().getUser(p.getUniqueId()).setInvincibility(false);
         }
-        if (DataManager.getInstance().getWeaponName(-1) != null)
-            p.getInventory().setItem(1, CrackShotApi.getCSWeapon(DataManager.getInstance().getWeaponName(-1)));
     }
 
     public Location getTeleportLocation(Location first, Location second){
@@ -280,16 +283,16 @@ public class GameManager {
         if (gapx == 0 && gapy == 0 && gapz == 0)
             return first;
         Location min = new Location(first.getWorld(),x,y,z);
-        if (gapx != 0){
+        if (gapx > 0){
             int add = ThreadLocalRandom.current().nextInt(0,gapx+1);
             min.setX(min.getX()+add);
         }
-        if (gapy != 0){
+        if (gapy > 0){
             int add = ThreadLocalRandom.current().nextInt(0,gapy+1);
             min.setY(min.getY()+add);
             
         }
-        if (gapz != 0){
+        if (gapz > 0){
             int add = ThreadLocalRandom.current().nextInt(0,gapz+1);
             min.setZ(min.getZ()+add);
         }

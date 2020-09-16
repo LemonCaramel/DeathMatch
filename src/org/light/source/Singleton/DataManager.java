@@ -14,7 +14,6 @@ public class DataManager {
     private int time; //초단위
     private int minimum;
     private Location[] locations; //2개
-    private HashMap<Integer,String> weapons; //rounds개를 가져야함
     private static DataManager manager;
     private int joinMoney;
     private int firstReward;
@@ -38,7 +37,6 @@ public class DataManager {
         thirdReward = 0;
         killMaintain = 1;
         locations = new Location[21];
-        weapons = new HashMap<>();
     }
 
     public static DataManager getInstance(){
@@ -90,23 +88,6 @@ public class DataManager {
         this.minimum = minimum;
     }
 
-    public String getWeaponName(int index){
-        return weapons.get(index);
-    }
-
-    public void setWeapon(int index, String weaponName){
-        weapons.put(index, weaponName);
-    }
-
-    public int getListSize(){
-        int i = 0, returnValue = 0;
-        while (weapons.get(i) != null){
-            returnValue++;
-            i++;
-        }
-        return returnValue;
-    }
-
     public int getLocationAmount(){
         int i = 0, count = 0;
         while (locations[i] != null){
@@ -120,9 +101,6 @@ public class DataManager {
         locations = new Location[locations.length];
     }
 
-    public HashMap<Integer,String> getWeapons(){
-        return weapons;
-    }
 
     public int getJoinMoney(){
         return joinMoney;

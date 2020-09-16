@@ -51,11 +51,6 @@ public class FileManager {
                 config.set("Location." + (i+1), manager.getLocations()[i]);
             }
         }
-        if (manager.getWeapons().size() != 0){
-            for (int i = -1; i <= manager.getRounds(); i++){
-                config.set("Weapon." + i, manager.getWeaponName(i));
-            }
-        }
         try {
             config.save(file);
         } catch (IOException e) {
@@ -84,10 +79,6 @@ public class FileManager {
             for (int i = 0; i < amount; i++){
                 DataManager.getInstance().setLocations((Location) config.get("Location." + (i+1)),i+1);
             }
-        }
-        for (int i = -1; i <= manager.getRounds(); i++){
-            if (config.getString("Weapon." + i) != null)
-                manager.setWeapon(i, config.getString("Weapon." + i));
         }
     }
 }
