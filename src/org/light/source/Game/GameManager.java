@@ -105,6 +105,7 @@ public class GameManager {
             p.getInventory().clear();
             p.setHealth(20.0);
             p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
+            p.setHealthScaled(true);
             gameRunnable.getbossbarInstance().removePlayer(p);
             p.removePotionEffect(PotionEffectType.WEAKNESS);
             p.setLevel(0);
@@ -133,6 +134,7 @@ public class GameManager {
                 p.getInventory().clear();
                 p.setHealth(20.0);
                 p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
+                p.setHealthScaled(true);
                 p.removePotionEffect(PotionEffectType.WEAKNESS);
                 p.setLevel(0);
                 p.setExp(0.0f);
@@ -199,6 +201,7 @@ public class GameManager {
                     target.teleport(DataManager.getInstance().getLocations()[0]);
                     target.getInventory().clear();
                     target.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
+                    target.setHealthScaled(true);
                     target.setHealth(20.0);
                     target.removePotionEffect(PotionEffectType.WEAKNESS);
                     target.setLevel(0);
@@ -230,6 +233,7 @@ public class GameManager {
 
     public void setPlayer(Player p){
         p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(80.0);
+        p.setHealthScaled(true);
         p.setHealth(80.0);
         p.setGameMode(GameMode.ADVENTURE);
         p.getInventory().clear();

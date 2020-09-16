@@ -265,6 +265,7 @@ public class EventManager implements Listener {
                     for (UserMananger victimgr : GameManager.getInstance().getUserlist()) {
                         if (victimgr.getUUID().equals(victim.getUniqueId())) {
                             victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(80.0);
+                            victim.setHealthScaled(true);
                             victim.setHealth(80.0);
                             victim.teleport(GameManager.getInstance().getTeleportLocation(DataManager.getInstance().getLocations()[GameManager.getInstance().getRandomNumber()], DataManager.getInstance().getLocations()[GameManager.getInstance().getRandomNumber() + 1]));
                             victim.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 60, 5, true, false));
