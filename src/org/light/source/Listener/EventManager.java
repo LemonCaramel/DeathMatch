@@ -180,6 +180,12 @@ public class EventManager implements Listener {
         if (event.getDamager() instanceof Firework)
             event.setCancelled(true);
     }
+
+    @EventHandler
+    public void onLightningDamage(EntityDamageEvent event){
+        if (event.getCause() == EntityDamageEvent.DamageCause.LIGHTNING)
+            event.setCancelled(true);
+    }
     public void sendLevelUp(Player p, int back, int to){
         p.sendTitle("§c[ §fDeathMatch §6] §bLevel UP!", "§6" + back + " §f=> §b" + to, 5,50,5);
         p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
