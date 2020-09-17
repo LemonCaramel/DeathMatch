@@ -1,5 +1,6 @@
 package org.light.source.Listener;
 
+import com.shampaggon.crackshot.CSDirector;
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 import moe.caramel.caramellibrarylegacy.user.CaramelUserData;
 import net.md_5.bungee.api.ChatMessageType;
@@ -17,6 +18,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
@@ -56,8 +58,22 @@ public class EventManager implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event){
         Player p = (Player) event.getWhoClicked();
-        if (GameManager.getInstance().contains(p.getUniqueId()) && GameManager.getInstance().isgaming())
+        if (GameManager.getInstance().contains(p.getUniqueId()) && GameManager.getInstance().isgaming()){
+            if (event.getRawSlot() == -999)
+                return;
             event.setCancelled(true);
+            if (event.getClick() == ClickType.MIDDLE && event.getCurrentItem() != null){
+                //boolean oneTime = this.getBoolean(parentNode + ".Extras.One_Time_Use");
+                CSDirector director = CrackShotApi.getPlugin();
+                String node[] = director.itemParentNode(event.getCurrentItem(), null);
+                if (node != null) {
+                    if (director.getBoolean(node[0] +".Extras.One_Time_Use"))
+                        p.getInventory().setItem(0, CrackShotApi.generateRandomWeapon());
+                }
+            }
+
+        }
+
     }
     @EventHandler
     public void onDrop(PlayerDropItemEvent event){
