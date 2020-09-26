@@ -283,8 +283,10 @@ public class EventManager implements Listener {
                             victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(80.0);
                             victim.setHealthScaled(true);
                             victim.setHealth(80.0);
-                            for (PotionEffectType type : PotionEffectType.values())
-                                victim.removePotionEffect(type);
+                            for (PotionEffectType type : PotionEffectType.values()) {
+                                if (victim.hasPotionEffect(type))
+                                    victim.removePotionEffect(type);
+                            }
                             victim.teleport(GameManager.getInstance().getTeleportLocation(DataManager.getInstance().getLocations()[GameManager.getInstance().getRandomNumber()], DataManager.getInstance().getLocations()[GameManager.getInstance().getRandomNumber() + 1]));
                             victim.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 60, 5, true, false));
                             victim.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 9999, 100, true, false));

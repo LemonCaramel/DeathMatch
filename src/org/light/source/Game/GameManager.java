@@ -107,8 +107,10 @@ public class GameManager {
             p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
             p.setHealthScaled(true);
             gameRunnable.getbossbarInstance().removePlayer(p);
-            for (PotionEffectType type : PotionEffectType.values())
-                p.removePotionEffect(type);
+            for (PotionEffectType type : PotionEffectType.values()) {
+                if (p.hasPotionEffect(type))
+                    p.removePotionEffect(type);
+            }
             p.setLevel(0);
             p.setExp(0.0f);
             if (CaramelUserData.getData().getUser(p.getUniqueId()) != null)
@@ -196,7 +198,10 @@ public class GameManager {
                     target.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
                     target.setHealthScaled(true);
                     target.setHealth(20.0);
-                    target.removePotionEffect(PotionEffectType.WEAKNESS);
+                    for (PotionEffectType type : PotionEffectType.values()) {
+                        if (target.hasPotionEffect(type))
+                            target.removePotionEffect(type);
+                    }
                     target.setLevel(0);
                     target.setExp(0.0f);
                     if (CaramelUserData.getData().getUser(target.getUniqueId()) != null)
