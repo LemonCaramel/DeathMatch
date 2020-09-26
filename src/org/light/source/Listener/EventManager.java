@@ -284,6 +284,8 @@ public class EventManager implements Listener {
                             victim.setHealthScaled(true);
                             victim.setHealth(80.0);
                             for (PotionEffectType type : PotionEffectType.values()) {
+                                if (type == null)
+                                    continue;
                                 if (victim.hasPotionEffect(type))
                                     victim.removePotionEffect(type);
                             }

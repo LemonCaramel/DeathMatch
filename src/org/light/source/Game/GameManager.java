@@ -108,6 +108,8 @@ public class GameManager {
             p.setHealthScaled(true);
             gameRunnable.getbossbarInstance().removePlayer(p);
             for (PotionEffectType type : PotionEffectType.values()) {
+                if (type == null)
+                    continue;
                 if (p.hasPotionEffect(type))
                     p.removePotionEffect(type);
             }
@@ -199,6 +201,8 @@ public class GameManager {
                     target.setHealthScaled(true);
                     target.setHealth(20.0);
                     for (PotionEffectType type : PotionEffectType.values()) {
+                        if (type == null)
+                            continue;
                         if (target.hasPotionEffect(type))
                             target.removePotionEffect(type);
                     }
