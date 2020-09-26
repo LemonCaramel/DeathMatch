@@ -107,11 +107,15 @@ public class GameManager {
             p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
             p.setHealthScaled(true);
             gameRunnable.getbossbarInstance().removePlayer(p);
-            p.removePotionEffect(PotionEffectType.WEAKNESS);
+            for (PotionEffectType type : PotionEffectType.values())
+                p.removePotionEffect(type);
             p.setLevel(0);
             p.setExp(0.0f);
             if (CaramelUserData.getData().getUser(p.getUniqueId()) != null)
                 CaramelUserData.getData().getUser(p.getUniqueId()).setInvincibility(true);
+        }
+        else{
+            p.teleport(DataManager.getInstance().getLocations()[0]);
         }
         if (canstart() && getusercount() + 1 == DataManager.getInstance().getMinimumUser()){
             if (!isgaming) {
@@ -123,24 +127,13 @@ public class GameManager {
                     target.sendMessage("§c[ §fDeathMatch §6] §f최소인원을 만족하지 못해 게임 준비가 취소되었습니다.");
                     target.teleport(DataManager.getInstance().getLocations()[0]);
                 }
-                p.teleport(DataManager.getInstance().getLocations()[0]);
             }
             else {
                 for (UserMananger mananger : userlist) {
                     Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
                     target.sendMessage("§c[ §fDeathMatch §6] §c데스매치 최소인원을 만족하지 못해 게임이 중단되었습니다.");
                 }
-                p.teleport(DataManager.getInstance().getLocations()[0]);
-                p.getInventory().clear();
-                p.setHealth(20.0);
-                p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
-                p.setHealthScaled(true);
-                p.removePotionEffect(PotionEffectType.WEAKNESS);
-                p.setLevel(0);
-                p.setExp(0.0f);
                 gameRunnable.cancel();
-                if (CaramelUserData.getData().getUser(p.getUniqueId()) != null)
-                    CaramelUserData.getData().getUser(p.getUniqueId()).setInvincibility(true);
                 stop();
             }
         }
