@@ -3,6 +3,7 @@ package org.light.source.Singleton;
 import com.shampaggon.crackshot.CSDirector;
 import com.shampaggon.crackshot.CSMinion;
 import com.shampaggon.crackshot.CSUtility;
+import me.DeeCaaD.CrackShotPlus.CSPapi;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -39,6 +40,6 @@ public class CrackShotApi {
         if (weapon == null){
             weapon = director.wlist.get(1);
         }
-        return getCSWeapon(weapon);
+        return CSPapi.updateItemStackFeaturesNonPlayer(weapon,getCSWeapon(weapon));
     }
 }
