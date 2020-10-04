@@ -234,9 +234,9 @@ public class GameManager {
     }
 
     public void setPlayer(Player p){
-        p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(80.0);
+        p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(110.0);
         p.setHealthScaled(true);
-        p.setHealth(80.0);
+        p.setHealth(110.0);
         p.setGameMode(GameMode.ADVENTURE);
         p.getInventory().clear();
         p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 60, 5, true, false));

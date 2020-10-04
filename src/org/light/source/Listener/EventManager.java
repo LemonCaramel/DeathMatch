@@ -143,7 +143,7 @@ public class EventManager implements Listener {
                         if (victimgr.getUUID().equals(victim.getUniqueId())) {
                             victim.getInventory().clear();
                             event.setDamage(0.0);
-                            victim.setHealth(80.0);
+                            victim.setHealth(110.0);
                             String disname = killer.getInventory().getItemInMainHand().getType() == Material.AIR ? "X" : killer.getInventory().getItemInMainHand().getItemMeta().hasDisplayName() ? killer.getInventory().getItemInMainHand().getItemMeta().getDisplayName() : "X";
                             sendRespawn(victim, killer.getName(), disname, false);
                         }
@@ -280,9 +280,9 @@ public class EventManager implements Listener {
                 if (GameManager.getInstance().contains(victim.getUniqueId())){
                     for (UserMananger victimgr : GameManager.getInstance().getUserlist()) {
                         if (victimgr.getUUID().equals(victim.getUniqueId())) {
-                            victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(80.0);
+                            victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(110.0);
                             victim.setHealthScaled(true);
-                            victim.setHealth(80.0);
+                            victim.setHealth(110.0);
                             for (PotionEffectType type : PotionEffectType.values()) {
                                 if (type == null)
                                     continue;
