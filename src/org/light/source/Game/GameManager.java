@@ -1,5 +1,6 @@
 package org.light.source.Game;
 
+import moe.caramel.caramellibrarylegacy.api.API;
 import moe.caramel.caramellibrarylegacy.user.CaramelUserData;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -30,6 +31,7 @@ public class GameManager {
     private int randomMap;
     private Countdown countRunnable;
     private MainTimer gameRunnable;
+    private API api;
 
     static {
         manager = new GameManager();
@@ -41,6 +43,7 @@ public class GameManager {
         taskid = Bukkit.getScheduler().runTaskTimerAsynchronously(Plugin, this::sendScore, 0L, 20L).getTaskId();
         countRunnable = null;
         gameRunnable = null;
+        api = new API();
         randomMap = 1;
     }
 
@@ -103,6 +106,7 @@ public class GameManager {
             RatingManager.getInstance().updateRank();
             p.teleport(DataManager.getInstance().getLocations()[0]);
             p.getInventory().clear();
+            api.giveChannel(p, 8);
             p.setHealth(20.0);
             p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
             p.setHealthScaled(true);
@@ -120,6 +124,7 @@ public class GameManager {
         }
         else{
             p.teleport(DataManager.getInstance().getLocations()[0]);
+            api.giveChannel(p, 8);
         }
         if (canstart() && getusercount() + 1 == DataManager.getInstance().getMinimumUser()){
             if (!isgaming) {
@@ -197,6 +202,7 @@ public class GameManager {
                     Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
                     target.teleport(DataManager.getInstance().getLocations()[0]);
                     target.getInventory().clear();
+                    api.giveChannel(target, 8);
                     target.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
                     target.setHealthScaled(true);
                     target.setHealth(20.0);

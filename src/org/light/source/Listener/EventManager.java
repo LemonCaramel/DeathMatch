@@ -2,6 +2,7 @@ package org.light.source.Listener;
 
 import com.shampaggon.crackshot.CSDirector;
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
+import moe.caramel.caramellibrarylegacy.api.API;
 import moe.caramel.caramellibrarylegacy.user.CaramelUserData;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -91,9 +92,12 @@ public class EventManager implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event){
+        ItemStack skull;
         Player target = event.getPlayer();
         target.setGameMode(GameMode.ADVENTURE);
         ScoreboardObject.getInstance().setScoreboard(target);
+        API api = new API();
+        api.giveChannel(target, 8);
         Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(Plugin, ()->{
             if (CaramelUserData.getData().getUser(target.getUniqueId()) != null && !GameManager.getInstance().contains(target.getUniqueId()))
                 CaramelUserData.getData().getUser(target.getUniqueId()).setInvincibility(true);
