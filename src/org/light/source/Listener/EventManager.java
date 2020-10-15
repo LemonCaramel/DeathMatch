@@ -78,7 +78,7 @@ public class EventManager implements Listener {
     }
     @EventHandler
     public void onDrop(PlayerDropItemEvent event){
-        if (CrackShotApi.getCSID(event.getItemDrop().getItemStack()) != null)
+        if (CrackShotApi.getCSID(event.getItemDrop().getItemStack()) != null || event.getItemDrop().getItemStack().getType() == Material.SKULL_ITEM)
             event.setCancelled(true);
 
     }
@@ -92,7 +92,6 @@ public class EventManager implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent event){
-        ItemStack skull;
         Player target = event.getPlayer();
         target.setGameMode(GameMode.ADVENTURE);
         ScoreboardObject.getInstance().setScoreboard(target);
