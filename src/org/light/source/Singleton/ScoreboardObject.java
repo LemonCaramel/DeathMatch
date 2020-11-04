@@ -24,7 +24,7 @@ public class ScoreboardObject {
         wait = boardManager.getNewScoreboard();
         readyObject = wait.registerNewObjective("test", "dummy");
         readyObject.setDisplaySlot(DisplaySlot.SIDEBAR);
-        readyObject.setDisplayName("§c§oDeath§b§oMatch");
+        readyObject.setDisplayName("§f§oDeath§7§oMatch");
     }
 
     public static ScoreboardObject getInstance(){

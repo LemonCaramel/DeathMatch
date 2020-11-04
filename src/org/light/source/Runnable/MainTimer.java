@@ -24,7 +24,7 @@ public class MainTimer extends BukkitRunnable {
         this.maxSecond = maxSecond;
         this.userlist = userlist;
         now = 0;
-        bossBar = Bukkit.createBossBar("§c[ §fDeathMatch §6] §5Timer", BarColor.RED, BarStyle.SOLID);
+        bossBar = Bukkit.createBossBar("§5Timer", BarColor.RED, BarStyle.SOLID);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class MainTimer extends BukkitRunnable {
                 Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
                 bossBar.setProgress(1.0f);
                 bossBar.addPlayer(target);
-                bossBar.setTitle("§c[ §fDeathMatch §6] §5Timer §7: §6" + maxSecond + "§fs");
+                bossBar.setTitle("§5Timer §7: §6" + maxSecond + "§fs");
             }
         }
         else if (now >= maxSecond){
@@ -42,17 +42,17 @@ public class MainTimer extends BukkitRunnable {
             //우승자 가리기
             for (UserMananger mananger : userlist){
                 Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-                target.sendMessage("§c[ §fDeathMatch §6] §b시간이 다 되어 게임이 종료되었습니다!");
+                target.sendMessage("§b시간이 다 되어 게임이 종료되었습니다!");
             }
             GameManager.getInstance().stop();
         }
         else{
-            bossBar.setTitle("§c[ §fDeathMatch §6] §5Timer §7: §6" + (maxSecond - now) + "§fs");
+            bossBar.setTitle("§5Timer §7: §6" + (maxSecond - now) + "§fs");
             bossBar.setProgress(calcProgress(maxSecond, now));
             if (maxSecond - now <= 5){
                 for (UserMananger mananger : userlist){
                     Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-                    target.sendMessage("§c[ §fDeathMatch §6] §f게임 종료까지 §6" + (maxSecond-now) + "§f초 남았습니다!");
+                    target.sendMessage("§f게임 종료까지 §6" + (maxSecond-now) + "§f초 남았습니다!");
                 }
             }
         }

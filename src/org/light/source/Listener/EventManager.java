@@ -104,7 +104,7 @@ public class EventManager implements Listener {
         ScoreboardObject.getInstance().setScoreboard(target);
         API api = new API();
         api.giveChannel(target, 8);
-        target.setPlayerListName(null);
+        TeamManager.getInstance().removePlayer(target);
         Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(Plugin, ()->{
             if (CaramelUserData.getData().getUser(target.getUniqueId()) != null && !GameManager.getInstance().contains(target.getUniqueId()))
                 CaramelUserData.getData().getUser(target.getUniqueId()).setInvincibility(true);
@@ -153,7 +153,7 @@ public class EventManager implements Listener {
                         if (victimgr.getUUID().equals(victim.getUniqueId())) {
                             victim.getInventory().clear();
                             event.setDamage(0.0);
-                            victim.setHealth(110.0);
+                            victim.setHealth(80.0);
                             String disname = killer.getInventory().getItemInMainHand().getType() == Material.AIR ? "X" : killer.getInventory().getItemInMainHand().getItemMeta().hasDisplayName() ? killer.getInventory().getItemInMainHand().getItemMeta().getDisplayName() : "X";
                             sendRespawn(victim, killer.getName(), disname, false);
                         }
@@ -161,7 +161,7 @@ public class EventManager implements Listener {
                     if (mgr != null) {
                         if (DataManager.getInstance().getRounds() * DataManager.getInstance().getKilltolevel() <= mgr.getKills()) {
                             //승리!
-                            sendMsg("§c[ §fDeathMatch §6] §b" + killer.getName() + "§f님이 §6" + DataManager.getInstance().getRounds() + " §f레벨을 달성하여 게임을 승리하셨습니다!");
+                            sendMsg("§b" + killer.getName() + "§f님이 §6" + DataManager.getInstance().getRounds() + " §f레벨을 달성하여 게임을 승리하셨습니다!");
                             GameManager.getInstance().stop();
                         }
                         else {
@@ -170,7 +170,7 @@ public class EventManager implements Listener {
                             int to = mgr.getKills() / DataManager.getInstance().getKilltolevel();
                             if (mgr.getKills() - 1 != 0 && back != to) {
                                 if (mgr.getKills() == DataManager.getInstance().getKilltolevel() * (DataManager.getInstance().getRounds() - 1))
-                                    sendMsg("§c[ §fDeathMatch §6] §b" + killer.getName() + " §f님이 §6" + (DataManager.getInstance().getRounds() - 1) + "§f레벨에 도달하셨습니다!");
+                                    sendMsg("§b" + killer.getName() + " §f님이 §6" + (DataManager.getInstance().getRounds() - 1) + "§f레벨에 도달하셨습니다!");
                                 sendLevelUp(killer, back, to);
                             }
                         }
@@ -213,7 +213,7 @@ public class EventManager implements Listener {
             event.setCancelled(true);
     }
     public void sendLevelUp(Player p, int back, int to){
-        p.sendTitle("§c[ §fDeathMatch §6] §bLevel UP!", "§6" + back + " §f=> §b" + to, 5,50,5);
+        p.sendTitle("§bLevel UP!", "§6" + back + " §f=> §b" + to, 5,50,5);
         p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
         p.setLevel(to);
         p.setExp(GameManager.getInstance().calcLevelProgress(to));
@@ -299,9 +299,9 @@ public class EventManager implements Listener {
                 if (GameManager.getInstance().contains(victim.getUniqueId())){
                     for (UserMananger victimgr : GameManager.getInstance().getUserlist()) {
                         if (victimgr.getUUID().equals(victim.getUniqueId())) {
-                            victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(110.0);
+                            victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(80.0);
                             victim.setHealthScaled(true);
-                            victim.setHealth(110.0);
+                            victim.setHealth(80.0);
                             for (PotionEffectType type : PotionEffectType.values()) {
                                 if (type == null)
                                     continue;

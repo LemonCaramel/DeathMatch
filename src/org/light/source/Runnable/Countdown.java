@@ -28,7 +28,7 @@ public class Countdown extends BukkitRunnable {
             if (GameManager.getInstance().getusercount() < DataManager.getInstance().getMinimumUser()){
                 for (UserMananger mananger : userlist){
                     Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-                    target.sendTitle("§c[ §fDeathMatch §6] §c오류!", "§c최소인원을 충족하지 못해 게임이 중단되었습니다.", 0,3,0);
+                    target.sendTitle("§c오류!", "§c최소인원을 충족하지 못해 게임이 중단되었습니다.", 0,3,0);
                 }
             }
             else{
@@ -39,7 +39,7 @@ public class Countdown extends BukkitRunnable {
         double value = formattedDouble((double)countnum/20);
         for (UserMananger mananger : userlist){
             Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-            target.sendTitle("§c[ §fDeathMatch §6] §b카운트 다운!", "§6" + value + "s §f초후 시작합니다.", 0,3,0);
+            target.sendTitle("§b카운트 다운!", "§6" + value + "s §f초후 시작합니다.", 0,3,0);
         }
         countnum -= 2;
     }

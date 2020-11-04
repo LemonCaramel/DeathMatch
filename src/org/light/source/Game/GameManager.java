@@ -62,11 +62,11 @@ public class GameManager{
 
     public void addPlayer(Player p) {
         if (!canstart()) {
-            p.sendMessage("§c[ §fDeathMatch §6] §c데스매치 기초설정이 끝나지 않아 참여하실 수 없습니다.");
+            p.sendMessage("§c데스매치 기초설정이 끝나지 않아 참여하실 수 없습니다.");
         } else {
             for (UserMananger mananger : userlist) {
                 Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-                target.sendMessage("§c[ §fDeathMatch §6] §b" + p.getName() + "§f님이 §c데스매치§f에 참여하셨습니다.");
+                target.sendMessage("§b" + p.getName() + "§f님이 §c데스매치§f에 참여하셨습니다.");
             }
             userlist.add(new UserMananger(p.getUniqueId()));
             if (isgaming) {
@@ -81,7 +81,7 @@ public class GameManager{
                     for (UserMananger mananger : userlist) {
                         Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
                         target.playSound(target.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
-                        target.sendTitle("§c[ §fDeathMatch §6] §b시작 준비!", "§c최소 인원이 충족되어 곧 게임이 시작됩니다.", 5, 20, 5);
+                        target.sendTitle("§6준비!", "§c최소 인원이 충족되어 곧 게임이 시작됩니다.", 5, 20, 5);
                         target.teleport(getTeleportLocation(DataManager.getInstance().getLocations()[randomMap], DataManager.getInstance().getLocations()[randomMap + 1]));
                     }
                     countRunnable = new Countdown(userlist);
@@ -97,11 +97,11 @@ public class GameManager{
 
     public void removePlayer(Player p) {
         userlist.removeIf(userMananger -> userMananger.getUUID().equals(p.getUniqueId()));
-        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§c[ §fDeathMatch §6] §f데스매치에서 퇴장하셨습니다."));
+        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§f데스매치에서 퇴장하셨습니다."));
         p.setPlayerListName(null);
         for (UserMananger mananger : userlist) {
             Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-            target.sendMessage("§c[ §fDeathMatch §6] §b" + p.getName() + "§f님이 §c데스매치§f에서 퇴장하셨습니다.");
+            target.sendMessage("§b" + p.getName() + "§f님이 §c데스매치§f에서 퇴장하셨습니다.");
         }
         if (isgaming) {
             RatingManager.getInstance().updateRank();
@@ -133,13 +133,13 @@ public class GameManager{
                 countRunnable = null;
                 for (UserMananger mananger : userlist) {
                     Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-                    target.sendMessage("§c[ §fDeathMatch §6] §f최소인원을 만족하지 못해 게임 준비가 취소되었습니다.");
+                    target.sendMessage("§f최소인원을 만족하지 못해 게임 준비가 취소되었습니다.");
                     target.teleport(DataManager.getInstance().getLocations()[0]);
                 }
             } else {
                 for (UserMananger mananger : userlist) {
                     Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-                    target.sendMessage("§c[ §fDeathMatch §6] §c데스매치 최소인원을 만족하지 못해 게임이 중단되었습니다.");
+                    target.sendMessage("§c데스매치 최소인원을 만족하지 못해 게임이 중단되었습니다.");
                 }
                 gameRunnable.cancel();
                 stop();
@@ -208,7 +208,7 @@ public class GameManager{
                     target.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
                     target.setHealthScaled(true);
                     target.setHealth(20.0);
-                    target.setPlayerListName(null);
+                    TeamManager.getInstance().removePlayer(target);
                     for (PotionEffectType type : PotionEffectType.values()) {
                         if (type == null)
                             continue;
@@ -221,9 +221,12 @@ public class GameManager{
                         CaramelUserData.getData().getUser(target.getUniqueId()).setInvincibility(true);
                     gameRunnable.getbossbarInstance().removeAll();
                     if (DataManager.getInstance().getJoinMoney() != 0 && getusercount() >= DataManager.getInstance().getMinimumUser()) {
-                        target.sendMessage("§c[ §fDeathMatch §6] §f참여 보상 §6" + DataManager.getInstance().getJoinMoney() + "§f원을 흭득하셨습니다!");
+                        target.sendMessage("§f참여 보상 §6" + DataManager.getInstance().getJoinMoney() + "§f원을 흭득하셨습니다!");
                         EconomyApi.getInstance().giveMoney(target, DataManager.getInstance().getJoinMoney());
                         MinimizeLogger.getInstance().appendLog(target.getName() + "님이 데스매치에 참여해 " + DataManager.getInstance().getJoinMoney() + "원을 흭득함");
+                    }
+                    if (RatingManager.getInstance().getFirst() != null){
+                        target.sendMessage("§f이번 게임의 §6MVP§f는 §b" + RatingManager.getInstance().getFirst() + "§f님 입니다!");
                     }
                 }
                 giveRatingReward();
@@ -243,9 +246,9 @@ public class GameManager{
     }
 
     public void setPlayer(Player p) {
-        p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(110.0);
+        p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(80.0);
         p.setHealthScaled(true);
-        p.setHealth(110.0);
+        p.setHealth(80.0);
         p.setGameMode(GameMode.ADVENTURE);
         p.getInventory().clear();
         p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 60, 5, true, false));
@@ -254,7 +257,7 @@ public class GameManager{
         p.getInventory().setItem(0, CrackShotApi.generateRandomWeapon());
         p.setLevel(0);
         p.setExp(0.0f);
-        p.setPlayerListName("§b" + p.getName());
+        TeamManager.getInstance().addPlayer(p);
         if (CaramelUserData.getData().getUser(p.getUniqueId()) == null) {
             Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(Plugin, () -> {
                 if (CaramelUserData.getData().getUser(p.getUniqueId()) != null)
@@ -319,19 +322,19 @@ public class GameManager{
             if (RatingManager.getInstance().getFirst() != null && DataManager.getInstance().getFirstReward() != 0) {
                 Player first = Bukkit.getPlayer(RatingManager.getInstance().getFirst());
                 EconomyApi.getInstance().giveMoney(first, DataManager.getInstance().getFirstReward());
-                first.sendMessage("§c[ §fDeathMatch §6] §b1위를 하셔서 추가 보상 §6" + DataManager.getInstance().getFirstReward() + "§f원을 흭득하셨습니다!");
+                first.sendMessage("§b1위를 하셔서 추가 보상 §6" + DataManager.getInstance().getFirstReward() + "§f원을 흭득하셨습니다!");
                 MinimizeLogger.getInstance().appendLog(first.getName() + "님이 데스매치에서 1등을 하여 " + DataManager.getInstance().getFirstReward() + "원을 흭득함");
             }
             if (RatingManager.getInstance().getSecond() != null && DataManager.getInstance().getSecondReward() != 0) {
                 Player second = Bukkit.getPlayer(RatingManager.getInstance().getSecond());
                 EconomyApi.getInstance().giveMoney(second, DataManager.getInstance().getSecondReward());
-                second.sendMessage("§c[ §fDeathMatch §6] §a2위를 하셔서 추가 보상 §6" + DataManager.getInstance().getSecondReward() + "§f원을 흭득하셨습니다!");
+                second.sendMessage("§a2위를 하셔서 추가 보상 §6" + DataManager.getInstance().getSecondReward() + "§f원을 흭득하셨습니다!");
                 MinimizeLogger.getInstance().appendLog(second.getName() + "님이 데스매치에서 2등을 하여 " + DataManager.getInstance().getSecondReward() + "원을 흭득함");
             }
             if (RatingManager.getInstance().getThird() != null && DataManager.getInstance().getThirdReward() != 0) {
                 Player third = Bukkit.getPlayer(RatingManager.getInstance().getThird());
                 EconomyApi.getInstance().giveMoney(third, DataManager.getInstance().getThirdReward());
-                third.sendMessage("§c[ §fDeathMatch §6] §c3위를 하셔서 추가 보상 §6" + DataManager.getInstance().getThirdReward() + "§f원을 흭득하셨습니다!");
+                third.sendMessage("§c3위를 하셔서 추가 보상 §6" + DataManager.getInstance().getThirdReward() + "§f원을 흭득하셨습니다!");
                 MinimizeLogger.getInstance().appendLog(third.getName() + "님이 데스매치에서 3등을 하여 " + DataManager.getInstance().getThirdReward() + "원을 흭득함");
             }
         }
