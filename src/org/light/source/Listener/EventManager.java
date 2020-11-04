@@ -276,6 +276,7 @@ public class EventManager implements Listener {
             }
             victimManager.setKillMaintain(0);
             killManager.setLastKillTime(System.currentTimeMillis());
+            killer.sendTitle("", "+ " + reward + " §6포인트", 0, 20 ,0);
             MinimizeLogger.getInstance().appendLog(killer.getName() + "님이 " + victim.getName() + "님을 죽여 " + reward + "원을 흭득");
             EconomyApi.getInstance().giveMoney(killer, reward);
             }
