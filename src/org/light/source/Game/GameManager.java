@@ -98,7 +98,7 @@ public class GameManager{
     public void removePlayer(Player p) {
         userlist.removeIf(userMananger -> userMananger.getUUID().equals(p.getUniqueId()));
         p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§f데스매치에서 퇴장하셨습니다."));
-        p.setPlayerListName(null);
+        TeamManager.getInstance().removePlayer(p);
         for (UserMananger mananger : userlist) {
             Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
             target.sendMessage("§b" + p.getName() + "§f님이 §c데스매치§f에서 퇴장하셨습니다.");
