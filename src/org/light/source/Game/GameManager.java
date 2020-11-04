@@ -98,6 +98,7 @@ public class GameManager{
     public void removePlayer(Player p) {
         userlist.removeIf(userMananger -> userMananger.getUUID().equals(p.getUniqueId()));
         p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§c[ §fDeathMatch §6] §f데스매치에서 퇴장하셨습니다."));
+        p.setPlayerListName(null);
         for (UserMananger mananger : userlist) {
             Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
             target.sendMessage("§c[ §fDeathMatch §6] §b" + p.getName() + "§f님이 §c데스매치§f에서 퇴장하셨습니다.");
@@ -207,6 +208,7 @@ public class GameManager{
                     target.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
                     target.setHealthScaled(true);
                     target.setHealth(20.0);
+                    target.setPlayerListName(null);
                     for (PotionEffectType type : PotionEffectType.values()) {
                         if (type == null)
                             continue;
@@ -252,6 +254,7 @@ public class GameManager{
         p.getInventory().setItem(0, CrackShotApi.generateRandomWeapon());
         p.setLevel(0);
         p.setExp(0.0f);
+        p.setPlayerListName("§b" + p.getName());
         if (CaramelUserData.getData().getUser(p.getUniqueId()) == null) {
             Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(Plugin, () -> {
                 if (CaramelUserData.getData().getUser(p.getUniqueId()) != null)

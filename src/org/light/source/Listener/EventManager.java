@@ -28,6 +28,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.light.source.DeathMatch;
 import org.light.source.Game.GameManager;
 import org.light.source.Game.UserMananger;
+import org.light.source.Log.MinimizeLogger;
 import org.light.source.Phone.PhoneObject;
 import org.light.source.Singleton.*;
 
@@ -91,12 +92,19 @@ public class EventManager implements Listener {
     }
 
     @EventHandler
+    public void onVelocity(PlayerVelocityEvent event){
+        if (event.getVelocity().getY() >= 2)
+            event.setCancelled(true);
+    }
+
+    @EventHandler
     public void onJoin(PlayerJoinEvent event){
         Player target = event.getPlayer();
         target.setGameMode(GameMode.ADVENTURE);
         ScoreboardObject.getInstance().setScoreboard(target);
         API api = new API();
         api.giveChannel(target, 8);
+        target.setPlayerListName(null);
         Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(Plugin, ()->{
             if (CaramelUserData.getData().getUser(target.getUniqueId()) != null && !GameManager.getInstance().contains(target.getUniqueId()))
                 CaramelUserData.getData().getUser(target.getUniqueId()).setInvincibility(true);
@@ -105,7 +113,6 @@ public class EventManager implements Listener {
             if (!PhoneManager.getInstance().contains(target.getUniqueId()))
                 PhoneManager.getInstance().addObject(target.getUniqueId(), false);
         },40L);
-
 
     }
 
@@ -220,7 +227,9 @@ public class EventManager implements Listener {
     }
 
     public void sendKillMsg(Player killer, Player victim, String msg){
+        //킬당 참여보상의 1/10 지급, 연속킬시 킬보상의 1/10 * 반올림(연속킬수 / 2), 제압킬시 참여 보상의 1/5 지급, 전부다 합연산으로 지급
         UserMananger killManager = null, victimManager = null;
+        int reward = 0;
         for (UserMananger mananger : GameManager.getInstance().getUserlist()) {
             if (mananger.getUUID().equals(killer.getUniqueId())){
                 killManager = mananger;
@@ -231,9 +240,12 @@ public class EventManager implements Listener {
         }
         if (killManager != null && victimManager != null){
             //죽은사람이 연속킬중일 경우
+            reward += DataManager.getInstance().getJoinMoney() / 10;
             killManager.setKillMaintain(killManager.getKillMaintain() + 1);
             if (victimManager.getKillMaintain() >= 2){
                 sendMsg("§4§oShutDown! " + msg);
+                reward += DataManager.getInstance().getJoinMoney() / 5;
+
             }
             else{
                 //아닌경우 그냥 출력
@@ -252,6 +264,7 @@ public class EventManager implements Listener {
                             sendMsg("§4§oHexa Kill! " + msg);
                         else
                             sendMsg("§6§oLegendary! " + msg);
+                        reward += DataManager.getInstance().getJoinMoney() / 10 * (int)(Math.floor((double)killManager.getKillMaintain() / 2));
                     }
                     else
                         sendMsg(msg);
@@ -263,6 +276,8 @@ public class EventManager implements Listener {
             }
             victimManager.setKillMaintain(0);
             killManager.setLastKillTime(System.currentTimeMillis());
+            MinimizeLogger.getInstance().appendLog(killer.getName() + "님이 " + victim.getName() + "님을 죽여 " + reward + "원을 흭득");
+            EconomyApi.getInstance().giveMoney(killer, reward);
             }
 
     }
