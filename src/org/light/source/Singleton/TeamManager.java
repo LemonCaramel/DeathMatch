@@ -33,10 +33,10 @@ public class TeamManager {
     }
 
     public void removePlayer(Player p){
-        joinTeam.removeEntry(p.getName());
+        joinTeam.removePlayer(p);
     }
 
     public void addPlayer(Player p){
-        joinTeam.addEntry(p.getName());
+        joinTeam.addPlayer(p);
     }
 }
