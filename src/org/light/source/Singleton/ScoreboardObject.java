@@ -35,6 +35,9 @@ public class ScoreboardObject {
         p.setScoreboard(wait);
     }
 
+    public Scoreboard getObject(){
+        return wait;
+    }
     public void sendScoreboard(int value){
         ArrayList<String> Score = new ArrayList<>();
         if (value == 1){

@@ -14,12 +14,12 @@ public class TeamManager {
     }
 
     private TeamManager(){
-        for (Team team : Bukkit.getScoreboardManager().getMainScoreboard().getTeams()) {
+        for (Team team : ScoreboardObject.getInstance().getObject().getTeams()) {
             if (team.getName().contains("join"))
                 joinTeam = team;
         }
         if (joinTeam == null)
-            joinTeam = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam("join");
+            joinTeam = ScoreboardObject.getInstance().getObject().registerNewTeam("join");
         setTeam(joinTeam);
 
     }
@@ -33,10 +33,10 @@ public class TeamManager {
     }
 
     public void removePlayer(Player p){
-        joinTeam.removePlayer(p);
+        joinTeam.removeEntry(p.getName());
     }
 
     public void addPlayer(Player p){
-        joinTeam.addPlayer(p);
+        joinTeam.addEntry(p.getName());
     }
 }
