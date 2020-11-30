@@ -1,5 +1,6 @@
 package org.light.source.Game;
 
+import com.shampaggon.crackshot.events.WeaponReloadEvent;
 import moe.caramel.caramellibrarylegacy.api.API;
 import moe.caramel.caramellibrarylegacy.user.CaramelUserData;
 import net.md_5.bungee.api.ChatMessageType;

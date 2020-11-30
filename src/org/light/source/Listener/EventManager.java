@@ -14,6 +14,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -84,7 +85,7 @@ public class EventManager implements Listener {
 
     }
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGHEST)
     public void onOffhandMove(PlayerSwapHandItemsEvent event){
         Player target = event.getPlayer();
         if (GameManager.getInstance().isgaming() && GameManager.getInstance().contains(target.getUniqueId()))
@@ -93,7 +94,7 @@ public class EventManager implements Listener {
 
     @EventHandler
     public void onVelocity(PlayerVelocityEvent event){
-        if (event.getVelocity().getY() >= 2)
+        if (event.getVelocity().getY() >= 0.7)
             event.setCancelled(true);
     }
 
