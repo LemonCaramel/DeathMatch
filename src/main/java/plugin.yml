@@ -1,0 +1,16 @@
+main: org.light.source.DeathMatch
+name: DeathMatch
+version: 2.0
+depend: [CrackShot, Vault]
+commands:
+  데스매치:
+    description: Related with DeathMatch
+  참여:
+    aliases: [join]
+    description: Join Command
+  나가기:
+    aliases: [leave]
+    description: Leave Command
+  랭킹:
+    aliases: [rank]
+    description: Rank

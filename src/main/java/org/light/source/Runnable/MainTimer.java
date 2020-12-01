@@ -1,7 +1,6 @@
 package org.light.source.Runnable;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -11,7 +10,6 @@ import org.light.source.Game.GameManager;
 import org.light.source.Game.UserMananger;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class MainTimer extends BukkitRunnable {
 

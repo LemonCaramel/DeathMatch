@@ -1,11 +1,6 @@
 package org.light.source.Singleton;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class DataManager {
 
@@ -20,6 +15,8 @@ public class DataManager {
     private int secondReward;
     private int thirdReward;
     private int killMaintain;
+    private int maxReroll;
+    private int reRollMoney;
 
     static {
         manager = new DataManager();
@@ -36,6 +33,8 @@ public class DataManager {
         secondReward = 0;
         thirdReward = 0;
         killMaintain = 1;
+        maxReroll = 0;
+        reRollMoney = 0;
         locations = new Location[21];
     }
 
@@ -70,7 +69,6 @@ public class DataManager {
     public Location[] getLocations() {
         if (locations == null)
             return null;
-
         if (getLocationAmount() % 2 != 1 || getLocationAmount() == 1)
             return null;
         return locations;
@@ -101,6 +99,21 @@ public class DataManager {
         locations = new Location[locations.length];
     }
 
+    public int getMaxReroll() {
+        return maxReroll;
+    }
+
+    public void setMaxReroll(int maxReroll) {
+        this.maxReroll = maxReroll;
+    }
+
+    public int getReRollMoney() {
+        return reRollMoney;
+    }
+
+    public void setReRollMoney(int reRollMoney) {
+        this.reRollMoney = reRollMoney;
+    }
 
     public int getJoinMoney(){
         return joinMoney;

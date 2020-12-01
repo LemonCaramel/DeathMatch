@@ -5,8 +5,6 @@ import org.bukkit.entity.Player;
 import org.light.source.Game.GameManager;
 import org.light.source.Game.UserMananger;
 
-import java.util.UUID;
-
 public class RatingManager {
 
     private static RatingManager manager;

@@ -1,11 +1,12 @@
 package org.light.source.Singleton;
 
 import com.shampaggon.crackshot.CSDirector;
-import com.shampaggon.crackshot.CSMinion;
 import com.shampaggon.crackshot.CSUtility;
 import me.DeeCaaD.CrackShotPlus.CSPapi;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class CrackShotApi {
@@ -41,5 +42,14 @@ public class CrackShotApi {
             weapon = director.wlist.get(1);
         }
         return CSPapi.updateItemStackFeaturesNonPlayer(weapon,getCSWeapon(weapon));
+    }
+
+    public static ItemStack generateNotOPWeapon(){
+        CSDirector director = getPlugin();
+        ArrayList<String> list = new ArrayList<>(director.wlist.values());
+        Collections.shuffle(list);
+        while(list.get(0) == null || list.get(0).equalsIgnoreCase("CHICKENGUN") || list.get(0).equalsIgnoreCase("C4_Ultimate"))
+            Collections.shuffle(list);
+        return CSPapi.updateItemStackFeaturesNonPlayer(list.get(0),getCSWeapon(list.get(0)));
     }
 }

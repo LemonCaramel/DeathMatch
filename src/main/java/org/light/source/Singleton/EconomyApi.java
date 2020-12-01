@@ -40,6 +40,10 @@ public class EconomyApi {
         economy.depositPlayer(offlinePlayer, value);
     }
 
+    public void subtractMoney(Player p, double value){
+        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(p.getUniqueId());
+        economy.withdrawPlayer(offlinePlayer, value);
+    }
     public double currentMoney(Player p){
         return economy.getBalance(p);
     }

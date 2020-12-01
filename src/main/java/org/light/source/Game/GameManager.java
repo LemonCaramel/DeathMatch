@@ -1,6 +1,5 @@
 package org.light.source.Game;
 
-import com.shampaggon.crackshot.events.WeaponReloadEvent;
 import moe.caramel.caramellibrarylegacy.api.API;
 import moe.caramel.caramellibrarylegacy.user.CaramelUserData;
 import net.md_5.bungee.api.ChatMessageType;
@@ -201,8 +200,8 @@ public class GameManager{
         if (isgaming) {
             Bukkit.getScheduler().runTask(Plugin, () -> {
                 setGameState(false);
-                for (UserMananger mananger : userlist) {
-                    Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
+                for (UserMananger data : userlist) {
+                    Player target = Bukkit.getServer().getPlayer(data.getUUID());
                     target.teleport(DataManager.getInstance().getLocations()[0]);
                     target.getInventory().clear();
                     api.giveChannel(target, 8);
@@ -222,7 +221,7 @@ public class GameManager{
                         CaramelUserData.getData().getUser(target.getUniqueId()).setInvincibility(true);
                     gameRunnable.getbossbarInstance().removeAll();
                     if (DataManager.getInstance().getJoinMoney() != 0 && getusercount() >= DataManager.getInstance().getMinimumUser()) {
-                        target.sendMessage("§f참여 보상 §6" + DataManager.getInstance().getJoinMoney() + "§f원을 흭득하셨습니다!");
+                        target.sendMessage("§f총 보상 §6" +  (DataManager.getInstance().getJoinMoney() + data.getCalcResultMoney()) + "§f원을 흭득하셨습니다!");
                         EconomyApi.getInstance().giveMoney(target, DataManager.getInstance().getJoinMoney());
                         MinimizeLogger.getInstance().appendLog(target.getName() + "님이 데스매치에 참여해 " + DataManager.getInstance().getJoinMoney() + "원을 흭득함");
                     }

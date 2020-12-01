@@ -10,12 +10,16 @@ public class UserMananger {
     private int kills;
     private long lastKillTime;
     private int killMaintain;
+    private int reRoll;
+    private int calcResultMoney;
 
-    public UserMananger(UUID uuid){
+    public UserMananger(UUID uuid) {
         this.uuid = uuid;
         kills = 0;
         killMaintain = 0;
         lastKillTime = 0;
+        reRoll = 0;
+        calcResultMoney = 0;
     }
 
     public int getKills() {
@@ -46,8 +50,24 @@ public class UserMananger {
         this.lastKillTime = lastKillTime;
     }
 
-    public boolean calcKillStay(){
-        return System.currentTimeMillis() - getLastKillTime() <= DataManager.getInstance().getKillMaintain()*1000;
+    public int getReRoll() {
+        return reRoll;
+    }
+
+    public void setReRoll(int reRoll) {
+        this.reRoll = reRoll;
+    }
+
+    public int getCalcResultMoney() {
+        return calcResultMoney;
+    }
+
+    public void setCalcResultMoney(int calcResultMoney) {
+        this.calcResultMoney = calcResultMoney;
+    }
+
+    public boolean calcKillStay() {
+        return System.currentTimeMillis() - getLastKillTime() <= DataManager.getInstance().getKillMaintain() * 1000;
     }
 
 }

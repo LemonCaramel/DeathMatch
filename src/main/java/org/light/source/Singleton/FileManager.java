@@ -46,6 +46,8 @@ public class FileManager {
         config.set("ThirdReward", manager.getThirdReward());
         config.set("LocationAmount", manager.getLocationAmount());
         config.set("KillMaintain", manager.getKillMaintain());
+        config.set("MaxReRoll", manager.getMaxReroll());
+        config.set("ReRollMoney", manager.getReRollMoney());
         if (manager.getLocations() != null){
             for (int i = 0; i < DataManager.getInstance().getLocationAmount(); i++){
                 config.set("Location." + (i+1), manager.getLocations()[i]);
@@ -63,17 +65,20 @@ public class FileManager {
             config.load(file);
         }
         catch (IOException | InvalidConfigurationException e) {
+            e.printStackTrace();
         }
         DataManager manager = DataManager.getInstance();
         manager.setRounds(config.getInt("Round"));
         manager.setTime(config.getInt("Time"));
         manager.setKilltolevel(config.getInt("KillLevel"));
         manager.setMinimumUser(config.getInt("RequireJoin"));
-        manager.setJoinMoney(config.getInt("JoinReward"));
-        manager.setFirstReward(config.getInt("FirstReward"));
-        manager.setSecondReward(config.getInt("SecondReward"));
-        manager.setThirdReward(config.getInt("ThirdReward"));
-        manager.setKillMaintain(config.getInt("KillMaintain"));
+        manager.setJoinMoney(config.getInt("JoinReward", 30));
+        manager.setFirstReward(config.getInt("FirstReward", 150));
+        manager.setSecondReward(config.getInt("SecondReward", 100));
+        manager.setThirdReward(config.getInt("ThirdReward", 50));
+        manager.setKillMaintain(config.getInt("KillMaintain", 10));
+        manager.setMaxReroll(config.getInt("MaxReRoll", 10));
+        manager.setReRollMoney(config.getInt("ReRollMoney", 200));
         if (config.get("Location.1") != null && config.getInt("LocationAmount") != 0){
             int amount = config.getInt("LocationAmount");
             for (int i = 0; i < amount; i++){
