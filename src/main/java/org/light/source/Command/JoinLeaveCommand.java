@@ -10,9 +10,10 @@ import org.light.source.Log.MinimizeLogger;
 public class JoinLeaveCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender commandSender, Command cmd, String s, String[] strings) {
-        if (s.equalsIgnoreCase("참여") || s.equalsIgnoreCase("나가기")) {
+        if (s.equalsIgnoreCase("참여") || s.equalsIgnoreCase("나가기") || s.equalsIgnoreCase("join") || s.equalsIgnoreCase("leave")) {
             Player p = (Player) commandSender;
             switch (s.toLowerCase()) {
+                case "join":
                 case "참여":
                     if (GameManager.getInstance().contains(p.getUniqueId())) {
                         p.sendMessage("§c이미 게임에 참여중입니다.");
@@ -22,6 +23,7 @@ public class JoinLeaveCommand implements CommandExecutor {
                         MinimizeLogger.getInstance().appendLog(p.getName() + "님이 데스매치에 참여함");
                     }
                     break;
+                case "leave":
                 case "나가기":
                     if (GameManager.getInstance().contains(p.getUniqueId())) {
                         GameManager.getInstance().removePlayer(p);

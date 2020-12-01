@@ -23,6 +23,7 @@ import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.light.source.DeathMatch;
@@ -163,6 +164,8 @@ public class EventManager implements Listener {
                 if (victim.getHealth() - event.getDamage() <= 0) {
                     int killerData = 0;
                     ItemStack stack = CrackShotApi.getCSWeapon(event.getWeaponTitle());
+                    if (stack == null)
+                        stack = createDummyItem();
                     if (stack.getType() == Material.IRON_AXE || stack.getType() == Material.DIAMOND_AXE)
                         sendKillMsg(killer, victim, "§c" + killer.getName() + " §f(" + stack.getItemMeta().getDisplayName() + "§f)" + " §7メ §b" + victim.getName());
                     else
@@ -360,5 +363,13 @@ public class EventManager implements Listener {
             list.stream().filter(p -> Bukkit.getPlayer(p) != null).forEach(p -> bar.removePlayer(Bukkit.getPlayer(p)));
             bar.removeAll();
         }, 70L);
+    }
+
+    private ItemStack createDummyItem(){
+        ItemStack stack = new ItemStack(Material.DIAMOND_SWORD);
+        ItemMeta meta = stack.getItemMeta();
+        meta.setDisplayName("§cError <<X>>");
+        stack.setItemMeta(meta);
+        return stack;
     }
 }
