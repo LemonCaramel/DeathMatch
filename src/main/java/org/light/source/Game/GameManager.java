@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class GameManager{
+public class GameManager {
 
     private static GameManager manager;
     private boolean isgaming;
@@ -63,17 +63,16 @@ public class GameManager{
     public void addPlayer(Player p) {
         if (!canstart()) {
             p.sendMessage("§c데스매치 기초설정이 끝나지 않아 참여하실 수 없습니다.");
-        } else {
-            for (UserMananger mananger : userlist) {
-                Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-                target.sendMessage("§b" + p.getName() + "§f님이 §c데스매치§f에 참여하셨습니다.");
-            }
+        }
+        else {
+            p.sendMessage(" §6§l참여 §7§l》" + "§b" + p.getName());
             userlist.add(new UserMananger(p.getUniqueId()));
             if (isgaming) {
                 setPlayer(p);
                 RatingManager.getInstance().updateRank();
                 gameRunnable.getbossbarInstance().addPlayer(p);
-            } else if (getusercount() >= DataManager.getInstance().getMinimumUser()) {
+            }
+            else if (getusercount() >= DataManager.getInstance().getMinimumUser()) {
                 if (countRunnable == null) {
                     randomMap = ThreadLocalRandom.current().nextInt(1, DataManager.getInstance().getLocationAmount());
                     while (randomMap % 2 != 1)
@@ -97,11 +96,11 @@ public class GameManager{
 
     public void removePlayer(Player p) {
         userlist.removeIf(userMananger -> userMananger.getUUID().equals(p.getUniqueId()));
-        p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§f데스매치에서 퇴장하셨습니다."));
+        p.sendMessage(" §c§l퇴장 §7§l《 " + "§b" + p.getName());
         TeamManager.getInstance().removePlayer(p);
         for (UserMananger mananger : userlist) {
             Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-            target.sendMessage("§b" + p.getName() + "§f님이 §c데스매치§f에서 퇴장하셨습니다.");
+            target.sendMessage("§c퇴장 §7《" + "§b" + p.getName());
         }
         if (isgaming) {
             RatingManager.getInstance().updateRank();
@@ -122,7 +121,8 @@ public class GameManager{
             p.setExp(0.0f);
             if (CaramelUserData.getData().getUser(p.getUniqueId()) != null)
                 CaramelUserData.getData().getUser(p.getUniqueId()).setInvincibility(true);
-        } else {
+        }
+        else {
             p.teleport(DataManager.getInstance().getLocations()[0]);
             api.giveChannel(p, 8);
         }
@@ -136,7 +136,8 @@ public class GameManager{
                     target.sendMessage("§f최소인원을 만족하지 못해 게임 준비가 취소되었습니다.");
                     target.teleport(DataManager.getInstance().getLocations()[0]);
                 }
-            } else {
+            }
+            else {
                 for (UserMananger mananger : userlist) {
                     Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
                     target.sendMessage("§c데스매치 최소인원을 만족하지 못해 게임이 중단되었습니다.");
@@ -150,12 +151,12 @@ public class GameManager{
 
     public void sendScore() {
         Bukkit.getScheduler().runTask(Plugin, () -> {
-            if (!isgaming && (getusercount() < DataManager.getInstance().getMinimumUser() || DataManager.getInstance().getMinimumUser() == 0))
-                ScoreboardObject.getInstance().sendScoreboard(1);
-            else if (!isgaming && getusercount() >= DataManager.getInstance().getMinimumUser())
-                ScoreboardObject.getInstance().sendScoreboard(2);
-            else
-                ScoreboardObject.getInstance().sendScoreboard(3);
+                    if (!isgaming && (getusercount() < DataManager.getInstance().getMinimumUser() || DataManager.getInstance().getMinimumUser() == 0))
+                        ScoreboardObject.getInstance().sendScoreboard(1);
+                    else if (!isgaming && getusercount() >= DataManager.getInstance().getMinimumUser())
+                        ScoreboardObject.getInstance().sendScoreboard(2);
+                    else
+                        ScoreboardObject.getInstance().sendScoreboard(3);
                 }
         );
 
@@ -221,11 +222,11 @@ public class GameManager{
                         CaramelUserData.getData().getUser(target.getUniqueId()).setInvincibility(true);
                     gameRunnable.getbossbarInstance().removeAll();
                     if (DataManager.getInstance().getJoinMoney() != 0 && getusercount() >= DataManager.getInstance().getMinimumUser()) {
-                        target.sendMessage("§f총 보상 §6" +  (DataManager.getInstance().getJoinMoney() + data.getCalcResultMoney()) + "§f원을 흭득하셨습니다!");
+                        target.sendMessage("§f총 보상 §6" + (DataManager.getInstance().getJoinMoney() + data.getCalcResultMoney()) + "§f원을 흭득하셨습니다!");
                         EconomyApi.getInstance().giveMoney(target, DataManager.getInstance().getJoinMoney());
                         MinimizeLogger.getInstance().appendLog(target.getName() + "님이 데스매치에 참여해 " + DataManager.getInstance().getJoinMoney() + "원을 흭득함");
                     }
-                    if (RatingManager.getInstance().getFirst() != null){
+                    if (RatingManager.getInstance().getFirst() != null) {
                         target.sendMessage("§f이번 게임의 §6MVP§f는 §b" + RatingManager.getInstance().getFirst() + "§f님 입니다!");
                     }
                 }
@@ -263,7 +264,8 @@ public class GameManager{
                 if (CaramelUserData.getData().getUser(p.getUniqueId()) != null)
                     CaramelUserData.getData().getUser(p.getUniqueId()).setInvincibility(false);
             }, 20L);
-        } else {
+        }
+        else {
             CaramelUserData.getData().getUser(p.getUniqueId()).setInvincibility(false);
         }
     }
@@ -274,21 +276,24 @@ public class GameManager{
         if (first.getX() < second.getY()) {
             x = first.getX();
             xx = second.getX();
-        } else {
+        }
+        else {
             x = second.getX();
             xx = first.getX();
         }
         if (first.getY() < second.getY()) {
             y = first.getY();
             yy = second.getY();
-        } else {
+        }
+        else {
             y = second.getY();
             yy = first.getY();
         }
         if (first.getZ() < second.getZ()) {
             z = first.getZ();
             zz = second.getZ();
-        } else {
+        }
+        else {
             z = second.getZ();
             zz = first.getZ();
         }

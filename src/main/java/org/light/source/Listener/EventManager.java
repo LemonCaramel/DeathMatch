@@ -28,6 +28,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.light.source.DeathMatch;
 import org.light.source.Game.GameManager;
+import org.light.source.Game.NoKnockbackObject;
 import org.light.source.Game.UserMananger;
 import org.light.source.Log.MinimizeLogger;
 import org.light.source.Singleton.*;
@@ -115,8 +116,12 @@ public class EventManager implements Listener {
 
     @EventHandler
     public void onVelocity(PlayerVelocityEvent event) {
-        if (event.getVelocity().getY() >= 0.7)
+        if (!NoKnockbackObject.getInstance().getKnockbackState(event.getPlayer())){
             event.setCancelled(true);
+            NoKnockbackObject.getInstance().setKnockBackState(event.getPlayer(), true);
+        }
+        if (event.getVelocity().getY() >= 0.7)
+            event.setVelocity(event.getVelocity().setY(0.5));
     }
 
     @EventHandler
@@ -200,6 +205,9 @@ public class EventManager implements Listener {
                         }
                     }
                 }
+                else
+                    if (me.DeeCaaD.CrackShotPlus.API.getB(event.getWeaponTitle() + ".Damage.No_Knockback.caramel_Affect_Players") != null && me.DeeCaaD.CrackShotPlus.API.getB(event.getWeaponTitle() + ".Damage.No_Knockback.caramel_Affect_Players"))
+                        NoKnockbackObject.getInstance().setKnockBackState(victim, false);
             }
         }
     }
@@ -368,7 +376,7 @@ public class EventManager implements Listener {
     private ItemStack createDummyItem(){
         ItemStack stack = new ItemStack(Material.DIAMOND_SWORD);
         ItemMeta meta = stack.getItemMeta();
-        meta.setDisplayName("§cError <<X>>");
+        meta.setDisplayName("§cError §f<<X>>");
         stack.setItemMeta(meta);
         return stack;
     }
