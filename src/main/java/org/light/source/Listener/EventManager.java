@@ -118,7 +118,7 @@ public class EventManager implements Listener {
     @EventHandler
     public void onVelocity(PlayerVelocityEvent event) {
         Vector velocity = event.getVelocity();
-        if (!NoKnockbackObject.getInstance().getKnockbackState(event.getPlayer())){
+        if (!NoKnockbackObject.getInstance().getKnockbackState(event.getPlayer())) {
             event.setCancelled(true);
             NoKnockbackObject.getInstance().setKnockBackState(event.getPlayer(), true);
         }
@@ -188,8 +188,16 @@ public class EventManager implements Listener {
                             victim.getInventory().clear();
                             event.setDamage(0.0);
                             victim.setHealth(80.0);
-                            String disName = stack.getItemMeta().getDisplayName();
-                            sendRespawn(victim, killer.getName(), disName, false);
+                            sendRespawn(victim, killer.getName(), stack.getItemMeta().getDisplayName(), false);
+                            if (RatingManager.getInstance().getFirst().equalsIgnoreCase(victim.getName())) {
+                                //1위 인경우
+                                int back, to;
+                                data.setKills(data.getKills() - 1);
+                                back = (killerData + 1) / DataManager.getInstance().getKilltolevel();
+                                to = killerData / DataManager.getInstance().getKilltolevel();
+                                if (to >= DataManager.getInstance().getRounds() / 2 && back != to)
+                                    sendLevelDown(victim, back, to);
+                            }
                         }
                     }
                     RatingManager.getInstance().updateRank();
@@ -209,9 +217,8 @@ public class EventManager implements Listener {
                         }
                     }
                 }
-                else
-                    if (me.DeeCaaD.CrackShotPlus.API.getB(event.getWeaponTitle() + ".Damage.No_Knockback.caramel_Affect_Players") != null && me.DeeCaaD.CrackShotPlus.API.getB(event.getWeaponTitle() + ".Damage.No_Knockback.caramel_Affect_Players"))
-                        NoKnockbackObject.getInstance().setKnockBackState(victim, false);
+                else if (me.DeeCaaD.CrackShotPlus.API.getB(event.getWeaponTitle() + ".Damage.No_Knockback.caramel_Affect_Players") != null && me.DeeCaaD.CrackShotPlus.API.getB(event.getWeaponTitle() + ".Damage.No_Knockback.caramel_Affect_Players"))
+                    NoKnockbackObject.getInstance().setKnockBackState(victim, false);
             }
         }
     }
@@ -255,9 +262,15 @@ public class EventManager implements Listener {
         p.setExp(GameManager.getInstance().calcLevelProgress(to));
     }
 
+    public void sendLevelDown(Player p, int back, int to) {
+        p.sendTitle("§cLevel Down..", "§6" + back + " §f=> §b" + to, 5, 50, 5);
+        p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1.0f, 1.0f);
+        p.setLevel(to);
+        p.setExp(GameManager.getInstance().calcLevelProgress(to));
+    }
 
     public void sendKillMsg(Player killer, Player victim, String msg) {
-        //킬당 참여보상의 1/10 지급, 연속킬시 킬보상의 1/10 * 반올림(연속킬수 / 2), 제압킬시 참여 보상의 1/5 지급, 전부다 합연산으로 지급
+        //킬당 참여보상의 1/10 지급, 연속킬시 킬보상의 1/10 * 반올림(연속킬수 / 2), 제압킬시 참여 보상의 1/5 * 연속킬 횟수 * 2지급, 전부다 합연산으로 지급
         UserMananger killManager = null, victimManager = null;
         int reward = 0;
         for (UserMananger mananger : GameManager.getInstance().getUserlist()) {
@@ -274,7 +287,7 @@ public class EventManager implements Listener {
             killManager.setKillMaintain(killManager.getKillMaintain() + 1);
             if (victimManager.getKillMaintain() >= 2) {
                 craeteKillLog("§4§oShutDown! " + msg);
-                reward += DataManager.getInstance().getJoinMoney() / 5;
+                reward += DataManager.getInstance().getJoinMoney() / 5 * (victimManager.getKillMaintain() * 2);
 
             }
             else {
@@ -321,7 +334,7 @@ public class EventManager implements Listener {
         if (melee)
             victim.sendTitle("§c§oRespawn..", "§c" + killerName + " §7メ §6" + victim.getName(), 0, 40, 0);
         else {
-            victim.sendTitle("§c§oRespawn..", "§c" + killerName + " §➾ §6" + victim.getName(), 0, 40, 0);
+            victim.sendTitle("§c§oRespawn..", "§c" + killerName + " §7➾ §6" + victim.getName(), 0, 40, 0);
             victim.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§c§oUsing §8: " + WeaponName));
         }
         Bukkit.getScheduler().runTaskLater(Plugin, () -> {
@@ -342,6 +355,8 @@ public class EventManager implements Listener {
                             victim.teleport(GameManager.getInstance().getTeleportLocation(DataManager.getInstance().getLocations()[GameManager.getInstance().getRandomNumber()], DataManager.getInstance().getLocations()[GameManager.getInstance().getRandomNumber() + 1]));
                             victim.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 60, 5, true, false));
                             victim.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 9999, 100, true, false));
+                            if (victim.getName().equalsIgnoreCase(RatingManager.getInstance().getFirst()))
+                                victim.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 9999, 5, true, true));
                             victim.getInventory().setItem(0, CrackShotApi.generateRandomWeapon());
                         }
                     }
@@ -377,7 +392,7 @@ public class EventManager implements Listener {
         }, 70L);
     }
 
-    private ItemStack createDummyItem(){
+    private ItemStack createDummyItem() {
         ItemStack stack = new ItemStack(Material.DIAMOND_SWORD);
         ItemMeta meta = stack.getItemMeta();
         meta.setDisplayName("§cError §f<<X>>");
