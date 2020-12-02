@@ -65,8 +65,8 @@ public class GameManager {
             p.sendMessage("§c데스매치 기초설정이 끝나지 않아 참여하실 수 없습니다.");
         }
         else {
-            p.sendMessage(" §6§l참여 §7§l》" + "§b" + p.getName());
             userlist.add(new UserMananger(p.getUniqueId()));
+            sendMessage(" §6§l참여 §7§l》" + "§b" + p.getName());
             if (isgaming) {
                 setPlayer(p);
                 RatingManager.getInstance().updateRank();
@@ -95,13 +95,9 @@ public class GameManager {
     }
 
     public void removePlayer(Player p) {
+        sendMessage(" §c§l퇴장 §7§l《 " + "§b" + p.getName());
         userlist.removeIf(userMananger -> userMananger.getUUID().equals(p.getUniqueId()));
-        p.sendMessage(" §c§l퇴장 §7§l《 " + "§b" + p.getName());
         TeamManager.getInstance().removePlayer(p);
-        for (UserMananger mananger : userlist) {
-            Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-            target.sendMessage("§c퇴장 §7《" + "§b" + p.getName());
-        }
         if (isgaming) {
             RatingManager.getInstance().updateRank();
             p.teleport(DataManager.getInstance().getLocations()[0]);
@@ -343,6 +339,14 @@ public class GameManager {
                 MinimizeLogger.getInstance().appendLog(third.getName() + "님이 데스매치에서 3등을 하여 " + DataManager.getInstance().getThirdReward() + "원을 흭득함");
             }
         }
+    }
+
+    public void sendMessage(String message){
+        userlist.forEach(data -> {
+            Player target = Bukkit.getPlayer(data.getUUID());
+            if (target != null)
+                target.sendMessage(message);
+        });
     }
 
     public float calcLevelProgress(int level) {
