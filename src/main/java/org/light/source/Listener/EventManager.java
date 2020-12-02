@@ -189,7 +189,7 @@ public class EventManager implements Listener {
                             event.setDamage(0.0);
                             victim.setHealth(80.0);
                             sendRespawn(victim, killer.getName(), stack.getItemMeta().getDisplayName(), false);
-                            if (RatingManager.getInstance().getFirst().equalsIgnoreCase(victim.getName())) {
+                            if (victim.getName().equalsIgnoreCase(RatingManager.getInstance().getFirst())) {
                                 //1위 인경우
                                 int back, to;
                                 data.setKills(data.getKills() - 1);
