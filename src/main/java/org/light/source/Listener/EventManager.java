@@ -193,8 +193,8 @@ public class EventManager implements Listener {
                                 //1위 인경우
                                 int back, to;
                                 data.setKills(data.getKills() - 1);
-                                back = (killerData + 1) / DataManager.getInstance().getKilltolevel();
-                                to = killerData / DataManager.getInstance().getKilltolevel();
+                                back = (data.getKills() + 1) / DataManager.getInstance().getKilltolevel();
+                                to = data.getKills() / DataManager.getInstance().getKilltolevel();
                                 if (to >= DataManager.getInstance().getRounds() / 2 && back != to)
                                     sendLevelDown(victim, back, to);
                             }
