@@ -26,6 +26,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 import org.light.source.DeathMatch;
 import org.light.source.Game.GameManager;
 import org.light.source.Game.NoKnockbackObject;
@@ -116,12 +117,13 @@ public class EventManager implements Listener {
 
     @EventHandler
     public void onVelocity(PlayerVelocityEvent event) {
+        Vector velocity = event.getVelocity();
         if (!NoKnockbackObject.getInstance().getKnockbackState(event.getPlayer())){
             event.setCancelled(true);
             NoKnockbackObject.getInstance().setKnockBackState(event.getPlayer(), true);
         }
-        if (event.getVelocity().getY() >= 0.7)
-            event.setVelocity(event.getVelocity().setY(0.5));
+        if (velocity.getY() > 0.5)
+            event.setVelocity(velocity.setY(0.5));
     }
 
     @EventHandler
