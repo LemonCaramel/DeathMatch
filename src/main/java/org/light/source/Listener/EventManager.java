@@ -270,7 +270,7 @@ public class EventManager implements Listener {
     }
 
     public void sendKillMsg(Player killer, Player victim, String msg) {
-        //킬당 참여보상의 1/10 지급, 연속킬시 킬보상의 1/10 * 반올림(연속킬수 / 2), 제압킬시 참여 보상의 1/5 * 연속킬 횟수 * 2지급, 전부다 합연산으로 지급
+        //킬당 참여보상의 1/10 지급, 연속킬시 킬보상의 1/10 * 반올림(연속킬수 / 2), 제압킬시 참여 보상의 1/5 * 연속킬 횟수지급, 전부다 합연산으로 지급
         UserMananger killManager = null, victimManager = null;
         int reward = 0;
         for (UserMananger mananger : GameManager.getInstance().getUserlist()) {
@@ -287,7 +287,7 @@ public class EventManager implements Listener {
             killManager.setKillMaintain(killManager.getKillMaintain() + 1);
             if (victimManager.getKillMaintain() >= 2) {
                 craeteKillLog("§4§oShutDown! " + msg);
-                reward += DataManager.getInstance().getJoinMoney() / 5 * (victimManager.getKillMaintain() * 2);
+                reward += DataManager.getInstance().getJoinMoney() / 5 * victimManager.getKillMaintain();
 
             }
             else {
