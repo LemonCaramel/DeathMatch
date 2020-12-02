@@ -156,8 +156,10 @@ public class EventManager implements Listener {
 
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
-        if (GameManager.getInstance().isgaming() && GameManager.getInstance().contains(event.getEntity().getUniqueId()))
+        if (GameManager.getInstance().isgaming() && GameManager.getInstance().contains(event.getEntity().getUniqueId())) {
+            event.setDeathMessage("");
             event.getDrops().clear();
+        }
     }
 
     @EventHandler
