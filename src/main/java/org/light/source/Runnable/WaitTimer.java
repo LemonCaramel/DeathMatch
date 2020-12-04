@@ -17,6 +17,7 @@ public class WaitTimer extends BukkitRunnable {
     private boolean isRunning;
     private DeathMatch Plugin;
     private BossBar bossBar;
+    private int taskID;
 
     public WaitTimer(DeathMatch Plugin) {
         countValue = DataManager.getInstance().getWaitTime();
@@ -30,8 +31,13 @@ public class WaitTimer extends BukkitRunnable {
     public void run() {
         //1s주기 타이머
         if (!GameManager.getInstance().canStart() || GameManager.getInstance().getUsers().size() < DataManager.getInstance().getMinimumUser()) {
-            if (countValue <= 5)
+            if (countValue <= 5) {
                 countValue = DataManager.getInstance().getWaitTime();
+                GameManager.getInstance().getUsers().forEach(data -> {
+                    Player target = Bukkit.getPlayer(data.getUUID());
+                    target.teleport(DataManager.getInstance().getLocations()[0]);
+                });
+            }
             pause();
         }
         else if (countValue <= 0) {
@@ -65,7 +71,7 @@ public class WaitTimer extends BukkitRunnable {
     public boolean start() {
         if (!isRunning) {
             countValue = DataManager.getInstance().getWaitTime();
-            runTaskTimer(Plugin, 0L, 20L);
+            taskID = runTaskTimer(Plugin, 0L, 20L).getTaskId();
             isRunning = true;
             bossBar = Bukkit.createBossBar("§cRemain : ", BarColor.RED, BarStyle.SOLID);
             return true;
@@ -75,11 +81,8 @@ public class WaitTimer extends BukkitRunnable {
 
     public boolean pause() {
         if (isRunning) {
-            cancel();
-            GameManager.getInstance().getUsers().forEach(data -> {
-                Player target = Bukkit.getPlayer(data.getUUID());
-                target.teleport(DataManager.getInstance().getLocations()[0]);
-            });
+            Bukkit.getScheduler().cancelTask(taskID);
+            taskID = 0;
             isRunning = false;
             return true;
         }
@@ -88,7 +91,7 @@ public class WaitTimer extends BukkitRunnable {
 
     public boolean resume() {
         if (!isRunning) {
-            runTaskTimer(Plugin, 0L, 20L);
+            taskID = runTaskTimer(Plugin, 0L, 20L).getTaskId();
             isRunning = true;
             return true;
         }
@@ -97,7 +100,8 @@ public class WaitTimer extends BukkitRunnable {
 
     public boolean stop() {
         if (isRunning) {
-            cancel();
+            Bukkit.getScheduler().cancelTask(taskID);
+            taskID = 0;
             isRunning = false;
             countValue = DataManager.getInstance().getWaitTime();
             return true;
@@ -109,7 +113,7 @@ public class WaitTimer extends BukkitRunnable {
         return countValue;
     }
 
-    private float calcProgress(int remain, int now){
+    private float calcProgress(int now, int remain){
         if ((1.0 - (float)now / remain) < 0)
             return 0.0f;
         else
