@@ -73,10 +73,6 @@ public class GameManager {
             }
             else if (timer.returnRemainTime() <= 5 && timer.isRunning())
                 p.teleport(getTeleportLocation(DataManager.getInstance().getLocations()[randomMap], DataManager.getInstance().getLocations()[randomMap + 1]));
-            else if (getUserCount() >= DataManager.getInstance().getMinimumUser()) {
-                if (!timer.isRunning())
-                    timer.resume();
-            }
         }
     }
 

@@ -10,6 +10,8 @@ import org.light.source.DeathMatch;
 import org.light.source.Game.GameManager;
 import org.light.source.Singleton.DataManager;
 
+import javax.xml.crypto.Data;
+
 
 public class WaitTimer extends BukkitRunnable {
 
@@ -37,8 +39,8 @@ public class WaitTimer extends BukkitRunnable {
                     Player target = Bukkit.getPlayer(data.getUUID());
                     target.teleport(DataManager.getInstance().getLocations()[0]);
                 });
+                countValue = DataManager.getInstance().getWaitTime();
             }
-            pause();
         }
         else if (countValue <= 0) {
             //start
@@ -79,29 +81,9 @@ public class WaitTimer extends BukkitRunnable {
         return false;
     }
 
-    public boolean pause() {
-        if (isRunning) {
-            Bukkit.getScheduler().cancelTask(taskID);
-            taskID = 0;
-            isRunning = false;
-            return true;
-        }
-        return false;
-    }
-
-    public boolean resume() {
-        if (!isRunning) {
-            taskID = runTaskTimer(Plugin, 0L, 20L).getTaskId();
-            isRunning = true;
-            return true;
-        }
-        return false;
-    }
-
     public boolean stop() {
         if (isRunning) {
-            Bukkit.getScheduler().cancelTask(taskID);
-            taskID = 0;
+            cancel();
             isRunning = false;
             countValue = DataManager.getInstance().getWaitTime();
             return true;
