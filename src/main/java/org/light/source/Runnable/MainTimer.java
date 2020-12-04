@@ -32,7 +32,7 @@ public class MainTimer extends BukkitRunnable {
                 Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
                 bossBar.setProgress(1.0f);
                 bossBar.addPlayer(target);
-                bossBar.setTitle("§5Timer §7: §6" + maxSecond + "§fs");
+                bossBar.setTitle("§5Timer §7: §6" + maxSecond + "§f초");
             }
         }
         else if (now >= maxSecond){
@@ -45,7 +45,7 @@ public class MainTimer extends BukkitRunnable {
             GameManager.getInstance().stop();
         }
         else{
-            bossBar.setTitle("§5Timer §7: §6" + (maxSecond - now) + "§fs");
+            bossBar.setTitle("§5Timer §7: §6" + (maxSecond - now) + "§f초");
             bossBar.setProgress(calcProgress(maxSecond, now));
             if (maxSecond - now <= 5){
                 for (UserMananger mananger : userlist){

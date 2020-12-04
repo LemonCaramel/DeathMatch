@@ -17,6 +17,7 @@ public class DataManager {
     private int killMaintain;
     private int maxReroll;
     private int reRollMoney;
+    private int waitTime;
 
     static {
         manager = new DataManager();
@@ -35,6 +36,7 @@ public class DataManager {
         killMaintain = 1;
         maxReroll = 0;
         reRollMoney = 0;
+        waitTime = 0;
         locations = new Location[21];
     }
 
@@ -154,4 +156,13 @@ public class DataManager {
     public void setKillMaintain(int killMaintain) {
         this.killMaintain = killMaintain;
     }
+
+    public int getWaitTime() {
+        return waitTime;
+    }
+
+    public void setWaitTime(int waitTime) {
+        this.waitTime = waitTime;
+    }
+
 }

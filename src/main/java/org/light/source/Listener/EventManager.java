@@ -65,7 +65,7 @@ public class EventManager implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         Player p = (Player) event.getWhoClicked();
-        if (GameManager.getInstance().contains(p.getUniqueId()) && GameManager.getInstance().isgaming()) {
+        if (GameManager.getInstance().contains(p.getUniqueId()) && GameManager.getInstance().isGaming()) {
             if (event.getRawSlot() == -999)
                 return;
             event.setCancelled(true);
@@ -76,7 +76,7 @@ public class EventManager implements Listener {
                     if (director.getBoolean(node[0] + ".Extras.One_Time_Use"))
                         p.getInventory().setItem(0, CrackShotApi.generateRandomWeapon());
                     else {
-                        for (UserMananger data : GameManager.getInstance().getUserlist()) {
+                        for (UserMananger data : GameManager.getInstance().getUsers()) {
                             if (data.getUUID().equals(p.getUniqueId())) {
                                 if (data.getReRoll() >= DataManager.getInstance().getMaxReroll()) {
                                     p.sendMessage("§4최대 리롤 횟수를 초과하셨습니다..");
@@ -111,7 +111,7 @@ public class EventManager implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onOffhandMove(PlayerSwapHandItemsEvent event) {
         Player target = event.getPlayer();
-        if (GameManager.getInstance().isgaming() && GameManager.getInstance().contains(target.getUniqueId()))
+        if (GameManager.getInstance().isGaming() && GameManager.getInstance().contains(target.getUniqueId()))
             event.setCancelled(true);
     }
 
@@ -158,7 +158,7 @@ public class EventManager implements Listener {
 
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
-        if (GameManager.getInstance().isgaming() && GameManager.getInstance().contains(event.getEntity().getUniqueId())) {
+        if (GameManager.getInstance().isGaming() && GameManager.getInstance().contains(event.getEntity().getUniqueId())) {
             event.setDeathMessage("");
             event.getDrops().clear();
         }
@@ -166,7 +166,7 @@ public class EventManager implements Listener {
 
     @EventHandler
     public void onWeaponDamage(WeaponDamageEntityEvent event) {
-        if (event.getVictim() instanceof Player && GameManager.getInstance().isgaming()) {
+        if (event.getVictim() instanceof Player && GameManager.getInstance().isGaming()) {
             Player killer = event.getPlayer();
             Player victim = (Player) event.getVictim();
             if (GameManager.getInstance().contains(killer.getUniqueId()) && GameManager.getInstance().contains(victim.getUniqueId())) {
@@ -179,7 +179,7 @@ public class EventManager implements Listener {
                         sendKillMsg(killer, victim, "§c" + killer.getName() + " §f(" + stack.getItemMeta().getDisplayName() + "§f)" + " §7メ §b" + victim.getName());
                     else
                         sendKillMsg(killer, victim, "§c" + killer.getName() + " §f(" + stack.getItemMeta().getDisplayName() + "§f)" + " §7➾ §b" + victim.getName());
-                    for (UserMananger data : GameManager.getInstance().getUserlist()) {
+                    for (UserMananger data : GameManager.getInstance().getUsers()) {
                         if (data.getUUID().equals(killer.getUniqueId())) {
                             data.setKills(data.getKills() + 1);
                             killerData = data.getKills();
@@ -225,10 +225,10 @@ public class EventManager implements Listener {
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {
-        if (GameManager.getInstance().isgaming()) {
+        if (GameManager.getInstance().isGaming()) {
             Player target = event.getPlayer();
             if (GameManager.getInstance().contains(target.getUniqueId())) {
-                for (UserMananger mananger : GameManager.getInstance().getUserlist()) {
+                for (UserMananger mananger : GameManager.getInstance().getUsers()) {
                     if (mananger.getUUID().equals(target.getUniqueId())) {
                         target.getInventory().setItem(0, CrackShotApi.generateRandomWeapon());
                         target.getInventory().clear();
@@ -273,7 +273,7 @@ public class EventManager implements Listener {
         //킬당 참여보상의 1/10 지급, 연속킬시 킬보상의 1/10 * 반올림(연속킬수 / 2), 제압킬시 참여 보상의 1/5 * 연속킬 횟수지급, 전부다 합연산으로 지급
         UserMananger killManager = null, victimManager = null;
         int reward = 0;
-        for (UserMananger mananger : GameManager.getInstance().getUserlist()) {
+        for (UserMananger mananger : GameManager.getInstance().getUsers()) {
             if (mananger.getUUID().equals(killer.getUniqueId())) {
                 killManager = mananger;
             }
@@ -338,9 +338,9 @@ public class EventManager implements Listener {
         }
         Bukkit.getScheduler().runTaskLater(Plugin, () -> {
             //2초후 리스폰
-            if (GameManager.getInstance().isgaming()) {
+            if (GameManager.getInstance().isGaming()) {
                 if (GameManager.getInstance().contains(victim.getUniqueId())) {
-                    for (UserMananger victimgr : GameManager.getInstance().getUserlist()) {
+                    for (UserMananger victimgr : GameManager.getInstance().getUsers()) {
                         if (victimgr.getUUID().equals(victim.getUniqueId())) {
                             victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(80.0);
                             victim.setHealthScaled(true);
@@ -381,7 +381,7 @@ public class EventManager implements Listener {
             builder.append(" ");
         builder.append(message);
         BossBar bar = Bukkit.createBossBar(builder.toString(), BarColor.WHITE, BarStyle.SOLID);
-        GameManager.getInstance().getUserlist().forEach(p -> {
+        GameManager.getInstance().getUsers().forEach(p -> {
             bar.addPlayer(Bukkit.getPlayer(p.getUUID()));
             list.add(p.getUUID());
         });

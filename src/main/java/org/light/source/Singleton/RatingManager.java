@@ -2,8 +2,6 @@ package org.light.source.Singleton;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.light.source.Game.GameManager;
 import org.light.source.Game.UserMananger;
 
@@ -52,7 +50,7 @@ public class RatingManager {
 
     public void updateRank(){
         clear();
-        for (UserMananger mananger : GameManager.getInstance().getUserlist()){
+        for (UserMananger mananger : GameManager.getInstance().getUsers()){
             Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
             int kill = mananger.getKills();
             if (strings[0] == null || kills[0] < kill){

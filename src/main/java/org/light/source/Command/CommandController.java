@@ -184,7 +184,7 @@ public class CommandController implements CommandExecutor {
                                     }
                                 }
                                 else if (args[0].equalsIgnoreCase("강제종료")) {
-                                    if (GameManager.getInstance().isgaming()) {
+                                    if (GameManager.getInstance().isGaming()) {
                                         Bukkit.broadcastMessage(first + "§4관리자에 의해 데스매치가 강제종료 되었습니다.");
                                         GameManager.getInstance().stop();
                                         MinimizeLogger.getInstance().appendLog(p.getName() + "님이 데스매치를 강제종료함");
@@ -262,18 +262,18 @@ public class CommandController implements CommandExecutor {
 
     public void currentGameInfo(Player p) {
         p.sendMessage(" ");
-        if (!GameManager.getInstance().isgaming()) {
+        if (!GameManager.getInstance().isGaming()) {
             p.sendMessage(first + "§b게임 상태 §7: §6유저 대기중..");
             p.sendMessage(" ");
-            p.sendMessage(first + "§7참여 인원 §7: §b" + GameManager.getInstance().getusercount());
-            for (UserMananger mananger : GameManager.getInstance().getUserlist())
+            p.sendMessage(first + "§7참여 인원 §7: §b" + GameManager.getInstance().getUserCount());
+            for (UserMananger mananger : GameManager.getInstance().getUsers())
                 p.sendMessage("  §7-  §f" + Bukkit.getServer().getPlayer(mananger.getUUID()).getName());
         }
         else {
             p.sendMessage(first + "§b게임 상태 §7: §c게임 진행중");
             p.sendMessage(" ");
-            p.sendMessage(first + "§7참여 인원 §7: §b" + GameManager.getInstance().getusercount());
-            for (UserMananger mananger : GameManager.getInstance().getUserlist())
+            p.sendMessage(first + "§7참여 인원 §7: §b" + GameManager.getInstance().getUserCount());
+            for (UserMananger mananger : GameManager.getInstance().getUsers())
                 p.sendMessage("  §7-  §f" + Bukkit.getServer().getPlayer(mananger.getUUID()).getName());
         }
         p.sendMessage(" ");

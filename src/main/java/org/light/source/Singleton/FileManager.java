@@ -48,6 +48,7 @@ public class FileManager {
         config.set("KillMaintain", manager.getKillMaintain());
         config.set("MaxReRoll", manager.getMaxReroll());
         config.set("ReRollMoney", manager.getReRollMoney());
+        config.set("WaitTime", manager.getWaitTime());
         if (manager.getLocations() != null){
             for (int i = 0; i < DataManager.getInstance().getLocationAmount(); i++){
                 config.set("Location." + (i+1), manager.getLocations()[i]);
@@ -79,6 +80,7 @@ public class FileManager {
         manager.setKillMaintain(config.getInt("KillMaintain", 10));
         manager.setMaxReroll(config.getInt("MaxReRoll", 10));
         manager.setReRollMoney(config.getInt("ReRollMoney", 200));
+        manager.setWaitTime(config.getInt("WaitTime", 60));
         if (config.get("Location.1") != null && config.getInt("LocationAmount") != 0){
             int amount = config.getInt("LocationAmount");
             for (int i = 0; i < amount; i++){

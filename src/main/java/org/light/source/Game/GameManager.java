@@ -2,8 +2,6 @@ package org.light.source.Game;
 
 import moe.caramel.caramellibrarylegacy.api.API;
 import moe.caramel.caramellibrarylegacy.user.CaramelUserData;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
@@ -13,7 +11,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 import org.light.source.DeathMatch;
 import org.light.source.Log.MinimizeLogger;
-import org.light.source.Runnable.Countdown;
+import org.light.source.Runnable.WaitTimer;
 import org.light.source.Runnable.MainTimer;
 import org.light.source.Singleton.*;
 
@@ -24,13 +22,12 @@ import java.util.concurrent.ThreadLocalRandom;
 public class GameManager {
 
     private static GameManager manager;
-    private boolean isgaming;
-    private ArrayList<UserMananger> userlist;
+    private boolean isGaming;
+    private ArrayList<UserMananger> users;
     private DeathMatch Plugin;
-    private int taskid;
     private int randomMap;
-    private Countdown countRunnable;
-    private MainTimer gameRunnable;
+    private WaitTimer timer;
+    private MainTimer gameTimer;
     private API api;
 
     static {
@@ -38,118 +35,73 @@ public class GameManager {
     }
 
     private GameManager() {
-        userlist = new ArrayList<>();
-        isgaming = false;
+        users = new ArrayList<>();
+        isGaming = false;
         Plugin = JavaPlugin.getPlugin(DeathMatch.class);
-        taskid = Bukkit.getScheduler().runTaskTimerAsynchronously(Plugin, this::sendScore, 0L, 20L).getTaskId();
-        countRunnable = null;
-        gameRunnable = null;
+        Bukkit.getScheduler().runTaskTimerAsynchronously(Plugin, this::sendScore, 0L, 20L);
+        timer = new WaitTimer(Plugin);
+        gameTimer = null;
         api = new API();
-        randomMap = 1;
+        selectRandomMap();
     }
 
     public static GameManager getInstance() {
         return manager;
     }
 
-    public boolean isgaming() {
-        return isgaming;
+    public boolean isGaming() {
+        return isGaming;
     }
 
     public void setGameState(boolean GameState) {
-        isgaming = GameState;
+        isGaming = GameState;
     }
 
     public void addPlayer(Player p) {
-        if (!canstart()) {
+        if (!canStart()) {
             p.sendMessage("§c데스매치 기초설정이 끝나지 않아 참여하실 수 없습니다.");
         }
         else {
-            userlist.add(new UserMananger(p.getUniqueId()));
+            users.add(new UserMananger(p.getUniqueId()));
             sendMessage(" §6§l참여 §7§l》" + "§b" + p.getName());
-            if (isgaming) {
+            if (timer.isRunning())
+                timer.returnBossbarInstance().addPlayer(p);
+            if (isGaming()) {
                 setPlayer(p);
                 RatingManager.getInstance().updateRank();
-                gameRunnable.getbossbarInstance().addPlayer(p);
+                gameTimer.getbossbarInstance().addPlayer(p);
             }
-            else if (getusercount() >= DataManager.getInstance().getMinimumUser()) {
-                if (countRunnable == null) {
-                    randomMap = ThreadLocalRandom.current().nextInt(1, DataManager.getInstance().getLocationAmount());
-                    while (randomMap % 2 != 1)
-                        randomMap = ThreadLocalRandom.current().nextInt(1, DataManager.getInstance().getLocationAmount());
-                    for (UserMananger mananger : userlist) {
-                        Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-                        target.playSound(target.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.0f);
-                        target.sendTitle("§6준비!", "§c최소 인원이 충족되어 곧 게임이 시작됩니다.", 5, 20, 5);
-                        target.teleport(getTeleportLocation(DataManager.getInstance().getLocations()[randomMap], DataManager.getInstance().getLocations()[randomMap + 1]));
-                    }
-                    countRunnable = new Countdown(userlist);
-                    Bukkit.getScheduler().runTaskLaterAsynchronously(Plugin, () -> {
-                        if (countRunnable != null) {
-                            countRunnable.runTaskTimer(Plugin, 0L, 2L).getTaskId();
-                        }
-                    }, 20L);
-                }
+            else if (timer.returnRemainTime() <= 5 && timer.isRunning())
+                p.teleport(getTeleportLocation(DataManager.getInstance().getLocations()[randomMap], DataManager.getInstance().getLocations()[randomMap + 1]));
+            else if (getUserCount() >= DataManager.getInstance().getMinimumUser()) {
+                if (!timer.isRunning())
+                    timer.resume();
             }
         }
     }
 
     public void removePlayer(Player p) {
         sendMessage(" §c§l퇴장 §7§l《 " + "§b" + p.getName());
-        userlist.removeIf(userMananger -> userMananger.getUUID().equals(p.getUniqueId()));
+        users.removeIf(data -> data.getUUID().equals(p.getUniqueId()));
         TeamManager.getInstance().removePlayer(p);
-        if (isgaming) {
+        if (isGaming()) {
             RatingManager.getInstance().updateRank();
-            p.teleport(DataManager.getInstance().getLocations()[0]);
-            p.getInventory().clear();
-            api.giveChannel(p, 8);
-            p.setHealth(20.0);
-            p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
-            p.setHealthScaled(true);
-            gameRunnable.getbossbarInstance().removePlayer(p);
-            for (PotionEffectType type : PotionEffectType.values()) {
-                if (type == null)
-                    continue;
-                if (p.hasPotionEffect(type))
-                    p.removePotionEffect(type);
-            }
-            p.setLevel(0);
-            p.setExp(0.0f);
-            if (CaramelUserData.getData().getUser(p.getUniqueId()) != null)
-                CaramelUserData.getData().getUser(p.getUniqueId()).setInvincibility(true);
+            setNormalPlayer(p);
         }
-        else {
-            p.teleport(DataManager.getInstance().getLocations()[0]);
-            api.giveChannel(p, 8);
-        }
-        if (canstart() && getusercount() + 1 == DataManager.getInstance().getMinimumUser()) {
-            if (!isgaming) {
-                if (countRunnable != null && countRunnable.countnum != 102)
-                    countRunnable.cancel();
-                countRunnable = null;
-                for (UserMananger mananger : userlist) {
-                    Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-                    target.sendMessage("§f최소인원을 만족하지 못해 게임 준비가 취소되었습니다.");
-                    target.teleport(DataManager.getInstance().getLocations()[0]);
-                }
-            }
-            else {
-                for (UserMananger mananger : userlist) {
-                    Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-                    target.sendMessage("§c데스매치 최소인원을 만족하지 못해 게임이 중단되었습니다.");
-                }
-                gameRunnable.cancel();
-                stop();
-            }
+        p.teleport(DataManager.getInstance().getLocations()[0]);
+        if (isGaming() && getUserCount() < DataManager.getInstance().getMinimumUser()) {
+            sendMessage("§c데스매치 최소인원을 만족하지 못해 게임이 중단되었습니다.");
+            gameTimer.cancel();
+            stop();
         }
         //게임 시작전인지 게임 중인지
     }
 
     public void sendScore() {
         Bukkit.getScheduler().runTask(Plugin, () -> {
-                    if (!isgaming && (getusercount() < DataManager.getInstance().getMinimumUser() || DataManager.getInstance().getMinimumUser() == 0))
+                    if (!isGaming && (getUserCount() < DataManager.getInstance().getMinimumUser() || DataManager.getInstance().getMinimumUser() == 0))
                         ScoreboardObject.getInstance().sendScoreboard(1);
-                    else if (!isgaming && getusercount() >= DataManager.getInstance().getMinimumUser())
+                    else if (!isGaming && getUserCount() >= DataManager.getInstance().getMinimumUser())
                         ScoreboardObject.getInstance().sendScoreboard(2);
                     else
                         ScoreboardObject.getInstance().sendScoreboard(3);
@@ -158,17 +110,17 @@ public class GameManager {
 
     }
 
-    public int getusercount() {
-        return userlist.size();
+    public int getUserCount() {
+        return users.size();
     }
 
-    public ArrayList<UserMananger> getUserlist() {
-        return userlist;
+    public ArrayList<UserMananger> getUsers() {
+        return users;
     }
 
     public boolean contains(UUID uuid) {
-        for (UserMananger mananger : userlist) {
-            if (mananger.getUUID().equals(uuid))
+        for (UserMananger data : users) {
+            if (data.getUUID().equals(uuid))
                 return true;
         }
         return false;
@@ -179,45 +131,24 @@ public class GameManager {
     }
 
     public void start() {
-        if (!isgaming) {
+        if (!isGaming) {
             setGameState(true);
-            gameRunnable = new MainTimer(DataManager.getInstance().getTime(), userlist);
-            gameRunnable.runTaskTimerAsynchronously(Plugin, 0L, 20L);
-            Bukkit.getServer().getScheduler().runTask(Plugin, () -> {
-                for (UserMananger mananger : userlist) {
-                    Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-                    setPlayer(target);
-                }
-            });
+            gameTimer = new MainTimer(DataManager.getInstance().getTime(), users);
+            gameTimer.runTaskTimerAsynchronously(Plugin, 0L, 20L);
+            Bukkit.getServer().getScheduler().runTask(Plugin, () -> users.forEach(data -> setPlayer(Bukkit.getPlayer(data.getUUID()))));
             RatingManager.getInstance().updateRank();
         }
     }
 
     public void stop() {
-        if (isgaming) {
+        if (isGaming()) {
             Bukkit.getScheduler().runTask(Plugin, () -> {
                 setGameState(false);
-                for (UserMananger data : userlist) {
-                    Player target = Bukkit.getServer().getPlayer(data.getUUID());
-                    target.teleport(DataManager.getInstance().getLocations()[0]);
-                    target.getInventory().clear();
-                    api.giveChannel(target, 8);
-                    target.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
-                    target.setHealthScaled(true);
-                    target.setHealth(20.0);
-                    TeamManager.getInstance().removePlayer(target);
-                    for (PotionEffectType type : PotionEffectType.values()) {
-                        if (type == null)
-                            continue;
-                        if (target.hasPotionEffect(type))
-                            target.removePotionEffect(type);
-                    }
-                    target.setLevel(0);
-                    target.setExp(0.0f);
-                    if (CaramelUserData.getData().getUser(target.getUniqueId()) != null)
-                        CaramelUserData.getData().getUser(target.getUniqueId()).setInvincibility(true);
-                    gameRunnable.getbossbarInstance().removeAll();
-                    if (DataManager.getInstance().getJoinMoney() != 0 && getusercount() >= DataManager.getInstance().getMinimumUser()) {
+                for (UserMananger data : users) {
+                    Player target = Bukkit.getPlayer(data.getUUID());
+                    setNormalPlayer(target);
+                    gameTimer.getbossbarInstance().removeAll();
+                    if (DataManager.getInstance().getJoinMoney() != 0 && getUserCount() >= DataManager.getInstance().getMinimumUser()) {
                         target.sendMessage("§f총 보상 §6" + (DataManager.getInstance().getJoinMoney() + data.getCalcResultMoney()) + "§f원을 흭득하셨습니다!");
                         EconomyApi.getInstance().giveMoney(target, DataManager.getInstance().getJoinMoney() + data.getCalcResultMoney());
                         MinimizeLogger.getInstance().appendLog(target.getName() + "님이 데스매치에 참여해 " + DataManager.getInstance().getJoinMoney() + "원을 흭득함");
@@ -227,19 +158,17 @@ public class GameManager {
                     }
                 }
                 giveRatingReward();
-                gameRunnable.cancel();
-                gameRunnable = null;
-                countRunnable = null;
-                userlist.clear();
+                gameTimer.cancel();
+                gameTimer = null;
+                timer.start();
+                selectRandomMap();
             });
         }
     }
 
-    public boolean canstart() {
+    public boolean canStart() {
         DataManager manager = DataManager.getInstance();
-        if (manager.getMinimumUser() > 1 && manager.getTime() >= 10 && manager.getKilltolevel() >= 2 && manager.getLocations() != null && manager.getRounds() >= 1)
-            return true;
-        return false;
+        return manager.getMinimumUser() > 1 && manager.getTime() >= 10 && manager.getKilltolevel() >= 2 && manager.getLocations() != null && manager.getRounds() >= 1;
     }
 
     public void setPlayer(Player p) {
@@ -266,9 +195,24 @@ public class GameManager {
         }
     }
 
+    public void setNormalPlayer(Player p) {
+        p.teleport(DataManager.getInstance().getLocations()[0]);
+        p.getInventory().clear();
+        api.giveChannel(p, 8);
+        p.setHealth(20.0);
+        p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
+        p.setHealthScaled(true);
+        gameTimer.getbossbarInstance().removePlayer(p);
+        new ArrayList<>(p.getActivePotionEffects()).forEach(pos -> p.removePotionEffect(pos.getType()));
+        p.setLevel(0);
+        p.setExp(0.0f);
+        if (CaramelUserData.getData().getUser(p.getUniqueId()) != null)
+            CaramelUserData.getData().getUser(p.getUniqueId()).setInvincibility(true);
+    }
+
     public Location getTeleportLocation(Location first, Location second) {
         double x, xx, y, yy, z, zz;
-        int gapx, gapy, gapz;
+        int gapX, gapY, gapZ;
         if (first.getX() < second.getY()) {
             x = first.getX();
             xx = second.getX();
@@ -293,24 +237,24 @@ public class GameManager {
             z = second.getZ();
             zz = first.getZ();
         }
-        gapx = (int) ((int) xx - x);
-        gapy = (int) ((int) yy - y);
-        gapz = (int) ((int) zz - z);
+        gapX = (int) ((int) xx - x);
+        gapY = (int) ((int) yy - y);
+        gapZ = (int) ((int) zz - z);
 
-        if (gapx == 0 && gapy == 0 && gapz == 0)
+        if (gapX == 0 && gapY == 0 && gapZ == 0)
             return first;
         Location min = new Location(first.getWorld(), x, y, z);
-        if (gapx > 0) {
-            int add = ThreadLocalRandom.current().nextInt(0, gapx + 1);
+        if (gapX > 0) {
+            int add = ThreadLocalRandom.current().nextInt(0, gapX + 1);
             min.setX(min.getX() + add);
         }
-        if (gapy > 0) {
-            int add = ThreadLocalRandom.current().nextInt(0, gapy + 1);
+        if (gapY > 0) {
+            int add = ThreadLocalRandom.current().nextInt(0, gapY + 1);
             min.setY(min.getY() + add);
 
         }
-        if (gapz > 0) {
-            int add = ThreadLocalRandom.current().nextInt(0, gapz + 1);
+        if (gapZ > 0) {
+            int add = ThreadLocalRandom.current().nextInt(0, gapZ + 1);
             min.setZ(min.getZ() + add);
         }
         if (min.getBlock().getType() != Material.AIR || min.clone().add(new Vector(0, 1, 0)).getBlock().getType() != Material.AIR)
@@ -319,7 +263,7 @@ public class GameManager {
     }
 
     public void giveRatingReward() {
-        if (userlist.size() >= 5) {
+        if (users.size() >= 5) {
             if (RatingManager.getInstance().getFirst() != null && DataManager.getInstance().getFirstReward() != 0) {
                 Player first = Bukkit.getPlayer(RatingManager.getInstance().getFirst());
                 EconomyApi.getInstance().giveMoney(first, DataManager.getInstance().getFirstReward());
@@ -341,8 +285,8 @@ public class GameManager {
         }
     }
 
-    public void sendMessage(String message){
-        userlist.forEach(data -> {
+    public void sendMessage(String message) {
+        users.forEach(data -> {
             Player target = Bukkit.getPlayer(data.getUUID());
             if (target != null)
                 target.sendMessage(message);
@@ -354,5 +298,11 @@ public class GameManager {
             return 0.0f;
         else
             return (float) level / DataManager.getInstance().getRounds();
+    }
+
+    public void selectRandomMap() {
+        randomMap = ThreadLocalRandom.current().nextInt(1, DataManager.getInstance().getLocationAmount());
+        while (randomMap % 2 != 1)
+            randomMap = ThreadLocalRandom.current().nextInt(1, DataManager.getInstance().getLocationAmount());
     }
 }
