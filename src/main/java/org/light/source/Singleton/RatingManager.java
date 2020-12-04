@@ -2,6 +2,8 @@ package org.light.source.Singleton;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.light.source.Game.GameManager;
 import org.light.source.Game.UserMananger;
 
@@ -97,6 +99,12 @@ public class RatingManager {
                 kills[2] = kill;
             }
         }
+        Player first, second;
+        first = Bukkit.getPlayer(strings[0]);
+        second = Bukkit.getPlayer(strings[1]);
+        if (first.hasPotionEffect(PotionEffectType.GLOWING))
+            first.removePotionEffect(PotionEffectType.GLOWING);
+        second.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 9999, 3, true, false));
 
     }
 

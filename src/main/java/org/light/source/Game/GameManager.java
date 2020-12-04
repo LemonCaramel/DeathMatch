@@ -219,7 +219,7 @@ public class GameManager {
                     gameRunnable.getbossbarInstance().removeAll();
                     if (DataManager.getInstance().getJoinMoney() != 0 && getusercount() >= DataManager.getInstance().getMinimumUser()) {
                         target.sendMessage("§f총 보상 §6" + (DataManager.getInstance().getJoinMoney() + data.getCalcResultMoney()) + "§f원을 흭득하셨습니다!");
-                        EconomyApi.getInstance().giveMoney(target, DataManager.getInstance().getJoinMoney());
+                        EconomyApi.getInstance().giveMoney(target, DataManager.getInstance().getJoinMoney() + data.getCalcResultMoney());
                         MinimizeLogger.getInstance().appendLog(target.getName() + "님이 데스매치에 참여해 " + DataManager.getInstance().getJoinMoney() + "원을 흭득함");
                     }
                     if (RatingManager.getInstance().getFirst() != null) {
