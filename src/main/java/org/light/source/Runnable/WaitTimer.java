@@ -58,7 +58,6 @@ public class WaitTimer extends BukkitRunnable {
                 Player target = Bukkit.getPlayer(data.getUUID());
                 if (countValue == 5) {
                     int randomMap;
-                    GameManager.getInstance().selectRandomMap();
                     randomMap = GameManager.getInstance().getRandomNumber();
                     target.teleport(GameManager.getInstance().getTeleportLocation(DataManager.getInstance().getLocations()[randomMap], DataManager.getInstance().getLocations()[randomMap + 1]));
                 }

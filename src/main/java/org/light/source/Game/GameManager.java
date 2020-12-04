@@ -44,6 +44,7 @@ public class GameManager {
         gameTimer = null;
         api = new API();
         new TimeRunnable(Plugin);
+        selectRandomMap();
     }
 
     public static GameManager getInstance() {
