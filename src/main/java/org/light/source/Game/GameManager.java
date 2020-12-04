@@ -11,6 +11,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 import org.light.source.DeathMatch;
 import org.light.source.Log.MinimizeLogger;
+import org.light.source.Runnable.TimeRunnable;
 import org.light.source.Runnable.WaitTimer;
 import org.light.source.Runnable.MainTimer;
 import org.light.source.Singleton.*;
@@ -42,6 +43,7 @@ public class GameManager {
         timer = new WaitTimer(Plugin);
         gameTimer = null;
         api = new API();
+        new TimeRunnable(Plugin);
     }
 
     public static GameManager getInstance() {
@@ -83,8 +85,7 @@ public class GameManager {
             RatingManager.getInstance().updateRank();
             setNormalPlayer(p);
         }
-        if (DataManager.getInstance().getLocations() != null || !p.getWorld().getName().contains(DataManager.getInstance().getLocations()[0].getWorld().getName()))
-            p.teleport(DataManager.getInstance().getLocations()[0]);
+        p.teleport(DataManager.getInstance().getLocations()[0]);
         if (isGaming() && getUserCount() < DataManager.getInstance().getMinimumUser()) {
             sendMessage("§c데스매치 최소인원을 만족하지 못해 게임이 중단되었습니다.");
             gameTimer.cancel();
@@ -197,6 +198,7 @@ public class GameManager {
         p.setHealth(20.0);
         p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
         p.setHealthScaled(true);
+        TeamManager.getInstance().removePlayer(p);
         gameTimer.getbossbarInstance().removePlayer(p);
         new ArrayList<>(p.getActivePotionEffects()).forEach(pos -> p.removePotionEffect(pos.getType()));
         p.setLevel(0);

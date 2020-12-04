@@ -134,14 +134,8 @@ public class EventManager implements Listener {
         API api = new API();
         api.giveChannel(target, 8);
         TeamManager.getInstance().removePlayer(target);
-        Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(Plugin, () -> {
-            if (CaramelUserData.getData().getUser(target.getUniqueId()) != null && !GameManager.getInstance().contains(target.getUniqueId()))
-                CaramelUserData.getData().getUser(target.getUniqueId()).setInvincibility(true);
-        }, 20L);
-        Bukkit.getScheduler().runTaskLater(Plugin, () -> {
-            if (!PhoneManager.getInstance().contains(target.getUniqueId()))
-                PhoneManager.getInstance().addObject(target.getUniqueId(), false);
-        }, 40L);
+        setNoDamageState(target ,true);
+        checkPhone(target);
 
     }
 
@@ -192,11 +186,12 @@ public class EventManager implements Listener {
                             if (victim.getName().equalsIgnoreCase(RatingManager.getInstance().getFirst())) {
                                 //1위 인경우
                                 int back, to;
-                                data.setKills(data.getKills() - 1);
-                                back = (data.getKills() + 1) / DataManager.getInstance().getKilltolevel();
-                                to = data.getKills() / DataManager.getInstance().getKilltolevel();
-                                if (to >= DataManager.getInstance().getRounds() / 2 && back != to)
+                                back = data.getKills() / DataManager.getInstance().getKilltolevel();
+                                to = data.getKills()-1 / DataManager.getInstance().getKilltolevel();
+                                if (to >= DataManager.getInstance().getRounds() / 2 && back != to) {
                                     sendLevelDown(victim, back, to);
+                                    data.setKills(data.getKills() - 1);
+                                }
                             }
                         }
                     }
@@ -397,5 +392,19 @@ public class EventManager implements Listener {
         meta.setDisplayName("§cError §f<<X>>");
         stack.setItemMeta(meta);
         return stack;
+    }
+
+    private void setNoDamageState(Player target, boolean state){
+        Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(Plugin, () -> {
+            if (CaramelUserData.getData().getUser(target.getUniqueId()) != null && !GameManager.getInstance().contains(target.getUniqueId()))
+                CaramelUserData.getData().getUser(target.getUniqueId()).setInvincibility(state);
+        }, 20L);
+    }
+
+    private void checkPhone(Player target){
+        Bukkit.getScheduler().runTaskLater(Plugin, () -> {
+            if (!PhoneManager.getInstance().contains(target.getUniqueId()))
+                PhoneManager.getInstance().addObject(target.getUniqueId(), false);
+        }, 40L);
     }
 }

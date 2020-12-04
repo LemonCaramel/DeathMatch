@@ -38,8 +38,7 @@ public class WaitTimer extends BukkitRunnable {
                 countValue = DataManager.getInstance().getWaitTime();
                 GameManager.getInstance().getUsers().forEach(data -> {
                     Player target = Bukkit.getPlayer(data.getUUID());
-                    if (DataManager.getInstance().getLocations() != null || !target.getWorld().getName().contains(DataManager.getInstance().getLocations()[0].getWorld().getName()))
-                        target.teleport(DataManager.getInstance().getLocations()[0]);
+                    target.teleport(DataManager.getInstance().getLocations()[0]);
                 });
                 countValue = DataManager.getInstance().getWaitTime();
             }
