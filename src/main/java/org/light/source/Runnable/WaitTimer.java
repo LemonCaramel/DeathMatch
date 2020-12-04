@@ -61,7 +61,7 @@ public class WaitTimer extends BukkitRunnable {
             });
         }
         bossBar.setTitle("§cRemain §7: §6" + countValue + "§f초");
-        bossBar.setProgress(calcProgress(countValue, DataManager.getInstance().getWaitTime()));
+        bossBar.setProgress(calcProgress(DataManager.getInstance().getWaitTime() - countValue, DataManager.getInstance().getWaitTime()));
         countValue--;
     }
 
@@ -83,7 +83,7 @@ public class WaitTimer extends BukkitRunnable {
 
     public boolean stop() {
         if (isRunning) {
-            cancel();
+            Bukkit.getScheduler().cancelTask(taskID);
             isRunning = false;
             countValue = DataManager.getInstance().getWaitTime();
             return true;
