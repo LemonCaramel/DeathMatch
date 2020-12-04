@@ -84,7 +84,8 @@ public class GameManager {
             RatingManager.getInstance().updateRank();
             setNormalPlayer(p);
         }
-        p.teleport(DataManager.getInstance().getLocations()[0]);
+        if (DataManager.getInstance().getLocations() != null || !p.getWorld().getName().contains(DataManager.getInstance().getLocations()[0].getWorld().getName()))
+            p.teleport(DataManager.getInstance().getLocations()[0]);
         if (isGaming() && getUserCount() < DataManager.getInstance().getMinimumUser()) {
             sendMessage("§c데스매치 최소인원을 만족하지 못해 게임이 중단되었습니다.");
             gameTimer.cancel();

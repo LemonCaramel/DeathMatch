@@ -27,6 +27,7 @@ public class WaitTimer extends BukkitRunnable {
         isRunning = false;
         bossBar = Bukkit.createBossBar("§cRemain : ", BarColor.RED, BarStyle.SOLID);
         start();
+        setBossBar();
     }
 
     @Override
@@ -37,7 +38,8 @@ public class WaitTimer extends BukkitRunnable {
                 countValue = DataManager.getInstance().getWaitTime();
                 GameManager.getInstance().getUsers().forEach(data -> {
                     Player target = Bukkit.getPlayer(data.getUUID());
-                    target.teleport(DataManager.getInstance().getLocations()[0]);
+                    if (DataManager.getInstance().getLocations() != null || !target.getWorld().getName().contains(DataManager.getInstance().getLocations()[0].getWorld().getName()))
+                        target.teleport(DataManager.getInstance().getLocations()[0]);
                 });
                 countValue = DataManager.getInstance().getWaitTime();
             }
@@ -106,5 +108,13 @@ public class WaitTimer extends BukkitRunnable {
 
     public BossBar returnBossbarInstance(){
         return bossBar;
+    }
+
+    public void setBossBar(){
+        GameManager.getInstance().getUsers().forEach(data -> {
+            Player target = Bukkit.getPlayer(data.getUUID());
+            if (!bossBar.getPlayers().contains(target))
+                bossBar.addPlayer(target);
+        });
     }
 }
