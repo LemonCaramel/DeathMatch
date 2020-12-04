@@ -134,7 +134,7 @@ public class EventManager implements Listener {
         API api = new API();
         api.giveChannel(target, 8);
         TeamManager.getInstance().removePlayer(target);
-        setNoDamageState(target ,true);
+        setNoDamageState(target, true);
         checkPhone(target);
 
     }
@@ -187,8 +187,8 @@ public class EventManager implements Listener {
                                 //1위 인경우
                                 int back, to;
                                 back = data.getKills() / DataManager.getInstance().getKilltolevel();
-                                to = data.getKills()-1 / DataManager.getInstance().getKilltolevel();
-                                if (to >= DataManager.getInstance().getRounds() / 2 && back != to) {
+                                to = (data.getKills() - 1) / DataManager.getInstance().getKilltolevel();
+                                if (to >= (DataManager.getInstance().getRounds() / 2) && back != to) {
                                     sendLevelDown(victim, back, to);
                                     data.setKills(data.getKills() - 1);
                                 }
@@ -394,14 +394,14 @@ public class EventManager implements Listener {
         return stack;
     }
 
-    private void setNoDamageState(Player target, boolean state){
+    private void setNoDamageState(Player target, boolean state) {
         Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(Plugin, () -> {
             if (CaramelUserData.getData().getUser(target.getUniqueId()) != null && !GameManager.getInstance().contains(target.getUniqueId()))
                 CaramelUserData.getData().getUser(target.getUniqueId()).setInvincibility(state);
         }, 20L);
     }
 
-    private void checkPhone(Player target){
+    private void checkPhone(Player target) {
         Bukkit.getScheduler().runTaskLater(Plugin, () -> {
             if (!PhoneManager.getInstance().contains(target.getUniqueId()))
                 PhoneManager.getInstance().addObject(target.getUniqueId(), false);
