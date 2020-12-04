@@ -58,7 +58,9 @@ public class WaitTimer extends BukkitRunnable {
             GameManager.getInstance().getUsers().forEach(data -> {
                 Player target = Bukkit.getPlayer(data.getUUID());
                 if (countValue == 5) {
-                    int randomMap = GameManager.getInstance().getRandomNumber();
+                    int randomMap;
+                    GameManager.getInstance().selectRandomMap();
+                    randomMap = GameManager.getInstance().getRandomNumber();
                     target.teleport(GameManager.getInstance().getTeleportLocation(DataManager.getInstance().getLocations()[randomMap], DataManager.getInstance().getLocations()[randomMap + 1]));
                 }
                 target.sendTitle("§b준비!", "§6" + countValue + "§f초 후 게임이 시작됩니다.", 0, 24, 0);
