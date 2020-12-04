@@ -54,10 +54,12 @@ public class WaitTimer extends BukkitRunnable {
         }
         else if (countValue <= 5) {
             GameManager.getInstance().getUsers().forEach(data -> {
-                int randomMap = GameManager.getInstance().getRandomNumber();
                 Player target = Bukkit.getPlayer(data.getUUID());
-                target.sendTitle("§b준비!", "§6" + countValue + "§f초후 게임이 시작됩니다.", 0, 24, 0);
-                target.teleport(GameManager.getInstance().getTeleportLocation(DataManager.getInstance().getLocations()[randomMap], DataManager.getInstance().getLocations()[randomMap + 1]));
+                if (countValue == 5) {
+                    int randomMap = GameManager.getInstance().getRandomNumber();
+                    target.teleport(GameManager.getInstance().getTeleportLocation(DataManager.getInstance().getLocations()[randomMap], DataManager.getInstance().getLocations()[randomMap + 1]));
+                }
+                target.sendTitle("§b준비!", "§6" + countValue + "§f초 후 게임이 시작됩니다.", 0, 24, 0);
             });
         }
         bossBar.setTitle("§cRemain §7: §6" + countValue + "§f초");

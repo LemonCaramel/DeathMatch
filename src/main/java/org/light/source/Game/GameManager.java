@@ -155,8 +155,7 @@ public class GameManager {
                 }
                 giveRatingReward();
                 gameTimer.cancel();
-                gameTimer = null;
-                timer.start();
+                timer = new WaitTimer(Plugin);
                 selectRandomMap();
             });
         }
