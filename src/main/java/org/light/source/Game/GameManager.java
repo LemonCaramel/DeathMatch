@@ -157,6 +157,7 @@ public class GameManager {
                 }
                 giveRatingReward();
                 gameTimer.cancel();
+                flushData();
                 timer = new WaitTimer(Plugin);
                 selectRandomMap();
             });
@@ -302,5 +303,9 @@ public class GameManager {
         randomMap = ThreadLocalRandom.current().nextInt(1, DataManager.getInstance().getLocationAmount());
         while (randomMap % 2 != 1)
             randomMap = ThreadLocalRandom.current().nextInt(1, DataManager.getInstance().getLocationAmount());
+    }
+
+    public void flushData(){
+        getUsers().forEach(UserMananger::reset);
     }
 }

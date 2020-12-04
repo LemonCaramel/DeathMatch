@@ -70,4 +70,12 @@ public class UserMananger {
         return System.currentTimeMillis() - getLastKillTime() <= DataManager.getInstance().getKillMaintain() * 1000;
     }
 
+    public void reset(){
+        kills = 0;
+        killMaintain = 0;
+        lastKillTime = 0;
+        reRoll = 0;
+        calcResultMoney = 0;
+    }
+
 }
