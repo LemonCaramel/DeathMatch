@@ -99,13 +99,6 @@ public class RatingManager {
                 kills[2] = kill;
             }
         }
-        Player first, second;
-        first = Bukkit.getPlayer(strings[0]);
-        second = Bukkit.getPlayer(strings[1]);
-        if (first.hasPotionEffect(PotionEffectType.GLOWING))
-            first.removePotionEffect(PotionEffectType.GLOWING);
-        second.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 9999, 3, true, false));
-
     }
 
     public static int getLV(int kill){
