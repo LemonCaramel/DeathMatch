@@ -27,7 +27,7 @@ public class WaitTimer extends BukkitRunnable {
         isRunning = false;
         bossBar = Bukkit.createBossBar("§cRemain : ", BarColor.RED, BarStyle.SOLID);
         start();
-        setBossBar();
+        Bukkit.getScheduler().runTaskLaterAsynchronously(Plugin, this::setBossBar, 20L);
     }
 
     @Override
