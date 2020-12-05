@@ -66,5 +66,11 @@ public class KillDeathFileManager {
             config.set("Rank." + i + ".Kill", object.getKill());
             config.set("Rank." + i++ + ".Death", object.getDeath());
         }
+        try {
+            config.save(file);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

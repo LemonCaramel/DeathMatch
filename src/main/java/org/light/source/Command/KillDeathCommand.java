@@ -28,9 +28,9 @@ public class KillDeathCommand implements CommandExecutor {
                 KillDeathObject object = KillDeathManager.getInstance().getValue(target.getUniqueId());
                 target.sendMessage(" ");
                 if (object.getDeath() != 0)
-                    target.sendMessage(" §4§lKill §7: §c" + object.getKill() + "  §8§lDeath §7: §f" + object.getDeath() + "   §cK§7/§8D §7: " + 0);
-                else
                     target.sendMessage(" §4§lKill §7: §c" + object.getKill() + "  §8§lDeath §7: §f" + object.getDeath() + "   §cK§7/§8D §7: " + Math.floor(((double)object.getKill()/object.getDeath())*10.0)/10.0);
+                else
+                    target.sendMessage(" §4§lKill §7: §c" + object.getKill() + "  §8§lDeath §7: §f" + object.getDeath() + "   §cK§7/§8D §7: " + 0);
                 target.sendMessage(" ");
             }
             else if (s.equalsIgnoreCase("랭크") || s.equalsIgnoreCase("rank")) {
@@ -106,6 +106,8 @@ public class KillDeathCommand implements CommandExecutor {
                 name = "§b" + target.getName();
                 kill = object.kill;
                 death = object.death;
+                if (death == 0)
+                    death = 1;
                 kd = Math.floor(((double) kill / death) * 10) / 10.0;
                 if (kd != 0)
                     stackList.add(InventoryFactory.createItemStack(Material.SIGN, name, new String[]{" ", " §7- §4Kill §7: §c" + kill + " §4§lKills", " §7- §8Death §7: §f" + death + " §c§lDeaths", " §7- §cK§7/§8D §7: §c" + kd, " "}, (short) 0));
