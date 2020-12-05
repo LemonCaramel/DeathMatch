@@ -1,5 +1,6 @@
 package org.light.source.Singleton;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -66,7 +67,7 @@ public class FileManager {
             config.load(file);
         }
         catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
+            Bukkit.broadcastMessage("Error Load File");
         }
         DataManager manager = DataManager.getInstance();
         manager.setRounds(config.getInt("Round"));

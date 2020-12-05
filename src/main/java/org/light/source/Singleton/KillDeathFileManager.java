@@ -1,5 +1,6 @@
 package org.light.source.Singleton;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -41,7 +42,7 @@ public class KillDeathFileManager {
             config.load(file);
         }
         catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
+            Bukkit.broadcastMessage("Error Load File");
         }
         input = config.getInt("RankAmount", 0);
         for (int i = 0; i < input; i++) {
