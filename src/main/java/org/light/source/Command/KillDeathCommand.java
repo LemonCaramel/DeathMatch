@@ -74,6 +74,7 @@ public class KillDeathCommand implements CommandExecutor {
             list.add(new RankObject(object, objects.get(object)));
         //kill
         list.sort(Comparator.comparingInt(o -> o.kill));
+        Collections.reverse(list);
         for (RankObject object : list) {
             int kill, death;
             String name;
@@ -101,6 +102,7 @@ public class KillDeathCommand implements CommandExecutor {
             death1 = o2.death == 0 ? 1 : o2.death;
             return Double.compare((double) o1.kill / death, (double) o2.kill / death1);
         });
+        Collections.reverse(list);
         for (RankObject object : list) {
             int kill, death;
             double kd;
@@ -116,6 +118,7 @@ public class KillDeathCommand implements CommandExecutor {
                 stackList.add(InventoryFactory.createItemStack(Material.SIGN, name, new String[]{" ", " §7- §4Kill §7: §c" + kill + " §4§lKills", " §7- §8Death §7: §f" + death + " §c§lDeaths", " §7- §cK§7/§8D §7: §c" + kd, " "}, (short) 0));
             }
         }
+
         return stackList;
     }
 }
