@@ -27,7 +27,7 @@ public class KillDeathCommand implements CommandExecutor {
                 //자신 킬뎃 확인
                 KillDeathObject object = KillDeathManager.getInstance().getValue(target.getUniqueId());
                 target.sendMessage(" ");
-                target.sendMessage("§4§lKill §7: §c" + object.getKill() + "  §8§lDeath §7: §f" + object.getDeath());
+                target.sendMessage(" §4§lKill §7: §c" + object.getKill() + "  §8§lDeath §7: §f" + object.getDeath());
                 target.sendMessage(" ");
             }
             else if (s.equalsIgnoreCase("랭크") || s.equalsIgnoreCase("rank")) {

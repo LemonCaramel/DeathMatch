@@ -27,6 +27,9 @@ public class InventoryFactory {
     }
 
     public static List<String> createLore(String[] arr){
-        return Arrays.asList(arr);
+        if (arr == null)
+            return null;
+        else
+            return Arrays.asList(arr);
     }
 }
