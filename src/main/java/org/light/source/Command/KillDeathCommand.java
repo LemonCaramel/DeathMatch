@@ -67,6 +67,7 @@ public class KillDeathCommand implements CommandExecutor {
     }
 
     public static ArrayList<ItemStack> createKillRank() {
+        int i = 0;
         HashMap<UUID, KillDeathObject> objects = KillDeathManager.getInstance().getList();
         ArrayList<RankObject> list = new ArrayList<>();
         ArrayList<ItemStack> stackList = new ArrayList<>();
@@ -84,12 +85,16 @@ public class KillDeathCommand implements CommandExecutor {
                 kill = object.kill;
                 death = object.death;
                 stackList.add(InventoryFactory.createItemStack(Material.SIGN, name, new String[]{" ", " §7- §4Kill §7: §c" + kill + " §4§lKills", " §7- §8Death §7: §f" + death + " §c§lDeaths", " "}, (short) 0));
+                i++;
+                if (stackList.size() == 45)
+                    break;
             }
         }
         return stackList;
     }
 
     public static ArrayList<ItemStack> createKillDeathRank() {
+        int i = 0;
         HashMap<UUID, KillDeathObject> objects = KillDeathManager.getInstance().getList();
         ArrayList<RankObject> list = new ArrayList<>();
         ArrayList<ItemStack> stackList = new ArrayList<>();
@@ -116,6 +121,9 @@ public class KillDeathCommand implements CommandExecutor {
                     death = 1;
                 kd = Math.floor(((double) kill / death) * 10) / 10.0;
                 stackList.add(InventoryFactory.createItemStack(Material.SIGN, name, new String[]{" ", " §7- §4Kill §7: §c" + kill + " §4§lKills", " §7- §8Death §7: §f" + death + " §c§lDeaths", " §7- §cK§7/§8D §7: §c" + kd, " "}, (short) 0));
+                i++;
+                if (stackList.size() == 45)
+                    break;
             }
         }
 
