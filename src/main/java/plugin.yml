@@ -11,7 +11,7 @@ commands:
   나가기:
     aliases: [leave]
     description: Leave Command
-  랭킹:
+  랭크:
     aliases: [rank]
     description: Rank
   킬뎃:
