@@ -73,13 +73,13 @@ public class KillDeathCommand implements CommandExecutor {
         for (UUID object : objects.keySet())
             list.add(new RankObject(object, objects.get(object)));
         //kill
-        list.sort(Comparator.comparingInt(o -> o.death));
+        list.sort(Comparator.comparingInt(o -> o.kill));
         for (RankObject object : list) {
             int kill, death;
             String name;
             OfflinePlayer target = Bukkit.getOfflinePlayer(object.UUID);
             if (target != null) {
-                name = "§b" + target.getName();
+                name = target.getName() == null ? "§bOffline" : "§b" + target.getName();
                 kill = object.kill;
                 death = object.death;
                 stackList.add(InventoryFactory.createItemStack(Material.SIGN, name, new String[]{" ", " §7- §4Kill §7: §c" + kill + " §4§lKills", " §7- §8Death §7: §f" + death + " §c§lDeaths", " "}, (short) 0));
@@ -96,14 +96,19 @@ public class KillDeathCommand implements CommandExecutor {
         for (UUID object : objects.keySet())
             list.add(new RankObject(object, objects.get(object)));
         //kill
-        list.sort(Comparator.comparing(o -> (double) o.kill / o.death == 0 ? 1 : o.death));
+        list.sort((o1, o2) -> {
+            int death, death1;
+            death = o1.death == 0 ? 1 : o1.death;
+            death1 = o2.death == 0 ? 1 : o2.death;
+            return Double.compare((double) o1.kill / death, (double) o2.kill / death1);
+        });
         for (RankObject object : list) {
             int kill, death;
             double kd;
             String name;
             OfflinePlayer target = Bukkit.getOfflinePlayer(object.UUID);
             if (target != null) {
-                name = "§b" + target.getName();
+                name = target.getName() == null ? "§bOffline" : "§b" + target.getName();
                 kill = object.kill;
                 death = object.death;
                 if (death == 0)
