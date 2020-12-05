@@ -85,7 +85,6 @@ public class KillDeathCommand implements CommandExecutor {
                 stackList.add(InventoryFactory.createItemStack(Material.SIGN, name, new String[]{" ", " §7- §4Kill §7: §c" + kill + " §4§lKills", " §7- §8Death §7: §f" + death + " §c§lDeaths", " "}, (short) 0));
             }
         }
-        Collections.reverse(list);
         return stackList;
     }
 
@@ -117,7 +116,6 @@ public class KillDeathCommand implements CommandExecutor {
                 stackList.add(InventoryFactory.createItemStack(Material.SIGN, name, new String[]{" ", " §7- §4Kill §7: §c" + kill + " §4§lKills", " §7- §8Death §7: §f" + death + " §c§lDeaths", " §7- §cK§7/§8D §7: §c" + kd, " "}, (short) 0));
             }
         }
-        Collections.reverse(list);
         return stackList;
     }
 }
