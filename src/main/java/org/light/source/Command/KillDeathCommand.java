@@ -86,7 +86,7 @@ public class KillDeathCommand implements CommandExecutor {
                 death = object.death;
                 stackList.add(InventoryFactory.createItemStack(Material.SIGN, name, new String[]{" ", " §7- §4Kill §7: §c" + kill + " §4§lKills", " §7- §8Death §7: §f" + death + " §c§lDeaths", " "}, (short) 0));
                 i++;
-                if (stackList.size() == 45)
+                if (i == 45)
                     break;
             }
         }
@@ -122,7 +122,7 @@ public class KillDeathCommand implements CommandExecutor {
                 kd = Math.floor(((double) kill / death) * 10) / 10.0;
                 stackList.add(InventoryFactory.createItemStack(Material.SIGN, name, new String[]{" ", " §7- §4Kill §7: §c" + kill + " §4§lKills", " §7- §8Death §7: §f" + death + " §c§lDeaths", " §7- §cK§7/§8D §7: §c" + kd, " "}, (short) 0));
                 i++;
-                if (stackList.size() == 45)
+                if (i == 45)
                     break;
             }
         }
