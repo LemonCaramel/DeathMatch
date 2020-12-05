@@ -24,12 +24,8 @@ public class TimeRunnable extends BukkitRunnable {
 
     @Override
     public void run() {
-        int hour, val;
-        val = Integer.parseInt(format.format(Calendar.getInstance().getTime()));
-        if (val < 0 || val > times.length)
-            hour = 0;
-        else
-            hour = val;
+        int hour;
+        hour = Integer.parseInt(format.format(Calendar.getInstance().getTime())) % 24;
         Bukkit.getWorlds().forEach(world -> world.setTime(times[hour]));
     }
 

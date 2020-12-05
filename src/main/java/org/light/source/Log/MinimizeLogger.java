@@ -15,9 +15,9 @@ public class MinimizeLogger {
     private DeathMatch Plugin;
     private static MinimizeLogger instance;
     private ArrayList<String> logs;
-    private File folder, logFile;
+    private File logFile;
     private SimpleDateFormat fileFormat, logFormat;
-    private int taskid;
+    private int taskID;
     private YamlConfiguration configFormat;
 
     static
@@ -28,10 +28,10 @@ public class MinimizeLogger {
     private MinimizeLogger(){
         Plugin = JavaPlugin.getPlugin(DeathMatch.class);
         logs = new ArrayList<>();
-        folder = new File("plugins/" + Plugin.getDescription().getName() + "/log");
+        File folder = new File("plugins/" + Plugin.getDescription().getName() + "/log");
         fileFormat = new SimpleDateFormat("MM.dd-HH.mm.ss");
         logFormat = new SimpleDateFormat("[ MM-dd / HH:mm:ss ]");
-        taskid = 0;
+        taskID = 0;
         if (!folder.exists())
             folder.mkdir();
     }
@@ -40,17 +40,13 @@ public class MinimizeLogger {
         return instance;
     }
 
-    public int getTaskid(){
-        return taskid;
-    }
-
     public void appendLog(String log){
         String time = logFormat.format(Calendar.getInstance().getTime());
         logs.add(time + " " + log);
     }
 
     public void logStart(){
-        taskid = Bukkit.getScheduler().scheduleSyncRepeatingTask(Plugin, this::saveLog,0L, 1200L);
+        taskID = Bukkit.getScheduler().scheduleSyncRepeatingTask(Plugin, this::saveLog,0L, 1200L);
     }
 
     public void saveLog(){
@@ -80,7 +76,7 @@ public class MinimizeLogger {
                 e.printStackTrace();
             }
             logs.clear();
-            Bukkit.getScheduler().cancelTask(taskid);
+            Bukkit.getScheduler().cancelTask(taskID);
         }
     }
 

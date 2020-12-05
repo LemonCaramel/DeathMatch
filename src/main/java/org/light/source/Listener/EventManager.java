@@ -22,13 +22,16 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
+import org.light.source.Command.KillDeathCommand;
 import org.light.source.DeathMatch;
 import org.light.source.Game.GameManager;
+import org.light.source.Game.KillDeathManager;
 import org.light.source.Game.NoKnockbackObject;
 import org.light.source.Game.UserMananger;
 import org.light.source.Log.MinimizeLogger;
@@ -98,6 +101,31 @@ public class EventManager implements Listener {
                 }
             }
         }
+        else if (!GameManager.getInstance().contains(p.getUniqueId()) && event.getInventory().getTitle().contains("랭크")) {
+            if (event.getRawSlot() == -999)
+                return;
+            event.setCancelled(true);
+            if (event.getCurrentItem() != null && event.getRawSlot() == 51) {
+                //다음페이지 (서로 위치 바꾸기)
+                ItemStack stack = event.getCurrentItem();
+                if (stack.getItemMeta().getDisplayName() != null) {
+                    int i = 0;
+                    flushData(event.getInventory());
+                    if (stack.getItemMeta().getDisplayName().contains("뎃")) {
+                        //킬랭킹
+                        for (ItemStack st : KillDeathCommand.createKillDeathRank())
+                            event.getInventory().setItem(i++, st);
+                    }
+                    else {
+                        //킬뎃 랭킹
+                        for (ItemStack st : KillDeathCommand.createKillRank())
+                            event.getInventory().setItem(i++, st);
+                    }
+                    swapItem(event.getInventory());
+                }
+            }
+            //제발 돌아가라 흑흑
+        }
 
     }
 
@@ -136,7 +164,6 @@ public class EventManager implements Listener {
         TeamManager.getInstance().removePlayer(target);
         setNoDamageState(target, true);
         checkPhone(target);
-
     }
 
     @EventHandler
@@ -144,10 +171,7 @@ public class EventManager implements Listener {
         Player p = event.getPlayer();
         if (GameManager.getInstance().contains(p.getUniqueId()))
             GameManager.getInstance().removePlayer(p);
-        if (PhoneManager.getInstance().contains(p.getUniqueId())) {
-            PhoneManager.getInstance().getPhoneObjects().removeIf(phoneObject -> phoneObject.getUuid().equals(p.getUniqueId()));
-        }
-
+        PhoneManager.getInstance().getPhoneObjects().removeIf(phoneObject -> phoneObject.getUuid().equals(p.getUniqueId()));
     }
 
     @EventHandler
@@ -155,6 +179,7 @@ public class EventManager implements Listener {
         if (GameManager.getInstance().isGaming() && GameManager.getInstance().contains(event.getEntity().getUniqueId())) {
             event.setDeathMessage("");
             event.getDrops().clear();
+            addDeath(event.getEntity().getUniqueId());
         }
     }
 
@@ -196,6 +221,8 @@ public class EventManager implements Listener {
                         }
                     }
                     RatingManager.getInstance().updateRank();
+                    addKill(killer.getUniqueId());
+                    addDeath(victim.getUniqueId());
                     if (DataManager.getInstance().getRounds() * DataManager.getInstance().getKilltolevel() <= killerData) {
                         //승리!
                         Bukkit.broadcastMessage("§b" + killer.getName() + "§f님이 §6" + DataManager.getInstance().getRounds() + " §f레벨을 달성하여 게임을 승리하셨습니다!");
@@ -407,4 +434,28 @@ public class EventManager implements Listener {
                 PhoneManager.getInstance().addObject(target.getUniqueId(), false);
         }, 40L);
     }
+
+    private void flushData(Inventory inv) {
+        for (int i = 0; i < 45; i++)
+            inv.setItem(i, new ItemStack(Material.AIR));
+    }
+
+    private void addKill(UUID uuid) {
+        KillDeathObject object = KillDeathManager.getInstance().getValue(uuid);
+        object.setKill(object.getKill() + 1);
+    }
+
+    private void addDeath(UUID uuid) {
+        KillDeathObject object = KillDeathManager.getInstance().getValue(uuid);
+        object.setDeath(object.getDeath() + 1);
+    }
+
+    private void swapItem(Inventory inv) {
+        ItemStack previous, next;
+        previous = inv.getItem(47).clone();
+        next = inv.getItem(51);
+        inv.setItem(47, next);
+        inv.setItem(51, previous);
+    }
+
 }

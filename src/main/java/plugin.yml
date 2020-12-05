@@ -1,6 +1,6 @@
 main: org.light.source.DeathMatch
 name: DeathMatch
-version: 2.0
+version: 2.5
 depend: [CrackShot, Vault]
 commands:
   데스매치:
@@ -14,3 +14,6 @@ commands:
   랭킹:
     aliases: [rank]
     description: Rank
+  킬뎃:
+    aliases: [kd]
+    description: K/D
