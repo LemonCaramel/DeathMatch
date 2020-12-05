@@ -132,7 +132,7 @@ public class GameManager {
         if (!isGaming) {
             setGameState(true);
             gameTimer = new MainTimer(DataManager.getInstance().getTime(), users);
-            gameTimer.runTaskTimerAsynchronously(Plugin, 0L, 20L);
+            gameTimer.runTaskTimer(Plugin, 0L, 20L);
             Bukkit.getServer().getScheduler().runTask(Plugin, () -> users.forEach(data -> setPlayer(Bukkit.getPlayer(data.getUUID()))));
             RatingManager.getInstance().updateRank();
         }
@@ -140,27 +140,25 @@ public class GameManager {
 
     public void stop() {
         if (isGaming()) {
-            Bukkit.getScheduler().runTask(Plugin, () -> {
-                setGameState(false);
-                for (UserMananger data : users) {
-                    Player target = Bukkit.getPlayer(data.getUUID());
-                    setNormalPlayer(target);
-                    gameTimer.getbossbarInstance().removeAll();
-                    if (DataManager.getInstance().getJoinMoney() != 0 && getUserCount() >= DataManager.getInstance().getMinimumUser()) {
-                        target.sendMessage("§f총 보상 §6" + (DataManager.getInstance().getJoinMoney() + data.getCalcResultMoney()) + "§f원을 흭득하셨습니다!");
-                        EconomyApi.getInstance().giveMoney(target, DataManager.getInstance().getJoinMoney() + data.getCalcResultMoney());
-                        MinimizeLogger.getInstance().appendLog(target.getName() + "님이 데스매치에 참여해 " + DataManager.getInstance().getJoinMoney() + "원을 흭득함");
-                    }
-                    if (RatingManager.getInstance().getFirst() != null) {
-                        target.sendMessage("§f이번 게임의 §6MVP§f는 §b" + RatingManager.getInstance().getFirst() + "§f님 입니다!");
-                    }
+            setGameState(false);
+            for (UserMananger data : users) {
+                Player target = Bukkit.getPlayer(data.getUUID());
+                setNormalPlayer(target);
+                gameTimer.getbossbarInstance().removeAll();
+                if (DataManager.getInstance().getJoinMoney() != 0 && getUserCount() >= DataManager.getInstance().getMinimumUser()) {
+                    target.sendMessage("§f총 보상 §6" + (DataManager.getInstance().getJoinMoney() + data.getCalcResultMoney()) + "§f원을 흭득하셨습니다!");
+                    EconomyApi.getInstance().giveMoney(target, DataManager.getInstance().getJoinMoney() + data.getCalcResultMoney());
+                    MinimizeLogger.getInstance().appendLog(target.getName() + "님이 데스매치에 참여해 " + DataManager.getInstance().getJoinMoney() + "원을 흭득함");
                 }
-                giveRatingReward();
-                gameTimer.cancel();
-                flushData();
-                timer = new WaitTimer(Plugin);
-                selectRandomMap();
-            });
+                if (RatingManager.getInstance().getFirst() != null) {
+                    target.sendMessage("§f이번 게임의 §6MVP§f는 §b" + RatingManager.getInstance().getFirst() + "§f님 입니다!");
+                }
+            }
+            giveRatingReward();
+            gameTimer.cancel();
+            flushData();
+            timer = new WaitTimer(Plugin);
+            selectRandomMap();
         }
     }
 
@@ -305,7 +303,7 @@ public class GameManager {
             randomMap = ThreadLocalRandom.current().nextInt(1, DataManager.getInstance().getLocationAmount());
     }
 
-    public void flushData(){
+    public void flushData() {
         getUsers().forEach(UserMananger::reset);
     }
 }
