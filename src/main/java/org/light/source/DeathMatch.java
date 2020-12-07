@@ -4,6 +4,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.light.source.Command.CommandController;
 import org.light.source.Command.JoinLeaveCommand;
 import org.light.source.Command.KillDeathCommand;
+import org.light.source.Game.AfkManager;
 import org.light.source.Listener.EventManager;
 import org.light.source.Log.MinimizeLogger;
 import org.light.source.Singleton.FileManager;
@@ -19,6 +20,7 @@ public class DeathMatch extends JavaPlugin {
         FileManager.getInstance().load();
         MinimizeLogger.getInstance().logStart();
         KillDeathFileManager.getInstance().load();
+        new AfkManager().runTaskTimerAsynchronously(this, 0L, 20L);
     }
 
     @Override

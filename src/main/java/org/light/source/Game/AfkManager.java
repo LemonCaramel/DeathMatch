@@ -1,0 +1,69 @@
+package org.light.source.Game;
+
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.light.source.Log.MinimizeLogger;
+import org.light.source.Singleton.AfkObject;
+import org.light.source.Singleton.DataManager;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.UUID;
+
+public class AfkManager extends BukkitRunnable {
+
+    private HashMap<UUID, AfkObject> afkList;
+
+    public AfkManager() {
+        afkList = new HashMap<>();
+    }
+
+    public void addPlayer(Player p) {
+        afkList.putIfAbsent(p.getUniqueId(), new AfkObject(p.getLocation()));
+    }
+
+    public void removePlayer(UUID uid) {
+        afkList.remove(uid);
+    }
+
+    public AfkObject getPlayer(Player p) {
+        if (afkList.containsKey(p.getUniqueId()))
+            return afkList.get(p.getUniqueId());
+        else {
+            addPlayer(p);
+            return getPlayer(p);
+        }
+    }
+
+    @Override
+    public void run() {
+        Bukkit.getServer().getOnlinePlayers().forEach(player -> {
+            if (GameManager.getInstance().contains(player.getUniqueId()))
+                addPlayer(player);
+        });
+        for (UUID key : afkList.keySet()) {
+            Player target = Bukkit.getPlayer(key);
+            if (target == null)
+                removePlayer(key);
+            else {
+                AfkObject object = getPlayer(target);
+                if (object.getLocation().equals(target.getLocation()))
+                    object.setCheckTime(object.getCheckTime() - 1);
+                else
+                    object.resetValue(target.getLocation());
+                if (object.getCheckTime() <= DataManager.getInstance().getWaitTime()){
+                    if (object.getCheckTime() <= 0){
+                        //킥
+                        GameManager.getInstance().removePlayer(target);
+                        removePlayer(key);
+                        MinimizeLogger.getInstance().appendLog(target.getName() + "님이 게임 참여중 잠수가 감지되어 강제 퇴장 처리됨");
+                    }
+                    else if (object.getCheckTime() <= DataManager.getInstance().getWaitTime() / 2){
+                        target.sendTitle("§f[ §6! §f] §4AFK Detected!", "§f잠수가 감지 되었습니다. §6" + object.getCheckTime() + "§f초 후에 강제 퇴장 처리됩니다.");
+                    }
+                }
+            }
+        }
+    }
+}
