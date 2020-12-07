@@ -52,15 +52,15 @@ public class AfkManager extends BukkitRunnable {
                     object.setCheckTime(object.getCheckTime() - 1);
                 else
                     object.resetValue(target.getLocation());
-                if (object.getCheckTime() <= DataManager.getInstance().getWaitTime()){
-                    if (object.getCheckTime() <= 0){
+                if (object.getCheckTime() <= DataManager.getInstance().getWaitTime() / 2) {
+                    if (object.getCheckTime() <= 0) {
                         //킥
                         GameManager.getInstance().removePlayer(target);
                         removePlayer(key);
                         MinimizeLogger.getInstance().appendLog(target.getName() + "님이 게임 참여중 잠수가 감지되어 강제 퇴장 처리됨");
                     }
-                    else if (object.getCheckTime() <= DataManager.getInstance().getWaitTime() / 2){
-                        target.sendTitle("§f[ §6! §f] §4AFK Detected!", "§f잠수가 감지 되었습니다. §6" + object.getCheckTime() + "§f초 후에 강제 퇴장 처리됩니다.");
+                    else {
+                        target.sendTitle("§f[ §6! §f] §4AFK Detected!", "§f잠수가 감지 되었습니다. §6" + object.getCheckTime() + "§f초 후에 강제 퇴장 처리됩니다.", 0, 25, 0);
                     }
                 }
             }
