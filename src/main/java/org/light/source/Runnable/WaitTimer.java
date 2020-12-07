@@ -79,7 +79,6 @@ public class WaitTimer extends BukkitRunnable {
             countValue = DataManager.getInstance().getWaitTime();
             taskID = runTaskTimer(Plugin, 0L, 20L).getTaskId();
             isRunning = true;
-            bossBar = Bukkit.createBossBar("§cRemain : ", BarColor.RED, BarStyle.SOLID);
             return true;
         }
         return false;

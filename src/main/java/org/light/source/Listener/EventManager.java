@@ -164,6 +164,7 @@ public class EventManager implements Listener {
         TeamManager.getInstance().removePlayer(target);
         setNoDamageState(target, true);
         checkPhone(target);
+        setName(target);
     }
 
     @EventHandler
@@ -456,6 +457,10 @@ public class EventManager implements Listener {
         next = inv.getItem(51);
         inv.setItem(47, next);
         inv.setItem(51, previous);
+    }
+
+    private void setName(Player p){
+        KillDeathManager.getInstance().getValue(p.getUniqueId()).setName(p.getName());
     }
 
 }

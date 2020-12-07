@@ -37,6 +37,7 @@ public class KillDeathFileManager {
 
     public void load(){
         int input, kill, death;
+        String name;
         String uid;
         try {
             config.load(file);
@@ -49,8 +50,9 @@ public class KillDeathFileManager {
             uid = config.getString("Rank." + (i+1) + ".UUID", null);
             kill = config.getInt("Rank." + (i+1) + ".Kill", 0);
             death = config.getInt("Rank." + (i+1) + ".Death", 0);
+            name = config.getString("Rank." + (i+1) + ".Name", "Offline");
             if (uid != null){
-                KillDeathManager.getInstance().setValue(UUID.fromString(uid), kill, death);
+                KillDeathManager.getInstance().setValue(name, UUID.fromString(uid), kill, death);
             }
         }
     }
@@ -64,7 +66,8 @@ public class KillDeathFileManager {
             KillDeathObject object = KillDeathManager.getInstance().getValue(uuid);
             config.set("Rank." + i + ".UUID", uuid.toString());
             config.set("Rank." + i + ".Kill", object.getKill());
-            config.set("Rank." + i++ + ".Death", object.getDeath());
+            config.set("Rank." + i + ".Death", object.getDeath());
+            config.set("Rank." + i++ + ".Name", object.getName());
         }
         try {
             config.save(file);

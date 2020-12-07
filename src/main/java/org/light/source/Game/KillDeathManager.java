@@ -22,13 +22,13 @@ public class KillDeathManager {
         return instance;
     }
 
-    public KillDeathObject setValue(UUID uid, int kill, int death) {
+    public KillDeathObject setValue(String name, UUID uid, int kill, int death) {
         if (list.containsKey(uid))
             list.get(uid)
                     .setKill(kill)
                     .setDeath(death);
         else
-            list.put(uid, new KillDeathObject(kill, death));
+            list.put(uid, new KillDeathObject(name, kill, death));
         return list.get(uid);
     }
 
@@ -36,7 +36,7 @@ public class KillDeathManager {
         if (list.containsKey(uuid))
             return list.get(uuid);
         else
-            return setValue(uuid,0,0);
+            return setValue("Offline", uuid,0,0);
     }
 
     public HashMap<UUID, KillDeathObject> getList(){

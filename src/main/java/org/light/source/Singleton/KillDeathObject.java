@@ -6,8 +6,10 @@ public class KillDeathObject {
 
     private int kill;
     private int death;
+    private String name;
 
-    public KillDeathObject(int kill, int death){
+    public KillDeathObject(String name, int kill, int death){
+        this.name = name;
         this.kill = kill;
         this.death = death;
     }
@@ -30,4 +32,11 @@ public class KillDeathObject {
         return death;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }
