@@ -20,7 +20,7 @@ public class DeathMatch extends JavaPlugin {
         FileManager.getInstance().load();
         MinimizeLogger.getInstance().logStart();
         KillDeathFileManager.getInstance().load();
-        new AfkManager().runTaskTimerAsynchronously(this, 0L, 20L);
+        new AfkManager().runTaskTimer(this, 0L, 20L);
     }
 
     @Override
