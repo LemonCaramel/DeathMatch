@@ -42,7 +42,9 @@ public class AfkManager extends BukkitRunnable {
             if (GameManager.getInstance().contains(player.getUniqueId()))
                 addPlayer(player);
         });
-        for (UUID key : afkList.keySet()) {
+        Iterator<UUID> uuidIterator = afkList.keySet().iterator();
+        while(uuidIterator.hasNext()) {
+            UUID key = uuidIterator.next();
             Player target = Bukkit.getPlayer(key);
             if (target == null)
                 removePlayer(key);
