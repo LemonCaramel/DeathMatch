@@ -26,8 +26,9 @@ public class WaitTimer extends BukkitRunnable {
         this.Plugin = Plugin;
         isRunning = false;
         bossBar = Bukkit.createBossBar("§cRemain : ", BarColor.RED, BarStyle.SOLID);
+        setBossBar();
         start();
-        Bukkit.getScheduler().runTaskLaterAsynchronously(Plugin, this::setBossBar, 20L);
+
     }
 
     @Override
@@ -46,10 +47,6 @@ public class WaitTimer extends BukkitRunnable {
         else if (countValue <= 0) {
             //start
             GameManager.getInstance().start();
-            GameManager.getInstance().getUsers().forEach(data -> {
-                Player target = Bukkit.getPlayer(data.getUUID());
-                bossBar.removePlayer(target);
-            });
             bossBar.removeAll();
             stop();
         }
