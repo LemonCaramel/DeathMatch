@@ -23,10 +23,6 @@ public class AfkManager extends BukkitRunnable {
         afkList.putIfAbsent(p.getUniqueId(), new AfkObject(p.getLocation()));
     }
 
-    public void removePlayer(UUID uid) {
-        afkList.remove(uid);
-    }
-
     public AfkObject getPlayer(Player p) {
         if (afkList.containsKey(p.getUniqueId()))
             return afkList.get(p.getUniqueId());
@@ -47,7 +43,7 @@ public class AfkManager extends BukkitRunnable {
             UUID key = uuidIterator.next();
             Player target = Bukkit.getPlayer(key);
             if (target == null)
-                removePlayer(key);
+                uuidIterator.remove();
             else {
                 AfkObject object = getPlayer(target);
                 if (object.getLocation().equals(target.getLocation()))
@@ -58,7 +54,7 @@ public class AfkManager extends BukkitRunnable {
                     if (object.getCheckTime() <= 0) {
                         //킥
                         GameManager.getInstance().removePlayer(target);
-                        removePlayer(key);
+                        uuidIterator.remove();
                         MinimizeLogger.getInstance().appendLog(target.getName() + "님이 게임 참여중 잠수가 감지되어 강제 퇴장 처리됨");
                     }
                     else {
