@@ -30,6 +30,6 @@ public class TimeRunnable extends BukkitRunnable {
     }
 
     public void start(){
-        runTaskTimerAsynchronously(Plugin, 0L, 400L);
+        runTaskTimer(Plugin, 0L, 400L);
     }
 }

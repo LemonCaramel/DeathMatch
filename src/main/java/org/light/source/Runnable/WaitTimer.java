@@ -26,7 +26,7 @@ public class WaitTimer extends BukkitRunnable {
         this.Plugin = Plugin;
         isRunning = false;
         bossBar = Bukkit.createBossBar("§cRemain : ", BarColor.RED, BarStyle.SOLID);
-        setBossBar();
+        Bukkit.getScheduler().runTaskLater(Plugin, this::setBossBar, 20);
         start();
 
     }
@@ -74,7 +74,7 @@ public class WaitTimer extends BukkitRunnable {
     public boolean start() {
         if (!isRunning) {
             countValue = DataManager.getInstance().getWaitTime();
-            taskID = runTaskTimer(Plugin, 0L, 20L).getTaskId();
+            taskID = runTaskTimer(Plugin, 20L, 20L).getTaskId();
             isRunning = true;
             return true;
         }
