@@ -1,8 +1,8 @@
 package org.light.source.Log;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.light.source.DeathMatch;
 
