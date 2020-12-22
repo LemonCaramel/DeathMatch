@@ -1,6 +1,7 @@
 package org.light.source.Game;
 
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.light.source.Log.MinimizeLogger;
@@ -13,10 +14,10 @@ import java.util.UUID;
 
 public class AfkManager extends BukkitRunnable {
 
-    private HashMap<UUID, AfkObject> afkList;
+    private Object2ObjectOpenHashMap<UUID, AfkObject> afkList;
 
     public AfkManager() {
-        afkList = new HashMap<>();
+        afkList = new Object2ObjectOpenHashMap<>();
     }
 
     public void addPlayer(Player p) {

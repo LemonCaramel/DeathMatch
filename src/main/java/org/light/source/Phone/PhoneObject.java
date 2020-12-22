@@ -5,15 +5,15 @@ import java.util.UUID;
 public class PhoneObject {
 
     private UUID uuid;
-    private boolean isphone;
+    private boolean isPhone;
 
-    public PhoneObject(UUID uuid, boolean isphone){
+    public PhoneObject(UUID uuid, boolean isPhone){
         this.uuid = uuid;
-        this.isphone = isphone;
+        this.isPhone = isPhone;
     }
 
     public boolean getPhoneState(){
-        return isphone;
+        return isPhone;
     }
 
     public UUID getUuid() {

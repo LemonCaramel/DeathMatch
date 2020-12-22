@@ -1,6 +1,7 @@
 package org.light.source.Singleton;
 
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -16,13 +17,13 @@ public class ScoreboardObject {
     private ScoreboardManager boardManager;
     private Scoreboard wait;
     private Objective readyObject;
-    private ArrayList<String> current;
+    private ObjectArrayList<String> current;
     static {
         instance = new ScoreboardObject();
     }
 
     private ScoreboardObject(){
-        current = new ArrayList<>();
+        current = new ObjectArrayList<>();
         boardManager = Bukkit.getScoreboardManager();
         wait = boardManager.getNewScoreboard();
         readyObject = wait.registerNewObjective("test", "dummy");
@@ -75,8 +76,8 @@ public class ScoreboardObject {
             current.addAll(Score);
             for (String entry : readyObject.getScoreboard().getEntries())
                 readyObject.getScoreboard().resetScores(entry);
-            for (String scoreval : Score) {
-                readyObject.getScore(scoreval).setScore(Score.size() - i);
+            for (String val : Score) {
+                readyObject.getScore(val).setScore(Score.size() - i);
                 i++;
             }
         }

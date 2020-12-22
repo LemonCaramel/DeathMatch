@@ -1,5 +1,6 @@
 package org.light.source.Game;
 
+import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -8,14 +9,14 @@ import java.util.UUID;
 public class NoKnockbackObject {
 
     private static NoKnockbackObject object;
-    private HashMap<UUID, Boolean> knockBack;
+    private Object2ObjectOpenHashMap<UUID, Boolean> knockBack;
 
     static {
         object = new NoKnockbackObject();
     }
 
     private NoKnockbackObject(){
-        knockBack = new HashMap<>();
+        knockBack = new Object2ObjectOpenHashMap<>();
     }
 
     public static NoKnockbackObject getInstance(){

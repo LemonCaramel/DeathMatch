@@ -11,6 +11,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.bukkit.entity.Firework;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -248,8 +249,8 @@ public class EventManager implements Listener {
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {
+        Player target = event.getPlayer();
         if (GameManager.getInstance().isGaming()) {
-            Player target = event.getPlayer();
             if (GameManager.getInstance().contains(target.getUniqueId())) {
                 for (UserMananger mananger : GameManager.getInstance().getUsers()) {
                     if (mananger.getUUID().equals(target.getUniqueId())) {
@@ -261,7 +262,6 @@ public class EventManager implements Listener {
             }
         }
         else {
-            Player target = event.getPlayer();
             Bukkit.getScheduler().runTaskLater(Plugin, () -> target.teleport(DataManager.getInstance().getLocations()[0]), 1L);
         }
     }
@@ -397,7 +397,7 @@ public class EventManager implements Listener {
     }
 
     private void craeteKillLog(String message) {
-        List<UUID> list = new ArrayList<>();
+        ObjectArrayList<UUID> list = new ObjectArrayList<>();
         StringBuilder builder = new StringBuilder();
         String stripMsg = ChatColor.stripColor(message);
         for (int i = 0; i < (105 - stripMsg.length() - (stripMsg.replaceAll("[^ㄱ-힣]", "").length() + (stripMsg.contains("▄") ? 4 : 0) + (stripMsg.contains("▬▬") ? 2 : 0))); i++)

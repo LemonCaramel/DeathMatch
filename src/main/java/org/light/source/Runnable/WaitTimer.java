@@ -10,8 +10,6 @@ import org.light.source.DeathMatch;
 import org.light.source.Game.GameManager;
 import org.light.source.Singleton.DataManager;
 
-import javax.xml.crypto.Data;
-
 
 public class WaitTimer extends BukkitRunnable {
 
@@ -71,24 +69,20 @@ public class WaitTimer extends BukkitRunnable {
     }
 
     //성공시 true, 실패시 false
-    public boolean start() {
+    public void start() {
         if (!isRunning) {
             countValue = DataManager.getInstance().getWaitTime();
             taskID = runTaskTimer(Plugin, 20L, 20L).getTaskId();
             isRunning = true;
-            return true;
         }
-        return false;
     }
 
-    public boolean stop() {
+    public void stop() {
         if (isRunning) {
             Bukkit.getScheduler().cancelTask(taskID);
             isRunning = false;
             countValue = DataManager.getInstance().getWaitTime();
-            return true;
         }
-        return false;
     }
 
     public int returnRemainTime() {

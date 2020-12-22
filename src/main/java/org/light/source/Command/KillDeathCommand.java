@@ -6,6 +6,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -66,11 +68,11 @@ public class KillDeathCommand implements CommandExecutor {
         return InventoryFactory.createItemStack(Material.STAINED_GLASS_PANE, "§f", null, (short) 7);
     }
 
-    public static ArrayList<ItemStack> createKillRank() {
+    public static ObjectArrayList<ItemStack> createKillRank() {
         int i = 0;
-        HashMap<UUID, KillDeathObject> objects = KillDeathManager.getInstance().getList();
-        ArrayList<RankObject> list = new ArrayList<>();
-        ArrayList<ItemStack> stackList = new ArrayList<>();
+        Object2ObjectOpenHashMap<UUID, KillDeathObject> objects = KillDeathManager.getInstance().getList();
+        ObjectArrayList<RankObject> list = new ObjectArrayList<>();
+        ObjectArrayList<ItemStack> stackList = new ObjectArrayList<>();
         for (UUID object : objects.keySet())
             list.add(new RankObject(object, objects.get(object)));
         //kill
@@ -91,11 +93,11 @@ public class KillDeathCommand implements CommandExecutor {
         return stackList;
     }
 
-    public static ArrayList<ItemStack> createKillDeathRank() {
+    public static ObjectArrayList<ItemStack> createKillDeathRank() {
         int i = 0;
-        HashMap<UUID, KillDeathObject> objects = KillDeathManager.getInstance().getList();
-        ArrayList<RankObject> list = new ArrayList<>();
-        ArrayList<ItemStack> stackList = new ArrayList<>();
+        Object2ObjectOpenHashMap<UUID, KillDeathObject> objects = KillDeathManager.getInstance().getList();
+        ObjectArrayList<RankObject> list = new ObjectArrayList<>();
+        ObjectArrayList<ItemStack> stackList = new ObjectArrayList<>();
         for (UUID object : objects.keySet())
             list.add(new RankObject(object, objects.get(object)));
         //kill

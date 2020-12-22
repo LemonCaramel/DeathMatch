@@ -4,6 +4,7 @@ import moe.caramel.caramellibrarylegacy.api.API;
 import moe.caramel.caramellibrarylegacy.user.CaramelUserData;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
@@ -24,7 +25,7 @@ public class GameManager {
 
     private static GameManager manager;
     private boolean isGaming;
-    private ArrayList<UserMananger> users;
+    private ObjectArrayList<UserMananger> users;
     private DeathMatch Plugin;
     private int randomMap;
     private WaitTimer timer;
@@ -36,7 +37,7 @@ public class GameManager {
     }
 
     private GameManager() {
-        users = new ArrayList<>();
+        users = new ObjectArrayList<>();
         isGaming = false;
         Plugin = JavaPlugin.getPlugin(DeathMatch.class);
         Bukkit.getScheduler().runTaskTimerAsynchronously(Plugin, this::sendScore, 0L, 20L);
@@ -112,7 +113,7 @@ public class GameManager {
         return users.size();
     }
 
-    public ArrayList<UserMananger> getUsers() {
+    public ObjectArrayList<UserMananger> getUsers() {
         return users;
     }
 

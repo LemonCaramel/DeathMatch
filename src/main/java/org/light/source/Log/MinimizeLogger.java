@@ -2,6 +2,7 @@ package org.light.source.Log;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.light.source.DeathMatch;
 
@@ -14,7 +15,7 @@ public class MinimizeLogger {
 
     private DeathMatch Plugin;
     private static MinimizeLogger instance;
-    private ArrayList<String> logs;
+    private ObjectArrayList<String> logs;
     private File logFile;
     private SimpleDateFormat fileFormat, logFormat;
     private int taskID;
@@ -27,7 +28,7 @@ public class MinimizeLogger {
 
     private MinimizeLogger(){
         Plugin = JavaPlugin.getPlugin(DeathMatch.class);
-        logs = new ArrayList<>();
+        logs = new ObjectArrayList<>();
         File folder = new File("plugins/" + Plugin.getDescription().getName() + "/log");
         fileFormat = new SimpleDateFormat("MM.dd-HH.mm.ss");
         logFormat = new SimpleDateFormat("[ MM-dd / HH:mm:ss ]");

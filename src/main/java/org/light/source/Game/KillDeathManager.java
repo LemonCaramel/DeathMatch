@@ -1,5 +1,6 @@
 package org.light.source.Game;
 
+import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.light.source.Singleton.KillDeathObject;
 
 import java.util.HashMap;
@@ -8,14 +9,14 @@ import java.util.UUID;
 public class KillDeathManager {
 
     private static KillDeathManager instance;
-    private HashMap<UUID, KillDeathObject> list;
+    private Object2ObjectOpenHashMap<UUID, KillDeathObject> list;
 
     static {
         instance = new KillDeathManager();
     }
 
     private KillDeathManager() {
-        list = new HashMap<>();
+        list = new Object2ObjectOpenHashMap<>();
     }
 
     public static KillDeathManager getInstance() {
@@ -39,7 +40,7 @@ public class KillDeathManager {
             return setValue("Offline", uuid,0,0);
     }
 
-    public HashMap<UUID, KillDeathObject> getList(){
+    public Object2ObjectOpenHashMap<UUID, KillDeathObject> getList(){
         return list;
     }
 

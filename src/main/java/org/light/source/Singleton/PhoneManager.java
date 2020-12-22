@@ -1,5 +1,6 @@
 package org.light.source.Singleton;
 
+import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.light.source.Phone.PhoneObject;
 
 import java.util.ArrayList;
@@ -8,14 +9,14 @@ import java.util.UUID;
 public class PhoneManager {
 
     private static PhoneManager instance;
-    private ArrayList<PhoneObject> phoneObjects;
+    private ObjectArrayList<PhoneObject> phoneObjects;
 
     static {
         instance = new PhoneManager();
     }
 
     private PhoneManager(){
-        phoneObjects = new ArrayList<>();
+        phoneObjects = new ObjectArrayList<>();
     }
 
     public void addObject(UUID uuid, boolean isphone){
@@ -30,7 +31,7 @@ public class PhoneManager {
         return false;
     }
 
-    public ArrayList<PhoneObject> getPhoneObjects(){
+    public ObjectArrayList<PhoneObject> getPhoneObjects(){
         return phoneObjects;
     }
 
