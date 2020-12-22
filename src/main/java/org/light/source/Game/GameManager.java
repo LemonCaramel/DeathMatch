@@ -74,7 +74,7 @@ public class GameManager {
                 RatingManager.getInstance().updateRank();
                 gameTimer.getbossbarInstance().addPlayer(p);
             }
-            else if (timer.returnRemainTime() <= 5 && timer.isRunning())
+            else if (timer.returnRemainTime() <= 5 && timer.isRunning() && canStart() && getUsers().size() >= DataManager.getInstance().getMinimumUser())
                 p.teleport(getTeleportLocation(DataManager.getInstance().getLocations()[randomMap], DataManager.getInstance().getLocations()[randomMap + 1]));
         }
     }
