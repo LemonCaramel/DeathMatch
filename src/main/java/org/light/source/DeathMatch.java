@@ -7,6 +7,7 @@ import org.light.source.Command.KillDeathCommand;
 import org.light.source.Game.AfkManager;
 import org.light.source.Listener.EventManager;
 import org.light.source.Log.MinimizeLogger;
+import org.light.source.Runnable.WeatherRunnable;
 import org.light.source.Singleton.FileManager;
 import org.light.source.Singleton.KillDeathFileManager;
 
@@ -21,6 +22,7 @@ public class DeathMatch extends JavaPlugin {
         MinimizeLogger.getInstance().logStart();
         KillDeathFileManager.getInstance().load();
         new AfkManager().runTaskTimer(this, 0L, 20L);
+        new WeatherRunnable(this);
     }
 
     @Override
