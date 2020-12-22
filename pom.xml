@@ -79,6 +79,14 @@
         </dependency>
 
         <dependency>
+            <groupId>org.spigot</groupId>
+            <artifactId>spigot</artifactId>
+            <version>1.12.2-R0.1-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>${pom.basedir}/src/main/java/lib/Spigot.jar</systemPath>
+        </dependency>
+
+        <dependency>
             <groupId>me.DeeCaaD</groupId>
             <artifactId>CrackShotPlus</artifactId>
             <version>1.87</version>
