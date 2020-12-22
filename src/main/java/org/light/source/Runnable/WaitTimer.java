@@ -33,7 +33,7 @@ public class WaitTimer extends BukkitRunnable {
     public void run() {
         //1s주기 타이머
         if (!GameManager.getInstance().canStart() || GameManager.getInstance().getUsers().size() < DataManager.getInstance().getMinimumUser()) {
-            if (countValue <= 5) {
+            if (countValue <= 0) {
                 countValue = DataManager.getInstance().getWaitTime();
                 GameManager.getInstance().getUsers().forEach(data -> {
                     Player target = Bukkit.getPlayer(data.getUUID());
