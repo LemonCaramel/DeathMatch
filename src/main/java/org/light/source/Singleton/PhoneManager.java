@@ -1,6 +1,6 @@
 package org.light.source.Singleton;
 
-import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.light.source.Phone.PhoneObject;
 
 import java.util.ArrayList;

@@ -1,6 +1,6 @@
 package org.light.source.Game;
 
-import org.bukkit.craftbukkit.libs.it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.light.source.Singleton.KillDeathObject;
 
 import java.util.HashMap;
