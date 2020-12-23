@@ -146,6 +146,7 @@ public class GameManager {
             for (UserMananger data : users) {
                 Player target = Bukkit.getPlayer(data.getUUID());
                 setNormalPlayer(target);
+                target.teleport(DataManager.getInstance().getLocations()[0]);
                 gameTimer.getbossbarInstance().removeAll();
                 if (DataManager.getInstance().getJoinMoney() != 0 && getUserCount() >= DataManager.getInstance().getMinimumUser()) {
                     target.sendMessage("§f총 보상 §6" + (DataManager.getInstance().getJoinMoney() + data.getCalcResultMoney()) + "§f원을 흭득하셨습니다!");

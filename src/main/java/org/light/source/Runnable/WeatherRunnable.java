@@ -25,7 +25,7 @@ public class WeatherRunnable extends BukkitRunnable {
     public WeatherRunnable(DeathMatch Plugin) {
         this.Plugin = Plugin;
         taskID = 0;
-        runTaskTimerAsynchronously(Plugin, 0L, 1200L);
+        runTaskTimerAsynchronously(Plugin, 0L, 36000L);
     }
 
     public enum WeatherState {
