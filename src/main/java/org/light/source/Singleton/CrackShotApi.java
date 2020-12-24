@@ -42,7 +42,7 @@ public class CrackShotApi {
             weapon = director.wlist.get(1);
         }
         return CSPapi.updateItemStackFeaturesNonPlayer(weapon,getCSWeapon(weapon)); 이벤트 주석*/
-        return utility.generateWeapon("DEAGLE_Golden");
+        return CSPapi.updateItemStackFeaturesNonPlayer("DEAGLE_Golden", utility.generateWeapon("DEAGLE_Golden"));
     }
 
     public static ItemStack generateNotOPWeapon(){
