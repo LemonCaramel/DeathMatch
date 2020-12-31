@@ -73,7 +73,6 @@ public class EventManager implements Listener {
             if (event.getRawSlot() == -999)
                 return;
             event.setCancelled(true);
-            /* 이벤트 주석
             if (event.getClick() == ClickType.MIDDLE && event.getCurrentItem() != null) {
                 CSDirector director = CrackShotApi.getPlugin();
                 String[] node = director.itemParentNode(event.getCurrentItem(), null);
@@ -101,7 +100,7 @@ public class EventManager implements Listener {
                         }
                     }
                 }
-            }*/
+            }
         }
         else if (!GameManager.getInstance().contains(p.getUniqueId()) && event.getInventory().getTitle().contains("랭크")) {
             if (event.getRawSlot() == -999)
@@ -394,7 +393,7 @@ public class EventManager implements Listener {
                 victim.teleport(DataManager.getInstance().getLocations()[0]);
                 victim.setGameMode(GameMode.ADVENTURE);
             }
-        }, 40L);
+        }, 20L);
     }
 
     private void craeteKillLog(String message) {

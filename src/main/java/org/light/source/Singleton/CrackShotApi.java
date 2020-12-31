@@ -34,15 +34,14 @@ public class CrackShotApi {
     }
 
     public static ItemStack generateRandomWeapon(){
-        /*CSDirector director = getPlugin();
+        CSDirector director = getPlugin();
         int size = director.wlist.size();
         int random = ThreadLocalRandom.current().nextInt(1, size);
         String weapon = director.wlist.get(random);
         if (weapon == null){
             weapon = director.wlist.get(1);
         }
-        return CSPapi.updateItemStackFeaturesNonPlayer(weapon,getCSWeapon(weapon)); 이벤트 주석*/
-        return CSPapi.updateItemStackFeaturesNonPlayer("DEAGLE_Golden", utility.generateWeapon("DEAGLE_Golden"));
+        return CSPapi.updateItemStackFeaturesNonPlayer(weapon,getCSWeapon(weapon));
     }
 
     public static ItemStack generateNotOPWeapon(){

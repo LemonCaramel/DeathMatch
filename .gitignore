@@ -1,5 +1,8 @@
 DeathMatch.iml
 lib\
-.idea\
-/.idea/
-/.idea/
+.idea
+.idea/
+src/main/java/lib
+target
+dependency-reduced-pom.xml
+out
