@@ -30,7 +30,6 @@ public class GameManager {
     private int randomMap;
     private WaitTimer timer;
     private MainTimer gameTimer;
-    private API api;
 
     static {
         manager = new GameManager();
@@ -43,7 +42,6 @@ public class GameManager {
         Bukkit.getScheduler().runTaskTimerAsynchronously(Plugin, this::sendScore, 0L, 20L);
         timer = new WaitTimer(Plugin);
         gameTimer = null;
-        api = new API();
         new TimeRunnable(Plugin);
         selectRandomMap();
     }
@@ -196,7 +194,7 @@ public class GameManager {
 
     public void setNormalPlayer(Player p) {
         p.getInventory().clear();
-        api.giveChannel(p, 8);
+        API.giveChannel(p, 8);
         p.setHealth(20.0);
         p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
         p.setHealthScaled(true);

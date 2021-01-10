@@ -160,8 +160,7 @@ public class EventManager implements Listener {
         Player target = event.getPlayer();
         target.setGameMode(GameMode.ADVENTURE);
         ScoreboardObject.getInstance().setScoreboard(target);
-        API api = new API();
-        api.giveChannel(target, 8);
+        API.giveChannel(target, 8);
         TeamManager.getInstance().removePlayer(target);
         setNoDamageState(target, true);
         checkPhone(target);
