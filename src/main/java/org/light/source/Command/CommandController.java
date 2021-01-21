@@ -14,6 +14,7 @@ import org.light.source.Phone.PhoneObject;
 import org.light.source.Singleton.DataManager;
 import org.light.source.Singleton.FileManager;
 import org.light.source.Singleton.PhoneManager;
+import org.light.source.Singleton.WorldManager;
 
 public class CommandController implements CommandExecutor {
 
@@ -87,7 +88,7 @@ public class CommandController implements CommandExecutor {
                                     }
                                 }
                                 else if (args[0].equalsIgnoreCase("설정")) {
-                                    if (args.length >= 2 && (args[1].equalsIgnoreCase("라운드") || args[1].equalsIgnoreCase("킬") || args[1].equalsIgnoreCase("시간") || args[1].equalsIgnoreCase("최소인원") || args[1].equalsIgnoreCase("위치"))) {
+                                    if (args.length >= 2 && (args[1].equalsIgnoreCase("라운드") || args[1].equalsIgnoreCase("킬") || args[1].equalsIgnoreCase("시간") || args[1].equalsIgnoreCase("최소인원") || args[1].equalsIgnoreCase("위치") || args[1].equalsIgnoreCase("월드추가") || args[1].equalsIgnoreCase("월드삭제"))) {
                                         if (args[1].equalsIgnoreCase("라운드")) {
                                             if (args.length != 3)
                                                 p.sendMessage(first + "§c/데스매치 설정 라운드 <수치>");
@@ -176,6 +177,31 @@ public class CommandController implements CommandExecutor {
                                                 catch (NumberFormatException e) {
                                                     p.sendMessage(first + "§c올바른 수치를 입력해주세요.");
                                                 }
+                                            }
+                                        }
+                                        else if (args[1].equalsIgnoreCase("월드추가")) {
+                                            if (args.length != 3)
+                                                p.sendMessage(first + "§c/데스매치 설정 월드추가 이름");
+                                            else {
+                                                if (WorldManager.getInstance().containWorld(args[2]))
+                                                    p.sendMessage(first + "§c이미 추가된 월드입니다.");
+                                                else {
+                                                    WorldManager.getInstance().addWorld(args[2]);
+                                                    p.sendMessage(first + "§f월드 §b" + args[2] + "§f가 추가되었습니다. 리로드시 월드가 로드됩니다.");
+                                                }
+                                            }
+                                        }
+                                        else if (args[1].equalsIgnoreCase("월드삭제")) {
+                                            if (args.length != 3)
+                                                p.sendMessage(first + "§c/데스매치 설정 월드삭제 이름");
+                                            else {
+                                                if (WorldManager.getInstance().containWorld(args[2])) {
+                                                    WorldManager.getInstance().removeWorld(args[2]);
+                                                    p.sendMessage(first + "§f월드 §b" + args[2] + "§f가 제거되었습니다.");
+                                                }
+                                                else
+                                                    p.sendMessage(first + "§c존재하지 않는 월드입니다.");
+
                                             }
                                         }
                                     }
@@ -280,7 +306,7 @@ public class CommandController implements CommandExecutor {
     }
 
     public void valuesettinginfo(Player p) {
-        p.sendMessage(first + "§c/데스매치 설정 <라운드/킬/시간/최소인원/위치/저장/리로드> <값/1~21>");
+        p.sendMessage(first + "§c/데스매치 설정 <라운드/킬/시간/최소인원/위치/월드추가/월드삭제/저장/리로드> <값/1~21>");
     }
 
     public String locationToString(Location loc) {

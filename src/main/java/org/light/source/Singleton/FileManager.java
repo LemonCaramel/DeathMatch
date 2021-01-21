@@ -9,6 +9,7 @@ import org.light.source.DeathMatch;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class FileManager {
 
@@ -50,6 +51,7 @@ public class FileManager {
         config.set("MaxReRoll", manager.getMaxReroll());
         config.set("ReRollMoney", manager.getReRollMoney());
         config.set("WaitTime", manager.getWaitTime());
+        config.set("Worlds", WorldManager.getInstance().getWorlds());
         if (manager.getLocations() != null){
             for (int i = 0; i < DataManager.getInstance().getLocationAmount(); i++){
                 config.set("Location." + (i+1), manager.getLocations()[i]);
@@ -69,7 +71,9 @@ public class FileManager {
         catch (IOException | InvalidConfigurationException e) {
             Bukkit.broadcastMessage("Error Load File");
         }
+        WorldManager worldManager = WorldManager.getInstance();
         DataManager manager = DataManager.getInstance();
+        ArrayList<String> list = new ArrayList<>(config.getStringList("Worlds"));
         manager.setRounds(config.getInt("Round"));
         manager.setTime(config.getInt("Time"));
         manager.setKilltolevel(config.getInt("KillLevel"));
@@ -88,5 +92,8 @@ public class FileManager {
                 DataManager.getInstance().setLocations((Location) config.get("Location." + (i+1)),i+1);
             }
         }
+        worldManager.clear();
+        for (String world : list)
+            worldManager.addWorld(world);
     }
 }

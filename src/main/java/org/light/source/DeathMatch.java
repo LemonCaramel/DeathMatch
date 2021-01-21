@@ -10,6 +10,7 @@ import org.light.source.Log.MinimizeLogger;
 import org.light.source.Runnable.WeatherRunnable;
 import org.light.source.Singleton.FileManager;
 import org.light.source.Singleton.KillDeathFileManager;
+import org.light.source.Singleton.WorldManager;
 
 public class DeathMatch extends JavaPlugin {
 
@@ -19,10 +20,12 @@ public class DeathMatch extends JavaPlugin {
         loadCommand();
         getServer().getPluginManager().registerEvents(new EventManager(this), this);
         FileManager.getInstance().load();
+        WorldManager.getInstance().loadWorld();
         MinimizeLogger.getInstance().logStart();
         KillDeathFileManager.getInstance().load();
         new AfkManager().runTaskTimer(this, 0L, 20L);
         new WeatherRunnable(this);
+
     }
 
     @Override
