@@ -173,11 +173,12 @@ public class GameManager {
         p.setHealthScaled(true);
         p.setHealth(80.0);
         p.setGameMode(GameMode.ADVENTURE);
-        p.getInventory().clear();
         p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 60, 5, true, false));
         p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 9999, 100, true, false));
         p.teleport(getTeleportLocation(DataManager.getInstance().getLocations()[randomMap], DataManager.getInstance().getLocations()[randomMap + 1]));
+        p.getInventory().clear();
         p.getInventory().setItem(0, CrackShotApi.generateRandomWeapon());
+        API.getInstance().getResourceManagement().cspZoom(p, p.getInventory().getItemInMainHand());
         p.setLevel(0);
         p.setExp(0.0f);
         TeamManager.getInstance().addPlayer(p);
