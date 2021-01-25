@@ -5,6 +5,7 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.light.source.DeathMatch;
 import org.light.source.Game.GameManager;
@@ -13,7 +14,11 @@ import org.light.source.Log.MinimizeLogger;
 import org.light.source.Phone.PhoneObject;
 import org.light.source.Singleton.*;
 
-public class CommandController implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class CommandController implements CommandExecutor, TabExecutor {
 
     private DeathMatch Plugin;
     private static String first;
@@ -246,10 +251,8 @@ public class CommandController implements CommandExecutor {
     }
 
     public void info(Player p) {
-        if (p.hasPermission("DeathMatch.Control"))
-            p.sendMessage(first + "§f/데스매치 <참여/정보/나가기/관리/설정/강제종료/리로드/저장>");
-        else
-            p.sendMessage(first + "§f/데스매치 <참여/정보/나가기>");
+        p.sendMessage(first + "§f/데스매치 <참여/정보/나가기"
+                + (p.hasPermission("DeathMatch.Control") ? "/관리/설정/강제종료/리로드/저장>" : ">"));
     }
 
     public boolean correctArg(String value) {
@@ -318,4 +321,26 @@ public class CommandController implements CommandExecutor {
         }
         return true;
     }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (args.length == 1) {
+            List<String> tabComplete = new ArrayList<>(Arrays.asList("참여", "정보", "나가기"));
+            if (sender.hasPermission("DeathMatch.Control"))
+                tabComplete.addAll(Arrays.asList("관리", "설정", "강제종료", "리로드", "저장"));
+            return tabComplete;
+        } else if (args.length == 2) {
+            if (!sender.hasPermission("DeathMatch.Control")) return null;
+            switch (args[0]) {
+                case "설정":
+                    return new ArrayList<>(Arrays.asList("라운드", "킬", "시간", "최소인원", "위치", "월드추가",
+                            "월드삭제", "저장", "리로드"));
+                case "관리":
+                    return new ArrayList<>(Arrays.asList("확인", "추방"));
+                default:
+                    return null;
+            }
+        } else return null;
+    }
+
 }

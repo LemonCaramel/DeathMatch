@@ -38,8 +38,6 @@ import org.light.source.Game.UserMananger;
 import org.light.source.Log.MinimizeLogger;
 import org.light.source.Singleton.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class EventManager implements Listener {
@@ -77,9 +75,11 @@ public class EventManager implements Listener {
                 CSDirector director = CrackShotApi.getPlugin();
                 String[] node = director.itemParentNode(event.getCurrentItem(), null);
                 if (node != null) {
-                    if (director.getBoolean(node[0] + ".Extras.One_Time_Use"))
+                    if (director.getBoolean(node[0] + ".Extras.One_Time_Use")) {
+                        p.getInventory().setHeldItemSlot(0);
                         p.getInventory().setItem(0, CrackShotApi.generateRandomWeapon());
-                    else {
+                        API.getInstance().getResourceManagement().cspZoom(p, p.getInventory().getItemInMainHand());
+                    } else {
                         for (UserMananger data : GameManager.getInstance().getUsers()) {
                             if (data.getUUID().equals(p.getUniqueId())) {
                                 if (data.getReRoll() >= DataManager.getInstance().getMaxReroll()) {
@@ -92,6 +92,7 @@ public class EventManager implements Listener {
                                     data.setReRoll(data.getReRoll() + 1);
                                     EconomyApi.getInstance().subtractMoney(p, DataManager.getInstance().getReRollMoney());
                                     p.getInventory().setItem(0, CrackShotApi.generateNotOPWeapon());
+                                    API.getInstance().getResourceManagement().cspZoom(p, p.getInventory().getItemInMainHand());
                                     p.sendTitle("", "§c-" + DataManager.getInstance().getReRollMoney() + " §6포인트", 5, 40, 5);
                                     p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§f남은 리롤 횟수 §7: §b" + data.getReRoll() + " §7/ §6" + DataManager.getInstance().getMaxReroll()));
                                     p.closeInventory();
@@ -253,7 +254,6 @@ public class EventManager implements Listener {
             if (GameManager.getInstance().contains(target.getUniqueId())) {
                 for (UserMananger mananger : GameManager.getInstance().getUsers()) {
                     if (mananger.getUUID().equals(target.getUniqueId())) {
-                        target.getInventory().setItem(0, CrackShotApi.generateRandomWeapon());
                         target.getInventory().clear();
                         sendRespawn(target, "MineCraft", "§c<none> §7<<x>>", false);
                     }
@@ -379,6 +379,7 @@ public class EventManager implements Listener {
                             if (victim.getName().equalsIgnoreCase(RatingManager.getInstance().getFirst()))
                                 victim.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 9999, 5, true, true));
                             victim.getInventory().setItem(0, CrackShotApi.generateRandomWeapon());
+                            API.getInstance().getResourceManagement().cspZoom(victim, victim.getInventory().getItemInMainHand());
                         }
                     }
                     victim.setGameMode(GameMode.ADVENTURE);

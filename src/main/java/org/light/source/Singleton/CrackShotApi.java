@@ -59,4 +59,5 @@ public class CrackShotApi {
         for (String weapon : getPlugin().wlist.values())
             csItems.put(weapon, CSPapi.updateItemStackFeaturesNonPlayer(weapon, getCSWeapon(weapon)));
     }
+
 }
