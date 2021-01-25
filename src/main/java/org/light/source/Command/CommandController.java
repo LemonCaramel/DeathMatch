@@ -11,10 +11,7 @@ import org.light.source.Game.GameManager;
 import org.light.source.Game.UserMananger;
 import org.light.source.Log.MinimizeLogger;
 import org.light.source.Phone.PhoneObject;
-import org.light.source.Singleton.DataManager;
-import org.light.source.Singleton.FileManager;
-import org.light.source.Singleton.PhoneManager;
-import org.light.source.Singleton.WorldManager;
+import org.light.source.Singleton.*;
 
 public class CommandController implements CommandExecutor {
 
@@ -219,7 +216,8 @@ public class CommandController implements CommandExecutor {
                                 else if (args[0].equalsIgnoreCase("리로드")) {
                                     DataManager.getInstance().flushLocation();
                                     FileManager.getInstance().load();
-                                    p.sendMessage(first + "§f콘피그 파일이 리로드 되었습니다.");
+                                    CrackShotApi.generateWeaponMap();
+                                    p.sendMessage(first + "§f콘피그 파일 및 무기 목록이 리로드 되었습니다.");
                                 }
                                 else if (args[0].equalsIgnoreCase("저장")){
                                     FileManager.getInstance().save();
