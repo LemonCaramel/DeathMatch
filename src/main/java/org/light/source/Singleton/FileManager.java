@@ -95,5 +95,6 @@ public class FileManager {
         worldManager.clear();
         for (String world : list)
             worldManager.addWorld(world);
+        worldManager.loadWorld();
     }
 }

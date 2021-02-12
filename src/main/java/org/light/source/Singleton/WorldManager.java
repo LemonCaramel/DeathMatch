@@ -1,5 +1,6 @@
 package org.light.source.Singleton;
 
+import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
@@ -37,14 +38,14 @@ public class WorldManager {
     }
 
     public void loadWorld() {
-        for (String world : worlds) {
+        worlds.stream().filter(data -> Bukkit.getWorld(data) == null).forEach(world -> {
             WorldCreator worldCreator = new WorldCreator(world);
             worldCreator.type(WorldType.FLAT);
             worldCreator.generateStructures(false);
             worldCreator.environment(World.Environment.NORMAL);
             worldCreator.generatorSettings("0x0");
             worldCreator.createWorld();
-        }
+        });
     }
 
     public ArrayList<String> getWorlds() {

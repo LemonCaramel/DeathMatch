@@ -22,7 +22,6 @@ public class DeathMatch extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EventManager(this), this);
         FileManager.getInstance().load();
         CrackShotApi.generateWeaponMap();
-        WorldManager.getInstance().loadWorld();
         MinimizeLogger.getInstance().logStart();
         KillDeathFileManager.getInstance().load();
         new AfkManager().runTaskTimer(this, 0L, 20L);

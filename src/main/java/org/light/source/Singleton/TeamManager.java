@@ -29,6 +29,8 @@ public class TeamManager {
     private void setTeam(Team team){
         team.setPrefix("§b");
         team.setAllowFriendlyFire(true);
+        team.setCanSeeFriendlyInvisibles(true);
+        team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
     }
 
     public void removePlayer(Player p){
