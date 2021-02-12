@@ -30,7 +30,7 @@ public class SneakAdapter extends PacketAdapter{
                     List<WrappedWatchableObject> metas = metadata.getMetadata();
                     Object object = metas.get(0).getValue();
                     if (object instanceof Byte && ((byte)object | 0x02) == 0x02) {
-                        metadata.getMetadata().get(0).setValue((byte) ((byte) metas.get(0).getValue() | ~0x02));
+                        metadata.getMetadata().get(0).setValue((byte) ((byte) metas.get(0).getValue() & ~0x02));
                         event.setPacket(metadata.getHandle());
                     }
                 }
