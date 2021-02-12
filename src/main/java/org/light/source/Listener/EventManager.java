@@ -79,7 +79,8 @@ public class EventManager implements Listener {
                         p.getInventory().setHeldItemSlot(0);
                         p.getInventory().setItem(0, CrackShotApi.generateRandomWeapon());
                         API.getInstance().getResourceManagement().cspZoom(p, p.getInventory().getItemInMainHand());
-                    } else {
+                    }
+                    else {
                         for (UserMananger data : GameManager.getInstance().getUsers()) {
                             if (data.getUUID().equals(p.getUniqueId())) {
                                 if (data.getReRoll() >= DataManager.getInstance().getMaxReroll()) {
@@ -146,13 +147,19 @@ public class EventManager implements Listener {
     }
 
     @EventHandler
+    public void onMove(PlayerMoveEvent event) {
+        if (event.getTo().clone().subtract(new Vector(0, 1, 0)).getBlock().getType() == Material.SPONGE)
+            event.getPlayer().setVelocity(new Vector(0, 10, 0));
+    }
+
+    @EventHandler
     public void onVelocity(PlayerVelocityEvent event) {
         Vector velocity = event.getVelocity();
         if (!NoKnockbackObject.getInstance().getKnockbackState(event.getPlayer())) {
             event.setCancelled(true);
             NoKnockbackObject.getInstance().setKnockBackState(event.getPlayer(), true);
         }
-        if (velocity.getY() > 0.5)
+        if (velocity.getY() > 0.5 && velocity.getY() != 10)
             event.setVelocity(velocity.setY(0.5));
     }
 
@@ -441,7 +448,7 @@ public class EventManager implements Listener {
         inv.setItem(51, previous);
     }
 
-    private void setName(Player p){
+    private void setName(Player p) {
         KillDeathManager.getInstance().getValue(p.getUniqueId()).setName(p.getName());
     }
 

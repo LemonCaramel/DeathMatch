@@ -90,7 +90,7 @@ public class CommandController implements CommandExecutor, TabExecutor {
                                     }
                                 }
                                 else if (args[0].equalsIgnoreCase("설정")) {
-                                    if (args.length >= 2 && (args[1].equalsIgnoreCase("라운드") || args[1].equalsIgnoreCase("킬") || args[1].equalsIgnoreCase("시간") || args[1].equalsIgnoreCase("최소인원") || args[1].equalsIgnoreCase("위치") || args[1].equalsIgnoreCase("월드추가") || args[1].equalsIgnoreCase("월드삭제"))) {
+                                    if (args.length >= 2 && (args[1].equalsIgnoreCase("라운드") || args[1].equalsIgnoreCase("킬") || args[1].equalsIgnoreCase("시간") || args[1].equalsIgnoreCase("최소인원") || args[1].equalsIgnoreCase("위치") || args[1].equalsIgnoreCase("월드추가") || args[1].equalsIgnoreCase("월드삭제") || args[1].equalsIgnoreCase("월드이동"))) {
                                         if (args[1].equalsIgnoreCase("라운드")) {
                                             if (args.length != 3)
                                                 p.sendMessage(first + "§c/데스매치 설정 라운드 <수치>");
@@ -206,6 +206,16 @@ public class CommandController implements CommandExecutor, TabExecutor {
 
                                             }
                                         }
+                                        else if (args[1].equalsIgnoreCase("월드이동")) {
+                                            if (args.length != 3)
+                                                p.sendMessage(first + "§b/데스매치 설정 월드이동 <월드>");
+                                            else {
+                                                if (Bukkit.getWorld(args[2]) != null)
+                                                    p.teleport(new Location(Bukkit.getWorld(args[2]), 0, 60, 0));
+                                                else
+                                                    p.sendMessage(first + "§c존재하지 않는 월드입니다.");
+                                            }
+                                        }
                                     }
                                     else {
                                         valuesettinginfo(p);
@@ -224,7 +234,7 @@ public class CommandController implements CommandExecutor, TabExecutor {
                                     CrackShotApi.generateWeaponMap();
                                     p.sendMessage(first + "§f콘피그 파일 및 무기 목록이 리로드 되었습니다.");
                                 }
-                                else if (args[0].equalsIgnoreCase("저장")){
+                                else if (args[0].equalsIgnoreCase("저장")) {
                                     FileManager.getInstance().save();
                                     p.sendMessage(first + "§c파일이 성공적으로 저장되었습니다.");
                                 }
@@ -307,7 +317,7 @@ public class CommandController implements CommandExecutor, TabExecutor {
     }
 
     public void valuesettinginfo(Player p) {
-        p.sendMessage(first + "§c/데스매치 설정 <라운드/킬/시간/최소인원/위치/월드추가/월드삭제/저장/리로드> <값/1~21>");
+        p.sendMessage(first + "§c/데스매치 설정 <라운드/킬/시간/최소인원/위치/월드추가/월드삭제/월드이동/저장/리로드> <값/1~21>");
     }
 
     public String locationToString(Location loc) {
@@ -329,7 +339,8 @@ public class CommandController implements CommandExecutor, TabExecutor {
             if (sender.hasPermission("DeathMatch.Control"))
                 tabComplete.addAll(Arrays.asList("관리", "설정", "강제종료", "리로드", "저장"));
             return tabComplete;
-        } else if (args.length == 2) {
+        }
+        else if (args.length == 2) {
             if (!sender.hasPermission("DeathMatch.Control")) return null;
             switch (args[0]) {
                 case "설정":
@@ -340,7 +351,8 @@ public class CommandController implements CommandExecutor, TabExecutor {
                 default:
                     return null;
             }
-        } else return null;
+        }
+        else return null;
     }
 
 }

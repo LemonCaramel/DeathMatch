@@ -1,5 +1,6 @@
 package org.light.source;
 
+import com.comphenix.protocol.PacketType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.light.source.Command.CommandController;
 import org.light.source.Command.JoinLeaveCommand;
@@ -11,7 +12,8 @@ import org.light.source.Runnable.WeatherRunnable;
 import org.light.source.Singleton.CrackShotApi;
 import org.light.source.Singleton.FileManager;
 import org.light.source.Singleton.KillDeathFileManager;
-import org.light.source.Singleton.WorldManager;
+import com.comphenix.protocol.ProtocolLibrary;
+import org.light.source.packet.SneakAdapter;
 
 public class DeathMatch extends JavaPlugin {
 
@@ -24,8 +26,10 @@ public class DeathMatch extends JavaPlugin {
         CrackShotApi.generateWeaponMap();
         MinimizeLogger.getInstance().logStart();
         KillDeathFileManager.getInstance().load();
+        ProtocolLibrary.getProtocolManager().addPacketListener(new SneakAdapter(this, PacketType.Play.Server.ENTITY_METADATA));
         new AfkManager().runTaskTimer(this, 0L, 20L);
         new WeatherRunnable(this);
+
 
     }
 

@@ -113,6 +113,14 @@
             <systemPath>${project.lib.path}/Paper.jar</systemPath>
         </dependency>
 
+        <!-- ProtocolLib -->
+        <dependency>
+            <groupId>com.github.azbh111</groupId>
+            <artifactId>ProtocolLib</artifactId>
+            <version>4.4.0</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- caramelLibrary API -->
         <dependency>
             <groupId>moe.caramel</groupId>
