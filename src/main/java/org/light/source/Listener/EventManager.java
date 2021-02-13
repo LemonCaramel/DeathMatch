@@ -38,6 +38,9 @@ import org.light.source.Game.UserMananger;
 import org.light.source.Log.MinimizeLogger;
 import org.light.source.Singleton.*;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class EventManager implements Listener {
@@ -134,7 +137,7 @@ public class EventManager implements Listener {
 
     @EventHandler
     public void onDrop(PlayerDropItemEvent event) {
-        if (CrackShotApi.getCSID(event.getItemDrop().getItemStack()) != null || event.getItemDrop().getItemStack().getType() == Material.SKULL_ITEM)
+        if (!event.getPlayer().isOp() && GameManager.getInstance().contains(event.getPlayer().getUniqueId()))
             event.setCancelled(true);
 
     }
@@ -188,10 +191,12 @@ public class EventManager implements Listener {
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
         if (GameManager.getInstance().isGaming() && GameManager.getInstance().contains(event.getEntity().getUniqueId())) {
+            event.setKeepInventory(true);
             event.setDeathMessage("");
             event.getDrops().clear();
             addDeath(event.getEntity().getUniqueId());
             event.getEntity().spigot().respawn();
+            resetDamage(event.getEntity());
         }
     }
 
@@ -200,28 +205,25 @@ public class EventManager implements Listener {
         if (event.getVictim() instanceof Player && GameManager.getInstance().isGaming()) {
             Player killer = event.getPlayer();
             Player victim = (Player) event.getVictim();
+            addDamage(killer, victim, (int) event.getDamage());
             if (killer.hasPotionEffect(PotionEffectType.DAMAGE_RESISTANCE))
                 event.setCancelled(true);
             else if (GameManager.getInstance().contains(killer.getUniqueId()) && GameManager.getInstance().contains(victim.getUniqueId())) {
                 if (victim.getHealth() - event.getDamage() <= 0) {
                     int killerData = 0;
-                    ItemStack stack = CrackShotApi.getCSWeapon(event.getWeaponTitle());
-                    if (stack == null)
-                        stack = createDummyItem();
-                    if (stack.getType() == Material.IRON_AXE || stack.getType() == Material.DIAMOND_AXE)
-                        sendKillMsg(killer, victim, "§c" + killer.getName() + " §f(" + stack.getItemMeta().getDisplayName() + "§f)" + " §7メ §b" + victim.getName());
-                    else
-                        sendKillMsg(killer, victim, "§c" + killer.getName() + " §f(" + stack.getItemMeta().getDisplayName() + "§f)" + " §7➾ §b" + victim.getName());
+                    HashMap<UUID, Integer> damageMap = new HashMap<>();
                     for (UserMananger data : GameManager.getInstance().getUsers()) {
                         if (data.getUUID().equals(killer.getUniqueId())) {
                             data.setKills(data.getKills() + 1);
                             killerData = data.getKills();
+                            killer.getInventory().setItem(8, getKillItem(data.getKills()));
                         }
                         else if (data.getUUID().equals(victim.getUniqueId())) {
-                            victim.getInventory().clear();
+                            victim.getInventory().setItem(0, new ItemStack(Material.AIR));
                             event.setDamage(0.0);
                             victim.setHealth(80.0);
                             sendRespawn(victim);
+                            damageMap = data.getDamageMap();
                             if (victim.getName().equalsIgnoreCase(RatingManager.getInstance().getFirst())) {
                                 //1위 인경우
                                 int back, to;
@@ -234,6 +236,18 @@ public class EventManager implements Listener {
                             }
                         }
                     }
+                    damageMap.remove(killer.getUniqueId());
+                    int maxHealth = (int) victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
+                    for (UUID data : damageMap.keySet()) {
+                        if (damageMap.get(data) > maxHealth)
+                            damageMap.put(data, maxHealth);
+                    }
+                    ItemStack stack = CrackShotApi.getCSWeapon(event.getWeaponTitle()) == null ? createDummyItem() : CrackShotApi.getCSWeapon(event.getWeaponTitle());
+                    if (stack.getType() == Material.IRON_AXE || stack.getType() == Material.DIAMOND_AXE)
+                        sendKillMsg(killer, victim, "§c" + killer.getName() + " §f(" + stack.getItemMeta().getDisplayName() + "§f)" + " §7メ §b" + victim.getName(), damageMap);
+                    else
+                        sendKillMsg(killer, victim, "§c" + killer.getName() + " §f(" + stack.getItemMeta().getDisplayName() + "§f)" + " §7➾ §b" + victim.getName(), damageMap);
+
                     RatingManager.getInstance().updateRank();
                     addKill(killer.getUniqueId());
                     addDeath(victim.getUniqueId());
@@ -266,7 +280,7 @@ public class EventManager implements Listener {
             if (GameManager.getInstance().isGaming() && GameManager.getInstance().contains(target.getUniqueId())) {
                 for (UserMananger mgr : GameManager.getInstance().getUsers()) {
                     if (mgr.getUUID().equals(target.getUniqueId())) {
-                        target.getInventory().clear();
+                        target.getInventory().setItem(0, new ItemStack(Material.AIR));
                         sendRespawn(target);
                     }
                 }
@@ -306,7 +320,7 @@ public class EventManager implements Listener {
         p.setExp(GameManager.getInstance().calcLevelProgress(to));
     }
 
-    public void sendKillMsg(Player killer, Player victim, String msg) {
+    public void sendKillMsg(Player killer, Player victim, String msg, Map<UUID, Integer> damageMap) {
         //킬당 참여보상의 1/10 지급, 연속킬시 킬보상의 1/10 * 반올림(연속킬수 / 2), 제압킬시 참여 보상의 1/5 * 연속킬 횟수지급, 전부다 합연산으로 지급
         UserMananger killManager = null, victimManager = null;
         int reward = 0;
@@ -359,6 +373,19 @@ public class EventManager implements Listener {
             killer.sendTitle("", "+ " + reward + " §6포인트", 0, 20, 0);
             MinimizeLogger.getInstance().appendLog(killer.getName() + "님이 " + victim.getName() + "님을 죽여 " + reward + "원을 흭득");
             killManager.setCalcResultMoney(killManager.getCalcResultMoney() + reward);
+            for (UUID data : damageMap.keySet()) {
+                if (damageMap.get(data) != 0) {
+                    double percent = damageMap.get(data) / victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
+                    int assistReward = (int) (reward / 2 * percent);
+                    Player target = Bukkit.getPlayer(data);
+                    target.sendMessage("§6[ §f! §6] §bAssist! §6 +" + assistReward + " 포인트");
+                    MinimizeLogger.getInstance().appendLog(target.getName() + "님이 어시스트로 " + assistReward + "원 흭득");
+                    for (UserMananger value : GameManager.getInstance().getUsers())
+                        if (value.getUUID().equals(data))
+                            value.setCalcResultMoney(value.getCalcResultMoney() + assistReward);
+                }
+            }
+            victimManager.getDamageMap().clear();
         }
 
     }
@@ -454,6 +481,31 @@ public class EventManager implements Listener {
 
     private void setName(Player p) {
         KillDeathManager.getInstance().getValue(p.getUniqueId()).setName(p.getName());
+    }
+
+    private ItemStack getKillItem(int amount) {
+        ItemStack kill = new ItemStack(Material.NETHER_STAR, amount);
+        ItemMeta meta = kill.getItemMeta();
+        meta.setDisplayName("§6[ §f! §6] §cKill Stack");
+        meta.setLore(Arrays.asList(" ", " §8-  §f현재 당신의 킬 횟수입니다.", " "));
+        kill.setItemMeta(meta);
+        return kill;
+    }
+
+    private void addDamage(Player killer, Player victim, int damage) {
+        for (UserMananger manager : GameManager.getInstance().getUsers()) {
+            if (manager.getUUID().equals(victim.getUniqueId())) {
+                HashMap<UUID, Integer> damageMap = manager.getDamageMap();
+                if (damageMap.containsKey(killer.getUniqueId()))
+                    damageMap.put(killer.getUniqueId(), damageMap.get(killer.getUniqueId()) + damage);
+                else
+                    damageMap.put(killer.getUniqueId(), damage);
+            }
+        }
+    }
+
+    private void resetDamage(Player victim) {
+        GameManager.getInstance().getUsers().stream().filter(data -> data.getUUID().equals(victim.getUniqueId())).forEach(data -> data.getDamageMap().clear());
     }
 
 }
