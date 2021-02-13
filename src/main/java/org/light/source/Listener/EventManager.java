@@ -378,11 +378,13 @@ public class EventManager implements Listener {
                     double percent = damageMap.get(data) / victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
                     int assistReward = (int) (reward / 2 * percent);
                     Player target = Bukkit.getPlayer(data);
-                    target.sendMessage("§6[ §f! §6] §bAssist! §6 +" + assistReward + " 포인트");
-                    MinimizeLogger.getInstance().appendLog(target.getName() + "님이 어시스트로 " + assistReward + "원 흭득");
-                    for (UserMananger value : GameManager.getInstance().getUsers())
-                        if (value.getUUID().equals(data))
-                            value.setCalcResultMoney(value.getCalcResultMoney() + assistReward);
+                    if (target != null) {
+                        target.sendMessage("§6[ §f! §6] §bAssist! §6 +" + assistReward + " 포인트");
+                        MinimizeLogger.getInstance().appendLog(target.getName() + "님이 어시스트로 " + assistReward + "원 흭득");
+                        for (UserMananger value : GameManager.getInstance().getUsers())
+                            if (value.getUUID().equals(data))
+                                value.setCalcResultMoney(value.getCalcResultMoney() + assistReward);
+                    }
                 }
             }
             victimManager.getDamageMap().clear();
@@ -397,6 +399,7 @@ public class EventManager implements Listener {
         if (GameManager.getInstance().isGaming() && GameManager.getInstance().contains(victim.getUniqueId())) {
             for (UserMananger mgr : GameManager.getInstance().getUsers()) {
                 if (mgr.getUUID().equals(victim.getUniqueId())) {
+                    victim.getInventory().setHeldItemSlot(4);
                     victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(80.0);
                     victim.setHealthScaled(true);
                     victim.setHealth(80.0);
@@ -406,6 +409,7 @@ public class EventManager implements Listener {
                     victim.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 60, 1, true, false), false);
                     victim.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 60, 5, true, false));
                     victim.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 9999, 100, true, false));
+                    victim.getInventory().setHelmet(new ItemStack(Material.AIR));
                     if (victim.getName().equalsIgnoreCase(RatingManager.getInstance().getFirst()))
                         victim.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 9999, 5, true, true));
                     victim.getInventory().setItem(0, CrackShotApi.generateRandomWeapon());
