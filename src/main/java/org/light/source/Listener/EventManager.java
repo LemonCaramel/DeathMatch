@@ -139,7 +139,7 @@ public class EventManager implements Listener {
 
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onOffhandMove(PlayerSwapHandItemsEvent event) {
         Player target = event.getPlayer();
         if (GameManager.getInstance().isGaming() && GameManager.getInstance().contains(target.getUniqueId()))

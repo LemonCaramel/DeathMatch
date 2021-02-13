@@ -23,7 +23,7 @@ public class FileManager {
         manager = new FileManager();
     }
 
-    private FileManager(){
+    private FileManager() {
         Plugin = JavaPlugin.getPlugin(DeathMatch.class);
         folder = new File("plugins/" + Plugin.getDescription().getName());
         file = new File("plugins/" + Plugin.getDescription().getName() + "/config.yml");
@@ -32,11 +32,11 @@ public class FileManager {
             folder.mkdir();
     }
 
-    public static FileManager getInstance(){
+    public static FileManager getInstance() {
         return manager;
     }
 
-    public void save(){
+    public void save() {
         DataManager manager = DataManager.getInstance();
         config.set("Round", manager.getRounds());
         config.set("KillLevel", manager.getKilltolevel());
@@ -52,19 +52,19 @@ public class FileManager {
         config.set("ReRollMoney", manager.getReRollMoney());
         config.set("WaitTime", manager.getWaitTime());
         config.set("Worlds", WorldManager.getInstance().getWorlds());
-        if (manager.getLocations() != null){
-            for (int i = 0; i < DataManager.getInstance().getLocationAmount(); i++){
-                config.set("Location." + (i+1), manager.getLocations()[i]);
-            }
+        if (manager.getLocations() != null) {
+            for (int i = 0; i < DataManager.getInstance().getLocationAmount(); i++)
+                setLocation("Location." + (i + 1), manager.getLocations()[i]);
         }
         try {
             config.save(file);
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void load(){
+    public void load() {
         try {
             config.load(file);
         }
@@ -90,12 +90,36 @@ public class FileManager {
         manager.setMaxReroll(config.getInt("MaxReRoll", 10));
         manager.setReRollMoney(config.getInt("ReRollMoney", 200));
         manager.setWaitTime(config.getInt("WaitTime", 60));
-        if (config.get("Location.1") != null && config.getInt("LocationAmount") != 0){
-            int amount = config.getInt("LocationAmount");
-            for (int i = 0; i < amount; i++){
-                DataManager.getInstance().setLocations((Location) config.get("Location." + (i+1)),i+1);
+        Bukkit.getScheduler().runTaskLaterAsynchronously(Plugin, () -> {
+            if (config.get("Location.1") != null && config.getInt("LocationAmount") != 0) {
+                int amount = config.getInt("LocationAmount");
+                for (int i = 0; i < amount; i++) {
+                    DataManager.getInstance().setLocations(getLocation("Location." + (i + 1)), i + 1);
+                }
             }
-        }
+        }, 40L);
+    }
+
+    private void setLocation(String path, Location value) {
+        config.set(path + ".X", value.getX());
+        config.set(path + ".Y", value.getY());
+        config.set(path + ".Z", value.getZ());
+        config.set(path + ".World", value.getWorld().getName());
+        config.set(path + ".Pitch", value.getPitch());
+        config.set(path + ".Yaw", value.getYaw());
+    }
+
+    private Location getLocation(String path) {
+        double x = config.getDouble(path + ".X", -1);
+        double y = config.getDouble(path + ".Y", -1);
+        double z = config.getDouble(path + ".Z", -1);
+        float pitch = (float) config.getDouble(path + ".Pitch", 0);
+        float yaw = (float) config.getDouble(path + ".Yaw", 0);
+        String world = config.getString(path + ".World", null);
+        if (world == null || Bukkit.getWorld(world) == null)
+            return null;
+        else
+            return new Location(Bukkit.getWorld(world), x, y, z, yaw, pitch);
 
     }
 }
