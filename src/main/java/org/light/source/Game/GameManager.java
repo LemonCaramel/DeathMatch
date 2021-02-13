@@ -260,7 +260,7 @@ public class GameManager {
             int add = ThreadLocalRandom.current().nextInt(0, gapZ + 1);
             min.setZ(min.getZ() + add);
         }
-        if (min.getBlock().getType() != Material.AIR || min.clone().add(new Vector(0, 1, 0)).getBlock().getType() != Material.AIR || min.clone().add(new Vector(0, -1, 0)).getBlock().getType() == Material.AIR)
+        if (min.getBlock().getType() != Material.AIR || min.clone().add(new Vector(0, 1, 0)).getBlock().getType() != Material.AIR)
             min = getTeleportLocation(first, second);
         return min;
     }

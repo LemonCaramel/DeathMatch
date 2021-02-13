@@ -74,6 +74,10 @@ public class FileManager {
         WorldManager worldManager = WorldManager.getInstance();
         DataManager manager = DataManager.getInstance();
         ArrayList<String> list = new ArrayList<>(config.getStringList("Worlds"));
+        worldManager.clear();
+        for (String world : list)
+            worldManager.addWorld(world);
+        worldManager.loadWorld();
         manager.setRounds(config.getInt("Round"));
         manager.setTime(config.getInt("Time"));
         manager.setKilltolevel(config.getInt("KillLevel"));
@@ -92,9 +96,6 @@ public class FileManager {
                 DataManager.getInstance().setLocations((Location) config.get("Location." + (i+1)),i+1);
             }
         }
-        worldManager.clear();
-        for (String world : list)
-            worldManager.addWorld(world);
-        worldManager.loadWorld();
+
     }
 }

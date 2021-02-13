@@ -148,8 +148,10 @@ public class EventManager implements Listener {
 
     @EventHandler
     public void onMove(PlayerMoveEvent event) {
-        if (event.getTo().clone().subtract(new Vector(0, 1, 0)).getBlock().getType() == Material.SPONGE)
-            event.getPlayer().setVelocity(new Vector(0, 10, 0));
+        if (event.getTo().clone().subtract(new Vector(0, 1, 0)).getBlock().getType() == Material.SPONGE) {
+            event.getPlayer().setVelocity(new Vector(0, 2.05, 0));
+            event.getPlayer().spawnParticle(Particle.FIREWORKS_SPARK, event.getTo(), 30, 0.1, 0.1, 0.1, 0.5);
+        }
     }
 
     @EventHandler
@@ -159,7 +161,7 @@ public class EventManager implements Listener {
             event.setCancelled(true);
             NoKnockbackObject.getInstance().setKnockBackState(event.getPlayer(), true);
         }
-        if (velocity.getY() > 0.5 && velocity.getY() != 10)
+        if (velocity.getY() > 0.5 && velocity.getY() != 2.05)
             event.setVelocity(velocity.setY(0.5));
     }
 
@@ -189,6 +191,7 @@ public class EventManager implements Listener {
             event.setDeathMessage("");
             event.getDrops().clear();
             addDeath(event.getEntity().getUniqueId());
+            event.getEntity().spigot().respawn();
         }
     }
 
@@ -258,21 +261,22 @@ public class EventManager implements Listener {
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {
-        Player target = event.getPlayer();
-        if (GameManager.getInstance().isGaming()) {
-            if (GameManager.getInstance().contains(target.getUniqueId())) {
-                for (UserMananger mananger : GameManager.getInstance().getUsers()) {
-                    if (mananger.getUUID().equals(target.getUniqueId())) {
+        Bukkit.getScheduler().runTaskLater(Plugin, () -> {
+            Player target = event.getPlayer();
+            if (GameManager.getInstance().isGaming() && GameManager.getInstance().contains(target.getUniqueId())) {
+                for (UserMananger mgr : GameManager.getInstance().getUsers()) {
+                    if (mgr.getUUID().equals(target.getUniqueId())) {
                         target.getInventory().clear();
                         sendRespawn(target);
                     }
                 }
             }
-        }
-        else {
-            Bukkit.getScheduler().runTaskLater(Plugin, () -> target.teleport(DataManager.getInstance().getLocations()[0]), 1L);
-        }
+            else
+                Bukkit.getScheduler().runTaskLater(Plugin, () -> target.teleport(DataManager.getInstance().getLocations()[0]), 1L);
+        }, 1L);
+
     }
+
 
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent event) {
@@ -285,7 +289,7 @@ public class EventManager implements Listener {
         if (event.getCause() == EntityDamageEvent.DamageCause.LIGHTNING || event.getCause() == EntityDamageEvent.DamageCause.FALL)
             event.setCancelled(true);
         else if (event.getCause() == EntityDamageEvent.DamageCause.VOID)
-            event.setDamage(event.getDamage() * 10);
+            event.setDamage(event.getDamage() * 2);
     }
 
     public void sendLevelUp(Player p, int back, int to) {
