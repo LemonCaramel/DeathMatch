@@ -3,6 +3,7 @@ package org.light.source;
 import com.comphenix.protocol.PacketType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.light.source.Command.CommandController;
+import org.light.source.Command.HologramCommand;
 import org.light.source.Command.JoinLeaveCommand;
 import org.light.source.Command.KillDeathCommand;
 import org.light.source.Game.AfkManager;
@@ -49,5 +50,6 @@ public class DeathMatch extends JavaPlugin {
         getCommand("나가기").setExecutor(joinCommand);
         getCommand("킬뎃").setExecutor(killDeathCommand);
         getCommand("랭크").setExecutor(killDeathCommand);
+        getCommand("hd").setExecutor(new HologramCommand());
     }
 }

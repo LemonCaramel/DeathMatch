@@ -17,3 +17,5 @@ commands:
   킬뎃:
     aliases: [kd]
     description: K/D
+  hd:
+    description: hologram
