@@ -2,6 +2,7 @@ package org.light.source;
 
 import com.comphenix.protocol.PacketType;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.light.dayz.DMain;
 import org.light.source.Command.CommandController;
 import org.light.source.Command.HologramCommand;
 import org.light.source.Command.JoinLeaveCommand;
@@ -18,6 +19,13 @@ import org.light.source.packet.SneakAdapter;
 
 public class DeathMatch extends JavaPlugin {
 
+    private final DMain main;
+
+    public DeathMatch() {
+        super();
+        main = new DMain(this);
+    }
+
     @Override
     public void onEnable(){
         getLogger().info("DeathMatch Plugin Enabled");
@@ -30,8 +38,7 @@ public class DeathMatch extends JavaPlugin {
         ProtocolLibrary.getProtocolManager().addPacketListener(new SneakAdapter(this, PacketType.Play.Server.ENTITY_METADATA));
         new AfkManager().runTaskTimer(this, 0L, 20L);
         new WeatherRunnable(this);
-
-
+        main.makeEnable();
     }
 
     @Override
@@ -40,6 +47,7 @@ public class DeathMatch extends JavaPlugin {
         FileManager.getInstance().save();
         MinimizeLogger.getInstance().forceSaveLog();
         KillDeathFileManager.getInstance().save();
+        main.makeDisable();
     }
 
     public void loadCommand(){

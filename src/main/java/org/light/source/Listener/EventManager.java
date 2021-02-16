@@ -178,6 +178,8 @@ public class EventManager implements Listener {
         setNoDamageState(target, true);
         checkPhone(target);
         setName(target);
+        if (!target.getWorld().getName().contains("lobby"))
+            target.teleport(DataManager.getInstance().getLocations()[0]);
     }
 
     @EventHandler
@@ -300,7 +302,9 @@ public class EventManager implements Listener {
 
     @EventHandler
     public void onAnyDamage(EntityDamageEvent event) {
-        if (event.getCause() == EntityDamageEvent.DamageCause.LIGHTNING || event.getCause() == EntityDamageEvent.DamageCause.FALL)
+        if (event.getCause() == EntityDamageEvent.DamageCause.LIGHTNING)
+            event.setCancelled(true);
+        else if (event.getCause() == EntityDamageEvent.DamageCause.FALL && !event.getEntity().getWorld().getName().contains("dayz"))
             event.setCancelled(true);
         else if (event.getCause() == EntityDamageEvent.DamageCause.VOID)
             event.setDamage(event.getDamage() * 2);
