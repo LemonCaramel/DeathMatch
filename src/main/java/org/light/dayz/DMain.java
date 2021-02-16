@@ -2,6 +2,7 @@ package org.light.dayz;
 
 import org.bukkit.Bukkit;
 import org.light.dayz.command.ChestCommand;
+import org.light.dayz.command.DropCommand;
 import org.light.dayz.command.GameCommand;
 import org.light.dayz.data.YamlConfig;
 import org.light.dayz.event.*;
@@ -22,6 +23,7 @@ public class DMain {
         config.load();
         Plugin.getCommand("dayz").setExecutor(new GameCommand(config));
         Plugin.getCommand("창고").setExecutor(new ChestCommand());
+        Plugin.getCommand("드랍").setExecutor(new DropCommand());
         Bukkit.getServer().getPluginManager().registerEvents(new FoodLevel(), Plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new PreventShoot(), Plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new SpawnMob(), Plugin);

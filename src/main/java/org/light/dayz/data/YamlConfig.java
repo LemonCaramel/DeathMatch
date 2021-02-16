@@ -63,6 +63,7 @@ public class YamlConfig {
         //location.1 ~ location.2 ~
         try {
             config.load(file);
+            chestConfig.load(chestFile);
         }
         catch (IOException | InvalidConfigurationException e) {
             Bukkit.broadcastMessage("Error Load File");
@@ -102,6 +103,7 @@ public class YamlConfig {
         }
         try {
             config.save(file);
+            chestConfig.save(chestFile);
         }
         catch (IOException e) {
             e.printStackTrace();

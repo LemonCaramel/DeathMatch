@@ -31,8 +31,6 @@ public class ChestInteraction implements Listener {
                 Chest chest = (Chest) event.getClickedBlock().getState();
                 chest.getBlockInventory().clear();
                 chest.getInventory().addItem(CrackShotApi.generateNotOPWeapon());
-                if (random.nextInt(0, 101) <= 5)
-                    chest.getInventory().addItem(CrackShotApi.generateNotOPWeapon());
                 if (random.nextInt(0, 2) == 0)
                     chest.getInventory().addItem(Regen.getPotions().get(random.nextInt(0, Regen.getPotions().size())));
                 else

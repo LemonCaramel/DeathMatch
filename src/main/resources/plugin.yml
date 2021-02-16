@@ -23,3 +23,5 @@ commands:
     description: about dayz
   창고:
     description: dayz chest
+  드랍:
+    description: drop item

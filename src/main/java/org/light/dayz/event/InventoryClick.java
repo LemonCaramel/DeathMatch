@@ -5,7 +5,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryType;
 import org.light.dayz.util.Regen;
 import org.light.source.Game.GameManager;
 import org.light.source.Singleton.CrackShotApi;
@@ -28,7 +27,7 @@ public class InventoryClick implements Listener {
                 }
             }
         }
-        else if (!GameManager.getInstance().contains(event.getWhoClicked().getUniqueId()) && !event.getClickedInventory().getTitle().contains("채널"))
+        else if (!GameManager.getInstance().contains(event.getWhoClicked().getUniqueId()) && event.getClickedInventory() != null  && event.getClickedInventory().getTitle() != null && !event.getClickedInventory().getTitle().contains("채널"))
             event.setCancelled(false);
     }
 

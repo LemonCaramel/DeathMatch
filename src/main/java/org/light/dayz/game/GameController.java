@@ -35,6 +35,7 @@ public class GameController {
             p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(80.0);
             p.setHealthScaled(true);
             p.setHealth(80.0);
+            p.setFoodLevel(20);
             p.getInventory().setItem(8, new ItemStack(Material.AIR));
             p.setGameMode(GameMode.ADVENTURE);
             p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 60, 5, true, false));
@@ -67,7 +68,7 @@ public class GameController {
             p.setExp(0.0f);
             p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
             p.setHealth(20.0);
-
+            p.setFoodLevel(20);
             p.teleport(DataManager.getInstance().getLocations()[0]);
             p.sendMessage(" ");
             FontAPI.sendCenteredMessage(p, "§f《 레이드 결과 》");
