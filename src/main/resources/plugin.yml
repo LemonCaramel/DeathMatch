@@ -19,3 +19,5 @@ commands:
     description: K/D
   hd:
     description: hologram
+  dayz:
+    description: about dayz

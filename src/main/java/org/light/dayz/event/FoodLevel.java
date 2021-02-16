@@ -19,7 +19,7 @@ public class FoodLevel implements Listener {
     @EventHandler
     public void onFoodDamage(EntityDamageEvent event) {
         if (event.getCause() == EntityDamageEvent.DamageCause.STARVATION) {
-            event.setDamage(event.getDamage() * 2);
+            event.setDamage(event.getDamage() * 4);
             event.getEntity().sendMessage("§6[ §f! §6] §c배고픔에 의해 피해를 받고 있습니다. 음식을 섭취하여 해결할 수 있습니다.");
         }
     }

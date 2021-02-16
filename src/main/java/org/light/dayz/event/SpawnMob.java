@@ -18,7 +18,7 @@ public class SpawnMob implements Listener {
     @EventHandler
     public void onMobSpawn(CreatureSpawnEvent event) {
         World world = event.getLocation().getWorld();
-        if (world.getName().contains("dayz")) {
+        if (world.getName().contains("dayz") && event.getEntityType() != EntityType.ZOMBIE) {
             event.setCancelled(true);
             Zombie zombie = (Zombie) world.spawnEntity(event.getLocation(), EntityType.ZOMBIE);
             zombie.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(65.0);
@@ -26,7 +26,19 @@ public class SpawnMob implements Listener {
             zombie.setHealth(50.0);
             zombie.getEquipment().setHelmet(new ItemStack(Material.LEATHER_HELMET));
             zombie.setSilent(true);
-            zombie.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 999999, 3, true, false), false);
+            zombie.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 999999, 2, true, false), false);
+        }
+        else if (event.getEntityType() == EntityType.ZOMBIE) {
+            Zombie zombie = (Zombie) event.getEntity();
+            if (zombie.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).getBaseValue() != 65.0) {
+                zombie.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(60.0);
+                zombie.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(50.0);
+                zombie.setHealth(50.0);
+                zombie.getEquipment().setHelmet(new ItemStack(Material.LEATHER_HELMET));
+                zombie.setSilent(true);
+                zombie.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 999999, 2, true, false), false);
+
+            }
         }
     }
 }

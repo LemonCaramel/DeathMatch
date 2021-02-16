@@ -304,9 +304,13 @@ public class GameManager {
     }
 
     public void selectRandomMap() {
-        randomMap = ThreadLocalRandom.current().nextInt(1, DataManager.getInstance().getLocationAmount());
-        while (randomMap % 2 != 1)
+        if (DataManager.getInstance().getLocationAmount() == 0)
+            randomMap = 1;
+        else {
             randomMap = ThreadLocalRandom.current().nextInt(1, DataManager.getInstance().getLocationAmount());
+            while (randomMap % 2 != 1)
+                randomMap = ThreadLocalRandom.current().nextInt(1, DataManager.getInstance().getLocationAmount());
+        }
     }
 
     public void flushData() {

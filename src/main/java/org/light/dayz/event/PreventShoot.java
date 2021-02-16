@@ -27,7 +27,8 @@ public class PreventShoot implements Listener {
     public void onLeave(PlayerQuitEvent event) {
         if (GameController.contains(event.getPlayer().getUniqueId())) {
             for (ItemStack stack : event.getPlayer().getInventory().getContents())
-                event.getPlayer().getWorld().dropItem(event.getPlayer().getLocation(), stack);
+                if (stack != null)
+                    event.getPlayer().getWorld().dropItem(event.getPlayer().getLocation(), stack);
             event.getPlayer().getInventory().clear();
             GameController.removePlayer(event.getPlayer(), false);
         }

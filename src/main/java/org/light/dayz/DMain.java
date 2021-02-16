@@ -1,10 +1,10 @@
 package org.light.dayz;
 
 import org.bukkit.Bukkit;
+import org.light.dayz.command.GameCommand;
 import org.light.dayz.data.YamlConfig;
-import org.light.dayz.event.FoodLevel;
-import org.light.dayz.event.PreventShoot;
-import org.light.dayz.event.SpawnMob;
+import org.light.dayz.event.*;
+import org.light.dayz.util.Regen;
 import org.light.source.DeathMatch;
 
 public class DMain {
@@ -19,9 +19,14 @@ public class DMain {
 
     public void makeEnable() {
         config.load();
+        Plugin.getCommand("dayz").setExecutor(new GameCommand(config));
         Bukkit.getServer().getPluginManager().registerEvents(new FoodLevel(), Plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new PreventShoot(), Plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new SpawnMob(), Plugin);
+        Bukkit.getServer().getPluginManager().registerEvents(new InventoryClick(), Plugin);
+        Bukkit.getServer().getPluginManager().registerEvents(new WeaponDamage(config, Plugin), Plugin);
+        Bukkit.getServer().getPluginManager().registerEvents(new ChestInteraction(), Plugin);
+        Regen.startTask();
     }
 
     public void makeDisable() {

@@ -68,11 +68,12 @@ public class GameCommand implements CommandExecutor {
     }
 
     public void locationInfo(Player p) {
-        FontAPI.sendCenteredMessage(p, "§b맨 윗줄부터 인덱스 0번입니다.");
-        p.sendMessage(" ");
         ArrayList<Location> locations = config.getLocations();
-        if (locations.size() != 0)
+        if (locations.size() != 0) {
+            FontAPI.sendCenteredMessage(p, "§b맨 윗줄부터 인덱스 0번입니다.");
+            p.sendMessage(" ");
             locations.forEach(data -> p.sendMessage(locationToString(data)));
+        }
         else
             p.sendMessage("§c지정된 데이터가 없습니다.");
     }

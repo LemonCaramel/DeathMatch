@@ -1,6 +1,8 @@
 package org.light.source;
 
 import com.comphenix.protocol.PacketType;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.light.dayz.DMain;
 import org.light.source.Command.CommandController;
@@ -35,9 +37,9 @@ public class DeathMatch extends JavaPlugin {
         CrackShotApi.generateWeaponMap();
         MinimizeLogger.getInstance().logStart();
         KillDeathFileManager.getInstance().load();
-        ProtocolLibrary.getProtocolManager().addPacketListener(new SneakAdapter(this, PacketType.Play.Server.ENTITY_METADATA));
         new AfkManager().runTaskTimer(this, 0L, 20L);
         new WeatherRunnable(this);
+        Bukkit.getScheduler().runTaskLater(this, () -> ProtocolLibrary.getProtocolManager().addPacketListener(new SneakAdapter(this, PacketType.Play.Server.ENTITY_METADATA)), 60L);
         main.makeEnable();
     }
 

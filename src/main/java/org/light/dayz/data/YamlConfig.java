@@ -46,7 +46,7 @@ public class YamlConfig {
     }
 
     public void load() {
-        //locations.1 ~ locations.2 ~
+        //location.1 ~ location.2 ~
         try {
             config.load(file);
         }
@@ -59,9 +59,9 @@ public class YamlConfig {
         helpWeapon.clear();
         locations.clear();
         helpWeapon.addAll(config.getStringList("first-weapon"));
-        if (config.getConfigurationSection("locations") != null)
-            for (String key : config.getConfigurationSection("locations").getKeys(false))
-                locations.add(getLocation("locations." + key));
+        if (config.getConfigurationSection("location") != null)
+            for (String key : config.getConfigurationSection("location").getKeys(false))
+                locations.add(getLocation("location." + key));
     }
 
     public void save() {
@@ -133,5 +133,13 @@ public class YamlConfig {
 
     public void setHKill(int hKill) {
         this.hKill = hKill;
+    }
+
+    public int getRegen() {
+        return regen;
+    }
+
+    public void setRegen(int regen) {
+        this.regen = regen;
     }
 }

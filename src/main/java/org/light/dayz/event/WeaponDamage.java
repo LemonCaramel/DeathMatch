@@ -4,6 +4,7 @@ import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
@@ -29,7 +30,7 @@ public class WeaponDamage implements Listener {
 
     @EventHandler
     public void onWeaponDamage(WeaponDamageEntityEvent event) {
-        World world = event.getDamager().getWorld();
+        World world = event.getPlayer().getWorld();
         Player shooter = event.getPlayer();
         if (world.getName().contains("dayz")) {
             if (GameController.contains(shooter.getUniqueId()) && event.getVictim() instanceof Player && GameController.contains(event.getVictim().getUniqueId())) {
@@ -45,13 +46,15 @@ public class WeaponDamage implements Listener {
                     data.setKill(data.getKill() + 1);
                     data.setAccumulateMoney(data.getAccumulateMoney() + config.getHKill());
                     shooter.sendActionBar("§c[ §f! §c] §4" + data.getKill() + "§f킬");
+                    event.setCancelled(true);
                     for (ItemStack stack : victim.getInventory().getContents())
-                        world.dropItem(victim.getLocation(), stack);
+                        if (stack != null)
+                            world.dropItem(victim.getLocation(), stack);
                     victim.getInventory().clear();
                     GameController.removePlayer(victim, false);
                 }
             }
-            else
+            else if (event.getVictim() instanceof Player)
                 event.setDamage(0);
         }
     }
@@ -75,7 +78,9 @@ public class WeaponDamage implements Listener {
                 Player victim = (Player) entity;
                 if (GameController.contains(victim.getUniqueId())) {
                     for (ItemStack stack : victim.getInventory().getContents())
-                        victim.getWorld().dropItem(victim.getLocation(), stack);
+                        if (stack != null)
+                            victim.getWorld().dropItem(victim.getLocation(), stack);
+
                     victim.getInventory().clear();
                     victim.spigot().respawn();
                 }

@@ -16,7 +16,6 @@ public class InventoryClick implements Listener {
             event.setCancelled(true);
             if (event.getRawSlot() != -999 && CrackShotApi.getCSID(event.getCurrentItem()) != null) {
                 if (p.getInventory().addItem(event.getCurrentItem()).isEmpty()) {
-                    p.getInventory().addItem(event.getCurrentItem());
                     p.sendMessage("§c[ §f! §c] §f보급품을 선택하였습니다.");
                     Regen.addPlayer(p.getUniqueId());
                     p.closeInventory();

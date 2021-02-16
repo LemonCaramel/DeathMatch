@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.light.dayz.data.DayZData;
@@ -34,6 +35,7 @@ public class GameController {
             p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(80.0);
             p.setHealthScaled(true);
             p.setHealth(80.0);
+            p.getInventory().setItem(8, new ItemStack(Material.AIR));
             p.setGameMode(GameMode.ADVENTURE);
             p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 60, 5, true, false));
             p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 60, 3, true, false));
@@ -63,8 +65,9 @@ public class GameController {
             new ArrayList<>(p.getActivePotionEffects()).forEach(pos -> p.removePotionEffect(pos.getType()));
             p.setLevel(0);
             p.setExp(0.0f);
-            p.setHealth(20.0);
             p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
+            p.setHealth(20.0);
+
             p.teleport(DataManager.getInstance().getLocations()[0]);
             p.sendMessage(" ");
             FontAPI.sendCenteredMessage(p, "§f《 레이드 결과 》");
@@ -82,9 +85,9 @@ public class GameController {
             if (CaramelUserData.getData().getUser(p.getUniqueId()) != null)
                 CaramelUserData.getData().getUser(p.getUniqueId()).setInvincibility(true);
             if (p.getInventory().getItem(8) == null || p.getInventory().getItem(8).getType() == Material.AIR)
-                p.sendMessage("§6[ §f! §6] §f퀵슬롯 9번째칸에 아이템이 있어 채널이동기를 지급하지 못했습니다. 재접속시 사용이 가능합니다.");
-            else
                 API.giveChannel(p, 8);
+            else
+                p.sendMessage("§6[ §f! §6] §f퀵슬롯 9번째칸에 아이템이 있어 채널이동기를 지급하지 못했습니다. 재접속시 사용이 가능합니다.");
         }
     }
 
