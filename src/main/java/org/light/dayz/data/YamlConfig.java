@@ -4,17 +4,21 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.light.dayz.util.VirtualChest;
 import org.light.source.DeathMatch;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class YamlConfig {
 
     private DeathMatch Plugin;
     private File file;
+    private File chestFile;
     private YamlConfiguration config;
+    private YamlConfiguration chestConfig;
     private ArrayList<Location> locations;
     private ArrayList<String> helpWeapon;
     private int zKill;
@@ -30,14 +34,24 @@ public class YamlConfig {
         zKill = 0;
         hKill = 0;
         file =  new File("plugins/" + Plugin.getDescription().getName() + "/Dayz-Config.yml");
+        chestFile = new File("plugins/" + Plugin.getDescription().getName() + "/Dayz-Chest.yml");
         checkFile();
         config = YamlConfiguration.loadConfiguration(file);
+        chestConfig = YamlConfiguration.loadConfiguration(chestFile);
     }
 
     private void checkFile() {
         if (!file.exists()) {
             try {
                 file.createNewFile();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if (!chestFile.exists()) {
+            try {
+                chestFile.createNewFile();
             }
             catch (IOException e) {
                 e.printStackTrace();
@@ -58,19 +72,34 @@ public class YamlConfig {
         hKill = config.getInt("human-kill", 10);
         helpWeapon.clear();
         locations.clear();
+        VirtualChest.chest.clear();
         helpWeapon.addAll(config.getStringList("first-weapon"));
+        if (chestConfig.getConfigurationSection("chest") != null) {
+            for (String key : chestConfig.getConfigurationSection("chest").getKeys(false)) {
+                UUID uid = UUID.fromString(key);
+                ArrayList<String> strings = new ArrayList<>(chestConfig.getStringList("chest." + key));
+                VirtualChest.toInventory(uid, strings);
+            }
+        }
         if (config.getConfigurationSection("location") != null)
             for (String key : config.getConfigurationSection("location").getKeys(false))
                 locations.add(getLocation("location." + key));
+
+
     }
 
     public void save() {
+        chestConfig.set("chest", null);
         config.set("chest-regen", regen);
         config.set("zombie-kill", zKill);
         config.set("human-kill", hKill);
         config.set("first-weapon", helpWeapon);
         for (int i = 0; i < locations.size(); i++)
             setLocation("location." + i, locations.get(i));
+        for (UUID key : VirtualChest.chest.keySet()) {
+            ArrayList<String> list = VirtualChest.toConfig(VirtualChest.chest.get(key));
+            chestConfig.set("chest." + key.toString(), list);
+        }
         try {
             config.save(file);
         }

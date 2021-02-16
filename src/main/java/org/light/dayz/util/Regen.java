@@ -80,35 +80,24 @@ public class Regen {
                 Player p = Bukkit.getPlayer(data);
                 Location min = p.getLocation().clone().subtract(new Vector(30, 1, 30));
                 Location max = p.getLocation().clone().add(new Vector(30, 1, 30));
-                for (int i = 0; i < 10; i++) {
-                    Zombie zombie = (Zombie) p.getWorld().spawnEntity(getSpawnLocation(min, max), EntityType.ZOMBIE);
-                    zombie.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(65.0);
-                    zombie.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(50.0);
-                    zombie.setHealth(50.0);
-                    zombie.getEquipment().setHelmet(new ItemStack(Material.LEATHER_HELMET));
-                    zombie.setSilent(true);
-                    zombie.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 999999, 2, true, false), false);
+                for (int i = 0; i < 2; i++) {
+                    if (p.getWorld().getName().contains("dayz")) {
+                        Zombie zombie = (Zombie) p.getWorld().spawnEntity(getSpawnLocation(min, max), EntityType.ZOMBIE);
+                        zombie.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(65.0);
+                        zombie.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(50.0);
+                        zombie.setHealth(50.0);
+                        zombie.getEquipment().setHelmet(new ItemStack(Material.LEATHER_HELMET));
+                        zombie.setSilent(true);
+                        zombie.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 999999, 2, true, false), false);
+                    }
                 }
             }
             ArrayList<Location> delLocations = new ArrayList<>();
             for (Location location : chestRegen.keySet()) {
-                if (location.getBlock().getType() != Material.CHEST)
+                if (location.getBlock().getType() != Material.CHEST || chestRegen.get(location) >= config.getRegen())
                     delLocations.add(location);
-                else {
+                else
                     chestRegen.put(location, chestRegen.get(location) + 1);
-                    if (chestRegen.get(location) >= config.getRegen()) {
-                        ThreadLocalRandom random = ThreadLocalRandom.current();
-                        Chest chest = (Chest) location.getBlock().getState();
-                        chest.getBlockInventory().clear();
-                        chest.getInventory().addItem(CrackShotApi.generateNotOPWeapon());
-                        if (random.nextInt(0, 101) <= 5)
-                            chest.getInventory().addItem(CrackShotApi.generateNotOPWeapon());
-                        if (random.nextInt(0, 2) == 0)
-                            chest.getInventory().addItem(getPotions().get(random.nextInt(0, getPotions().size())));
-                        else
-                            chest.getInventory().addItem(items.get(random.nextInt(0, items.size())));
-                    }
-                }
             }
             for (Location location : delLocations)
                 chestRegen.remove(location);

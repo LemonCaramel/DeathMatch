@@ -21,3 +21,5 @@ commands:
     description: hologram
   dayz:
     description: about dayz
+  창고:
+    description: dayz chest

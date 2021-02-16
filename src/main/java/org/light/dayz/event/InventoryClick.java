@@ -2,14 +2,17 @@ package org.light.dayz.event;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.light.dayz.util.Regen;
+import org.light.source.Game.GameManager;
 import org.light.source.Singleton.CrackShotApi;
 
 public class InventoryClick implements Listener {
 
-    @EventHandler
+    @EventHandler (priority = EventPriority.HIGHEST)
     public void onClick(InventoryClickEvent event) {
         Player p = (Player) event.getWhoClicked();
         if (event.getInventory().getTitle().contains("보급품")) {
@@ -25,5 +28,8 @@ public class InventoryClick implements Listener {
                 }
             }
         }
+        else if (!GameManager.getInstance().contains(event.getWhoClicked().getUniqueId()) && !event.getClickedInventory().getTitle().contains("채널"))
+            event.setCancelled(false);
     }
+
 }

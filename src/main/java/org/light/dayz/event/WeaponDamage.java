@@ -18,6 +18,8 @@ import org.light.dayz.data.YamlConfig;
 import org.light.dayz.game.GameController;
 import org.light.source.DeathMatch;
 
+import java.util.Objects;
+
 public class WeaponDamage implements Listener {
 
     private YamlConfig config;
@@ -48,7 +50,7 @@ public class WeaponDamage implements Listener {
                     shooter.sendActionBar("§c[ §f! §c] §4" + data.getKill() + "§f킬");
                     event.setCancelled(true);
                     for (ItemStack stack : victim.getInventory().getContents())
-                        if (stack != null)
+                        if (stack != null && !stack.equals(victim.getInventory().getItemInOffHand()))
                             world.dropItem(victim.getLocation(), stack);
                     victim.getInventory().clear();
                     GameController.removePlayer(victim, false);
@@ -78,7 +80,7 @@ public class WeaponDamage implements Listener {
                 Player victim = (Player) entity;
                 if (GameController.contains(victim.getUniqueId())) {
                     for (ItemStack stack : victim.getInventory().getContents())
-                        if (stack != null)
+                        if (stack != null && !stack.equals(victim.getInventory().getItemInOffHand()))
                             victim.getWorld().dropItem(victim.getLocation(), stack);
 
                     victim.getInventory().clear();
