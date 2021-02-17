@@ -6,7 +6,7 @@
 
     <groupId>org.light</groupId>
     <artifactId>DeathMatch</artifactId>
-    <version>2.7</version>
+    <version>2.7.5</version>
     <packaging>jar</packaging>
 
     <name>DeathMatch</name>

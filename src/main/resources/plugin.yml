@@ -25,3 +25,7 @@ commands:
     description: dayz chest
   드랍:
     description: drop item
+  쓰레기통:
+    description: trash
+  판매:
+    description: sell zombie

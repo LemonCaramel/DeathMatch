@@ -28,7 +28,6 @@ import java.util.concurrent.ThreadLocalRandom;
 public class Regen {
 
     public static int count = 0;
-    public static int kitRegenCount = 0;
     public static DeathMatch Plugin = JavaPlugin.getPlugin(DeathMatch.class);
     public static YamlConfig config = YamlConfig.instance;
     public static HashMap<UUID, Integer> kitMap = new HashMap<>();
@@ -181,6 +180,9 @@ public class Regen {
             tryCount++;
         }
         return min;
+    }
+    public static ArrayList<ItemStack> getArmors() {
+        return new ArrayList<>(Arrays.asList(new ItemStack(Material.LEATHER_HELMET), new ItemStack(Material.LEATHER_CHESTPLATE), new ItemStack(Material.LEATHER_LEGGINGS), new ItemStack(Material.LEATHER_BOOTS), new ItemStack(Material.CHAINMAIL_HELMET), new ItemStack(Material.CHAINMAIL_CHESTPLATE), new ItemStack(Material.CHAINMAIL_LEGGINGS), new ItemStack(Material.CHAINMAIL_BOOTS), new ItemStack(Material.IRON_HELMET), new ItemStack(Material.IRON_CHESTPLATE), new ItemStack(Material.IRON_LEGGINGS), new ItemStack(Material.IRON_BOOTS), new ItemStack(Material.DIAMOND_HELMET), new ItemStack(Material.DIAMOND_CHESTPLATE), new ItemStack(Material.DIAMOND_LEGGINGS), new ItemStack(Material.DIAMOND_BOOTS)));
     }
 
     public static ArrayList<ItemStack> getPotions() {

@@ -30,11 +30,28 @@ public class ChestInteraction implements Listener {
                 ThreadLocalRandom random = ThreadLocalRandom.current();
                 Chest chest = (Chest) event.getClickedBlock().getState();
                 chest.getBlockInventory().clear();
-                chest.getInventory().addItem(CrackShotApi.generateNotOPWeapon());
-                if (random.nextInt(0, 2) == 0)
-                    chest.getInventory().addItem(Regen.getPotions().get(random.nextInt(0, Regen.getPotions().size())));
-                else
-                    chest.getInventory().addItem(Regen.items.get(random.nextInt(0, Regen.items.size())));
+                int rand = random.nextInt(0, 5);
+                switch (rand) {
+                    case 0:
+                        chest.getInventory().addItem(CrackShotApi.generateNotOPWeapon());
+                        chest.getInventory().addItem(Regen.getPotions().get(random.nextInt(0, Regen.getPotions().size())));
+                        break;
+                    case 1:
+                        chest.getInventory().addItem(Regen.getPotions().get(random.nextInt(0, Regen.getPotions().size())));
+                        chest.getInventory().addItem(Regen.items.get(random.nextInt(0, Regen.items.size())));
+                        break;
+                    case 2:
+                        chest.getInventory().addItem(CrackShotApi.generateNotOPWeapon());
+                        chest.getInventory().addItem(Regen.getArmors().get(random.nextInt(0, Regen.getArmors().size())));
+                        break;
+                    case 3:
+                        chest.getInventory().addItem(CrackShotApi.generateNotOPWeapon());
+                        break;
+                    default:
+                    case 4:
+                        chest.getInventory().addItem(Regen.getArmors().get(random.nextInt(0, Regen.getArmors().size())));
+                        break;
+                }
             }
         }
     }

@@ -28,8 +28,9 @@ public class VirtualChest {
 
     public static ArrayList<String> toConfig(Inventory inventory) {
         ArrayList<String> list = new ArrayList<>();
-        for (ItemStack stack : inventory.getContents()) {
-            if (stack == null)
+        for (int i = 0; i < 54; i++) {
+            ItemStack stack = inventory.getItem(i);
+            if (stack == null || stack.getType() == Material.AIR)
                 list.add("AIR");
             else if (CrackShotApi.getCSID(stack) != null)
                 list.add(CrackShotApi.getCSID(stack));
