@@ -104,7 +104,7 @@ public class WeaponDamage implements Listener {
 
     @EventHandler
     public void onFallDamage(EntityDamageEvent event) {
-        if (event.getEntity() instanceof Player) {
+        if (event.getEntity() instanceof Player && event.getEntity().getWorld().getName().contains("dayz")) {
             Player p = (Player) event.getEntity();
             if (event.getCause() == EntityDamageEvent.DamageCause.FALL && event.getDamage() >= 15) {
                 p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 1200, 4, true, true), true);
