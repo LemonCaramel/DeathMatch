@@ -21,8 +21,8 @@ public class SpawnMob implements Listener {
         if (world.getName().contains("dayz") && event.getEntityType() != EntityType.ZOMBIE) {
             event.setCancelled(true);
             Zombie zombie = (Zombie) world.spawnEntity(event.getLocation(), EntityType.ZOMBIE);
-            zombie.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(65.0);
-            zombie.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(50.0);
+            zombie.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(30.0);
+            zombie.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40.0);
             zombie.setHealth(50.0);
             zombie.getEquipment().setHelmet(new ItemStack(Material.LEATHER_HELMET));
             zombie.setSilent(true);
@@ -32,8 +32,8 @@ public class SpawnMob implements Listener {
         else if (event.getEntityType() == EntityType.ZOMBIE) {
             Zombie zombie = (Zombie) event.getEntity();
             if (zombie.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).getBaseValue() != 65.0) {
-                zombie.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(60.0);
-                zombie.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(50.0);
+                zombie.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(30.0);
+                zombie.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40.0);
                 zombie.setHealth(50.0);
                 zombie.getEquipment().setHelmet(new ItemStack(Material.LEATHER_HELMET));
                 zombie.setSilent(true);

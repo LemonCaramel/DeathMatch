@@ -82,8 +82,8 @@ public class Regen {
                 for (int i = 0; i < 2; i++) {
                     if (p.getWorld().getName().contains("dayz")) {
                         Zombie zombie = (Zombie) p.getWorld().spawnEntity(getSpawnLocation(min, max), EntityType.ZOMBIE);
-                        zombie.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(65.0);
-                        zombie.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(50.0);
+                        zombie.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(30.0);
+                        zombie.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40.0);
                         zombie.setHealth(50.0);
                         zombie.getEquipment().setHelmet(new ItemStack(Material.LEATHER_HELMET));
                         zombie.setSilent(true);

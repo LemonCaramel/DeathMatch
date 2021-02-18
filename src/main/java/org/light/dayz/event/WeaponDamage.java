@@ -106,7 +106,7 @@ public class WeaponDamage implements Listener {
     public void onFallDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player && event.getEntity().getWorld().getName().contains("dayz")) {
             Player p = (Player) event.getEntity();
-            if (event.getCause() == EntityDamageEvent.DamageCause.FALL && event.getDamage() >= 15) {
+            if (event.getCause() == EntityDamageEvent.DamageCause.FALL && event.getFinalDamage() >= 7) {
                 p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 1200, 4, true, true), true);
                 p.sendMessage("§c[ §f! §c] §f높은곳에서 떨어져 골절상태가 되었습니다. 치료제를 이용하여 상태이상을 제거할 수 있습니다.");
             }
@@ -118,7 +118,7 @@ public class WeaponDamage implements Listener {
         if (event.getDamager() instanceof Zombie && event.getEntity() instanceof Player) {
             Player victim = (Player) event.getEntity();
             ThreadLocalRandom random = ThreadLocalRandom.current();
-            if (random.nextInt(0, 101) <= 5) {
+            if (random.nextInt(0, 101) <= 1) {
                 victim.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, 1200, 1, true, false), true);
                 victim.sendMessage("§c[ §f! §c] §f좀비에게 물려 §c감염§f상태가 되어 3초마다 데미지를 입게 됩니다. 치료제를 사용하십시오");
             }

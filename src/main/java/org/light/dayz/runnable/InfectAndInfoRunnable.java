@@ -17,7 +17,7 @@ public class InfectAndInfoRunnable extends BukkitRunnable {
             Player p = Bukkit.getPlayer(data);
             if (p != null ) {
                 if (p.hasPotionEffect(PotionEffectType.LUCK)){
-                    p.damage(8.0);
+                    p.damage(4.0);
                 }
                 if (p.isSneaking()) {
                     p.sendActionBar("§c[ §f! §c] §b" + p.getName() + " §c체력 §7: §f" + (int)p.getHealth() + " §4hp §8| §6배고픔 §7: §f" + p.getFoodLevel());
