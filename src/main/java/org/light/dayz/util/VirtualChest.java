@@ -63,7 +63,7 @@ public class VirtualChest {
                 if (Material.getMaterial(val) != null && !val.equalsIgnoreCase("AIR"))
                     inv.setItem(i, new ItemStack(Material.getMaterial(val)));
                 else if (CrackShotApi.getCSWeapon(val) != null)
-                    inv.setItem(i, CrackShotApi.getCSWeapon(val));
+                    inv.setItem(i, CSPapi.updateItemStackFeaturesNonPlayer(val,CrackShotApi.getCSWeapon(val)));
             }
             chest.put(key, inv);
         }
