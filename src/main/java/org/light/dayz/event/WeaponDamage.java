@@ -118,7 +118,7 @@ public class WeaponDamage implements Listener {
         if (event.getDamager() instanceof Zombie && event.getEntity() instanceof Player) {
             Player victim = (Player) event.getEntity();
             ThreadLocalRandom random = ThreadLocalRandom.current();
-            if (random.nextInt(0, 101) <= 1) {
+            if (random.nextInt(0, 101) == 0) {
                 victim.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, 1200, 1, true, false), true);
                 victim.sendMessage("§c[ §f! §c] §f좀비에게 물려 §c감염§f상태가 되어 3초마다 데미지를 입게 됩니다. 치료제를 사용하십시오");
             }
