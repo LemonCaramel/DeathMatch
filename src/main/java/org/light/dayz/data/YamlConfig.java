@@ -74,12 +74,20 @@ public class YamlConfig {
         helpWeapon.clear();
         locations.clear();
         VirtualChest.chest.clear();
+        VirtualChest.chest2.clear();
         helpWeapon.addAll(config.getStringList("first-weapon"));
         if (chestConfig.getConfigurationSection("chest") != null) {
             for (String key : chestConfig.getConfigurationSection("chest").getKeys(false)) {
                 UUID uid = UUID.fromString(key);
                 ArrayList<String> strings = new ArrayList<>(chestConfig.getStringList("chest." + key));
-                VirtualChest.toInventory(uid, strings);
+                VirtualChest.toInventory(uid, strings, true);
+            }
+        }
+        if (chestConfig.getConfigurationSection("chest2") != null) {
+            for (String key : chestConfig.getConfigurationSection("chest2").getKeys(false)) {
+                UUID uid = UUID.fromString(key);
+                ArrayList<String> strings = new ArrayList<>(chestConfig.getStringList("chest2." + key));
+                VirtualChest.toInventory(uid, strings, false);
             }
         }
         if (config.getConfigurationSection("location") != null)
@@ -91,6 +99,7 @@ public class YamlConfig {
 
     public void save() {
         chestConfig.set("chest", null);
+        chestConfig.set("chest2", null);
         config.set("chest-regen", regen);
         config.set("zombie-kill", zKill);
         config.set("human-kill", hKill);
@@ -100,6 +109,10 @@ public class YamlConfig {
         for (UUID key : VirtualChest.chest.keySet()) {
             ArrayList<String> list = VirtualChest.toConfig(VirtualChest.chest.get(key));
             chestConfig.set("chest." + key.toString(), list);
+        }
+        for (UUID key : VirtualChest.chest2.keySet()) {
+            ArrayList<String> list = VirtualChest.toConfig(VirtualChest.chest2.get(key));
+            chestConfig.set("chest2." + key.toString(), list);
         }
         try {
             config.save(file);

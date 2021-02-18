@@ -87,7 +87,8 @@ public class Regen {
                         zombie.setHealth(50.0);
                         zombie.getEquipment().setHelmet(new ItemStack(Material.LEATHER_HELMET));
                         zombie.setSilent(true);
-                        zombie.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 999999, 2, true, false), false);
+                        zombie.setBaby(false);
+                        zombie.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 999999, 1, true, false), false);
                     }
                 }
             }
@@ -186,22 +187,20 @@ public class Regen {
     }
 
     public static ArrayList<ItemStack> getPotions() {
-        ItemStack potion1 = new ItemStack(Material.POTION);
+        ItemStack potion1 = new ItemStack(Material.SPLASH_POTION);
         PotionMeta meta1 = (PotionMeta) potion1.getItemMeta();
-        meta1.addCustomEffect(new PotionEffect(PotionEffectType.SPEED, 1200, 2, true, true), false);
+        meta1.addCustomEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 600, 2, true, true), false);
         potion1.setItemMeta(meta1);
-        ItemStack potion2 = new ItemStack(Material.POTION);
-        PotionMeta meta2 = (PotionMeta) potion2.getItemMeta();
-        meta2.addCustomEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 600, 2, true, true), false);
-        potion2.setItemMeta(meta2);
-        ItemStack potion3 = new ItemStack(Material.POTION);
-        PotionMeta meta3 = (PotionMeta) potion3.getItemMeta();
-        meta3.addCustomEffect(new PotionEffect(PotionEffectType.REGENERATION, 1200, 1, true, true), false);
-        potion3.setItemMeta(meta3);
-        ItemStack potion4 = new ItemStack(Material.POTION);
-        PotionMeta meta4 = (PotionMeta) potion4.getItemMeta();
-        meta4.addCustomEffect(new PotionEffect(PotionEffectType.HEAL, 1, 4, true, true), false);
-        potion4.setItemMeta(meta4);
-        return new ArrayList<>(Arrays.asList(potion1, potion2, potion3, potion4));
+        return new ArrayList<>(Arrays.asList(potion1, createItemStack(Material.PAPER, "§c[ §f! §c] §f붕대", (short)0, " ", " §8-  §f사용시 체력을 일부 회복합니다. (사용시간 3초, 창고 저장 자제)", " "), createItemStack(Material.MAGMA_CREAM, "§c[ §f! §c] §f에너지 드링크", (short)0, " ", " §8-  §f사용시 이동속도가 증가합니다. (사용시간 3초, 창고 저장 자제)", " "), createItemStack(Material.SUGAR, "§c[ §f! §c] §f구급상자", (short)0, " ", " §8-  §f사용시 체력을 모두 회복합니다. (사용시간 5초, 창고 저장 자제)", " "), createItemStack(Material.END_ROD, "§c[ §f! §c] §f치료제", (short)0, " ", " §8-  §f골절도 치료가능한 치료제", " §8-  §f사용시 상태이상을 모두 제거합니다. (사용시간 3초, 창고 저장 자제)", " ")));
+    }
+
+    public static ItemStack createItemStack(Material data, String name, short color, String... lore) {
+        ItemStack stack = new ItemStack(data);
+        ItemMeta meta = stack.getItemMeta();
+        stack.setDurability(color);
+        meta.setDisplayName(name);
+        meta.setLore(Arrays.asList(lore));
+        stack.setItemMeta(meta);
+        return stack;
     }
 }

@@ -60,7 +60,7 @@ public class WaitTimer extends BukkitRunnable {
                 target.sendTitle("§b준비!", "§6" + countValue + "§f초 후 게임이 시작됩니다.", 0, 24, 0);
             });
         }
-        if (DataManager.getInstance().getLocations()[GameManager.getInstance().getRandomNumber()] != null) {
+        if (DataManager.getInstance().getLocations() != null && DataManager.getInstance().getLocations()[GameManager.getInstance().getRandomNumber()] != null) {
             if (countValue % 5 != 0)
                 bossBar.setTitle("§cRemain §7: §6" + countValue + "§f초");
             else

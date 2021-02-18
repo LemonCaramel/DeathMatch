@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.light.dayz.command.*;
 import org.light.dayz.data.YamlConfig;
 import org.light.dayz.event.*;
+import org.light.dayz.runnable.InfectAndInfoRunnable;
 import org.light.dayz.util.Regen;
 import org.light.source.DeathMatch;
 
@@ -29,7 +30,9 @@ public class DMain {
         Bukkit.getServer().getPluginManager().registerEvents(new SpawnMob(), Plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new InventoryClick(), Plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new WeaponDamage(config, Plugin), Plugin);
-        Bukkit.getServer().getPluginManager().registerEvents(new ChestInteraction(), Plugin);
+        Bukkit.getServer().getPluginManager().registerEvents(new ChestInteraction(Plugin), Plugin);
+        Bukkit.getServer().getPluginManager().registerEvents(new ItemInteraction(Plugin), Plugin);
+        new InfectAndInfoRunnable().runTaskTimer(Plugin, 0L, 40L);
         Regen.startTask();
     }
 

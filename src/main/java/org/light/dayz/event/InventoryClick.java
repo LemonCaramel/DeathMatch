@@ -1,5 +1,6 @@
 package org.light.dayz.event;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -27,8 +28,11 @@ public class InventoryClick implements Listener {
                 }
             }
         }
-        else if (!GameManager.getInstance().contains(event.getWhoClicked().getUniqueId()) && event.getClickedInventory() != null  && event.getClickedInventory().getTitle() != null && !event.getClickedInventory().getTitle().contains("채널"))
+        else if (!GameManager.getInstance().contains(event.getWhoClicked().getUniqueId()) && event.getClickedInventory() != null  && event.getClickedInventory().getTitle() != null && !event.getClickedInventory().getTitle().contains("채널")) {
             event.setCancelled(false);
+            if (p.getInventory().getItemInOffHand() != null || p.getInventory().getItemInOffHand().getType() != Material.AIR)
+                p.getInventory().setItemInOffHand(null);
+        }
     }
 
 }

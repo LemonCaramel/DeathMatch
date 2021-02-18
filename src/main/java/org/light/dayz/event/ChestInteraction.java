@@ -1,5 +1,6 @@
 package org.light.dayz.event;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
@@ -9,13 +10,25 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.light.dayz.data.YamlConfig;
 import org.light.dayz.game.GameController;
+import org.light.dayz.runnable.ExitRunnable;
 import org.light.dayz.util.Regen;
+import org.light.source.DeathMatch;
 import org.light.source.Singleton.CrackShotApi;
-import org.yaml.snakeyaml.Yaml;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ChestInteraction implements Listener {
+
+    public HashMap<UUID, Integer> exitTime;
+    private DeathMatch Plugin;
+
+    public ChestInteraction(DeathMatch Plugin) {
+        exitTime = new HashMap<>();
+        this.Plugin = Plugin;
+    }
 
     @EventHandler
     public void onClick(PlayerInteractEvent event) {
@@ -60,7 +73,11 @@ public class ChestInteraction implements Listener {
     public void exit(PlayerInteractEvent event) {
         Player p = event.getPlayer();
         if (p.getWorld().getName().contains("dayz") && GameController.contains(p.getUniqueId()) && event.getClickedBlock() != null && event.getClickedBlock().getType() == Material.BEACON) {
-            GameController.removePlayer(p, true);
+            event.setCancelled(true);
+            if (!exitTime.containsKey(p.getUniqueId())) {
+                exitTime.put(p.getUniqueId(), 0);
+                new ExitRunnable(p.getLocation(), p.getUniqueId(), exitTime).runTaskTimer(Plugin, 0L, 20L);
+            }
         }
     }
 }

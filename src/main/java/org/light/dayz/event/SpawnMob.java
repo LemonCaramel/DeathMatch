@@ -26,7 +26,8 @@ public class SpawnMob implements Listener {
             zombie.setHealth(50.0);
             zombie.getEquipment().setHelmet(new ItemStack(Material.LEATHER_HELMET));
             zombie.setSilent(true);
-            zombie.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 999999, 2, true, false), false);
+            zombie.setBaby(false);
+            zombie.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 999999, 1, true, false), false);
         }
         else if (event.getEntityType() == EntityType.ZOMBIE) {
             Zombie zombie = (Zombie) event.getEntity();
@@ -36,7 +37,8 @@ public class SpawnMob implements Listener {
                 zombie.setHealth(50.0);
                 zombie.getEquipment().setHelmet(new ItemStack(Material.LEATHER_HELMET));
                 zombie.setSilent(true);
-                zombie.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 999999, 2, true, false), false);
+                zombie.setBaby(false);
+                zombie.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 999999, 1, true, false), false);
 
             }
         }
