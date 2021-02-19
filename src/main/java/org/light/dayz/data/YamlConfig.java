@@ -21,6 +21,7 @@ public class YamlConfig {
     private YamlConfiguration chestConfig;
     private ArrayList<Location> locations;
     private ArrayList<String> helpWeapon;
+    private ArrayList<String> denyWeapon;
     private int zKill;
     private int hKill;
     private int regen;
@@ -30,6 +31,7 @@ public class YamlConfig {
         this.Plugin = Plugin;
         locations = new ArrayList<>();
         helpWeapon = new ArrayList<>();
+        denyWeapon = new ArrayList<>();
         instance = this;
         zKill = 0;
         hKill = 0;
@@ -72,10 +74,12 @@ public class YamlConfig {
         zKill = config.getInt("zombie-kill", 1);
         hKill = config.getInt("human-kill", 10);
         helpWeapon.clear();
+        denyWeapon.clear();
         locations.clear();
         VirtualChest.chest.clear();
         VirtualChest.chest2.clear();
         helpWeapon.addAll(config.getStringList("first-weapon"));
+        denyWeapon.addAll(config.getStringList("non-drop-weapon"));
         if (chestConfig.getConfigurationSection("chest") != null) {
             for (String key : chestConfig.getConfigurationSection("chest").getKeys(false)) {
                 UUID uid = UUID.fromString(key);
@@ -104,6 +108,7 @@ public class YamlConfig {
         config.set("zombie-kill", zKill);
         config.set("human-kill", hKill);
         config.set("first-weapon", helpWeapon);
+        config.set("non-drop-weapon", denyWeapon);
         for (int i = 0; i < locations.size(); i++)
             setLocation("location." + i, locations.get(i));
         for (UUID key : VirtualChest.chest.keySet()) {
@@ -185,5 +190,13 @@ public class YamlConfig {
 
     public void setRegen(int regen) {
         this.regen = regen;
+    }
+
+    public ArrayList<String> getDenyWeapon() {
+        return denyWeapon;
+    }
+
+    public void setDenyWeapon(ArrayList<String> denyWeapon) {
+        this.denyWeapon = denyWeapon;
     }
 }

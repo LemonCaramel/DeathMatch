@@ -29,3 +29,5 @@ commands:
     description: trash
   판매:
     description: sell zombie
+  버그제거:
+    description: pumpkin bug

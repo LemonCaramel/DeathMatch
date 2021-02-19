@@ -182,8 +182,42 @@ public class Regen {
         }
         return min;
     }
-    public static ArrayList<ItemStack> getArmors() {
-        return new ArrayList<>(Arrays.asList(new ItemStack(Material.LEATHER_HELMET), new ItemStack(Material.LEATHER_CHESTPLATE), new ItemStack(Material.LEATHER_LEGGINGS), new ItemStack(Material.LEATHER_BOOTS), new ItemStack(Material.CHAINMAIL_HELMET), new ItemStack(Material.CHAINMAIL_CHESTPLATE), new ItemStack(Material.CHAINMAIL_LEGGINGS), new ItemStack(Material.CHAINMAIL_BOOTS), new ItemStack(Material.IRON_HELMET), new ItemStack(Material.IRON_CHESTPLATE), new ItemStack(Material.IRON_LEGGINGS), new ItemStack(Material.IRON_BOOTS), new ItemStack(Material.DIAMOND_HELMET), new ItemStack(Material.DIAMOND_CHESTPLATE), new ItemStack(Material.DIAMOND_LEGGINGS), new ItemStack(Material.DIAMOND_BOOTS)));
+    public static ItemStack calcArmor() {
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        int rand = random.nextInt(0, 101);
+        if (rand < 10)
+            return new ItemStack(Material.LEATHER_HELMET);
+        else if (rand <= 20)
+            return new ItemStack(Material.LEATHER_CHESTPLATE);
+        else if (rand <= 40)
+            return new ItemStack(Material.LEATHER_LEGGINGS);
+        else if (rand <= 50)
+            return new ItemStack(Material.LEATHER_BOOTS);
+        else if (rand <= 55)
+            return new ItemStack(Material.CHAINMAIL_HELMET);
+        else if (rand <= 60)
+            return new ItemStack(Material.CHAINMAIL_CHESTPLATE);
+        else if (rand <= 65)
+            return new ItemStack(Material.CHAINMAIL_LEGGINGS);
+        else if (rand <= 70)
+            return new ItemStack(Material.CHAINMAIL_BOOTS);
+        else if (rand <= 75)
+            return new ItemStack(Material.IRON_HELMET);
+        else if (rand <= 80)
+            return new ItemStack(Material.IRON_CHESTPLATE);
+        else if (rand <= 85)
+            return new ItemStack(Material.IRON_LEGGINGS);
+        else if (rand <= 90)
+            return new ItemStack(Material.IRON_BOOTS);
+        else if (rand <= 93)
+            return new ItemStack(Material.DIAMOND_HELMET);
+        else if (rand <= 96)
+            return new ItemStack(Material.DIAMOND_CHESTPLATE);
+        else if (rand <= 98)
+            return new ItemStack(Material.DIAMOND_LEGGINGS);
+        else
+            return new ItemStack(Material.DIAMOND_BOOTS);
+
     }
 
     public static ArrayList<ItemStack> getPotions() {

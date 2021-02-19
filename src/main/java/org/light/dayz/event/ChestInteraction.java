@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 import org.light.dayz.data.YamlConfig;
 import org.light.dayz.game.GameController;
 import org.light.dayz.runnable.ExitRunnable;
@@ -36,17 +37,20 @@ public class ChestInteraction implements Listener {
         if (p.getWorld().getName().contains("dayz") && GameController.contains(p.getUniqueId()) && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null && event.getClickedBlock().getType() == Material.CHEST) {
             if (Regen.chestRegen.containsKey(event.getClickedBlock().getLocation())) {
                 int amount = YamlConfig.instance.getRegen() - Regen.chestRegen.get(event.getClickedBlock().getLocation());
-                p.sendMessage("§c[ §f! §c] §f이미 누군가가 털어간 상자입니다. §b" + amount / 2 + "분 " + (amount % 2 == 0 ? 0 : 30) + "초후 리젠됩니다.");
+                if (amount == 0)
+                    p.sendMessage("§c[ §f! §c] §f이미 누군가가 털어간 상자입니다. §b곧 리젠됩니다.");
+                else
+                    p.sendMessage("§c[ §f! §c] §f이미 누군가가 털어간 상자입니다. §b" + amount / 2 + "분 " + (amount % 2 == 0 ? 0 : 30) + "초후 리젠됩니다.");
             }
             else {
                 Regen.chestRegen.put(event.getClickedBlock().getLocation(), 0);
                 ThreadLocalRandom random = ThreadLocalRandom.current();
                 Chest chest = (Chest) event.getClickedBlock().getState();
                 chest.getBlockInventory().clear();
-                int rand = random.nextInt(0, 5);
+                int rand = random.nextInt(0, 11);
                 switch (rand) {
                     case 0:
-                        chest.getInventory().addItem(CrackShotApi.generateNotOPWeapon());
+                        chest.getInventory().addItem(CrackShotApi.generateDayZWeapon());
                         chest.getInventory().addItem(Regen.getPotions().get(random.nextInt(0, Regen.getPotions().size())));
                         break;
                     case 1:
@@ -54,15 +58,34 @@ public class ChestInteraction implements Listener {
                         chest.getInventory().addItem(Regen.items.get(random.nextInt(0, Regen.items.size())));
                         break;
                     case 2:
-                        chest.getInventory().addItem(CrackShotApi.generateNotOPWeapon());
-                        chest.getInventory().addItem(Regen.getArmors().get(random.nextInt(0, Regen.getArmors().size())));
+                        chest.getInventory().addItem(Regen.calcArmor());
                         break;
                     case 3:
+                        chest.getInventory().addItem(Regen.items.get(random.nextInt(0, Regen.items.size())));
+                        break;
+                    case 4:
+                        chest.getInventory().addItem(CrackShotApi.generateDayZWeapon());
+                        break;
+                    case 5:
                         chest.getInventory().addItem(CrackShotApi.generateNotOPWeapon());
                         break;
+                    case 6:
+                        chest.getInventory().addItem(Regen.getPotions().get(random.nextInt(0, Regen.getPotions().size())));
+                        break;
+                    case 7:
+                        chest.getInventory().addItem(CrackShotApi.generateDayZWeapon());
+                        break;
+                    case 8:
+                        chest.getInventory().addItem(Regen.items.get(random.nextInt(0, Regen.items.size())));
+                        chest.getInventory().addItem(Regen.items.get(random.nextInt(0, Regen.items.size())));
+                        break;
+                    case 9:
+                        chest.getInventory().addItem(Regen.calcArmor());
+                        chest.getInventory().addItem(Regen.getPotions().get(random.nextInt(0, Regen.getPotions().size())));
+                        break;
                     default:
-                    case 4:
-                        chest.getInventory().addItem(Regen.getArmors().get(random.nextInt(0, Regen.getArmors().size())));
+                    case 10:
+                        chest.getInventory().addItem(CrackShotApi.generateDayZWeapon());
                         break;
                 }
             }

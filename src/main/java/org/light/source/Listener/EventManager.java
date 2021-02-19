@@ -178,7 +178,7 @@ public class EventManager implements Listener {
         setNoDamageState(target, true);
         checkPhone(target);
         setName(target);
-        if (!target.getWorld().getName().contains("lobby"))
+        if (DataManager.getInstance().getLocations() != null && DataManager.getInstance().getLocations()[0] != null && !target.getWorld().getName().contains("lobby"))
             target.teleport(DataManager.getInstance().getLocations()[0]);
     }
 
