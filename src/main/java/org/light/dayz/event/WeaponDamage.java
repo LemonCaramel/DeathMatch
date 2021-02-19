@@ -38,9 +38,9 @@ public class WeaponDamage implements Listener {
         Player shooter = event.getPlayer();
         if (world.getName().contains("dayz")) {
             if (GameController.contains(shooter.getUniqueId()) && event.getVictim() instanceof Player && GameController.contains(event.getVictim().getUniqueId())) {
-                if (shooter.hasPotionEffect(PotionEffectType.INVISIBILITY))
-                    event.setCancelled(true);
                 Player victim = (Player) event.getVictim();
+                if (shooter.hasPotionEffect(PotionEffectType.INVISIBILITY) || shooter.getUniqueId().equals(victim.getUniqueId()))
+                    event.setCancelled(true);
                 double distance = Math.round(shooter.getLocation().distance(victim.getLocation()) * 100.0) / 100.0;
                 if (victim.getHealth() - event.getDamage() <= 0) {
                     if (event.isHeadshot())

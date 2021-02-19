@@ -225,13 +225,24 @@ public class Regen {
         PotionMeta meta1 = (PotionMeta) potion1.getItemMeta();
         meta1.addCustomEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 600, 2, true, true), false);
         potion1.setItemMeta(meta1);
-        return new ArrayList<>(Arrays.asList(potion1, createItemStack(Material.PAPER, "§c[ §f! §c] §f붕대", (short)0, " ", " §8-  §f사용시 체력을 일부 회복합니다. (사용시간 3초, 창고 저장 자제)", " "), createItemStack(Material.MAGMA_CREAM, "§c[ §f! §c] §f에너지 드링크", (short)0, " ", " §8-  §f사용시 이동속도가 증가합니다. (사용시간 3초, 창고 저장 자제)", " "), createItemStack(Material.SUGAR, "§c[ §f! §c] §f구급상자", (short)0, " ", " §8-  §f사용시 체력을 모두 회복합니다. (사용시간 5초, 창고 저장 자제)", " "), createItemStack(Material.END_ROD, "§c[ §f! §c] §f치료제", (short)0, " ", " §8-  §f골절도 치료가능한 치료제", " §8-  §f사용시 상태이상을 모두 제거합니다. (사용시간 3초, 창고 저장 자제)", " ")));
+        return new ArrayList<>(Arrays.asList(potion1, createItemStack(Material.PAPER, "§c[ §f! §c] §f붕대", (short)0, " ", " §8-  §f사용시 체력을 일부 회복합니다. (사용시간 3초)", " "), createItemStack(Material.MAGMA_CREAM, "§c[ §f! §c] §f에너지 드링크", (short)0, " ", " §8-  §f사용시 이동속도가 증가합니다. (사용시간 3초)", " "), createItemStack(Material.SUGAR, "§c[ §f! §c] §f구급상자", (short)0, " ", " §8-  §f사용시 체력을 모두 회복합니다. (사용시간 5초)", " "), createItemStack(Material.END_ROD, "§c[ §f! §c] §f치료제", (short)0, " ", " §8-  §f골절도 치료가능한 치료제", " §8-  §f사용시 상태이상을 모두 제거합니다. (사용시간 3초)", " ")));
     }
 
     public static ItemStack createItemStack(Material data, String name, short color, String... lore) {
         ItemStack stack = new ItemStack(data);
         ItemMeta meta = stack.getItemMeta();
         stack.setDurability(color);
+        meta.setDisplayName(name);
+        meta.setLore(Arrays.asList(lore));
+        stack.setItemMeta(meta);
+        return stack;
+    }
+
+    public static ItemStack createItemStack(Material data, String name, short color, int amount, String... lore) {
+        ItemStack stack = new ItemStack(data);
+        ItemMeta meta = stack.getItemMeta();
+        stack.setDurability(color);
+        stack.setAmount(amount);
         meta.setDisplayName(name);
         meta.setLore(Arrays.asList(lore));
         stack.setItemMeta(meta);

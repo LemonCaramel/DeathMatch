@@ -26,6 +26,7 @@ public class DMain {
         Plugin.getCommand("판매").setExecutor(new SellCommand());
         Plugin.getCommand("쓰레기통").setExecutor(new TrashCommand());
         Plugin.getCommand("버그제거").setExecutor(new BugCommand(Plugin));
+        Plugin.getCommand("자살").setExecutor(new SuicideCommand());
         Bukkit.getServer().getPluginManager().registerEvents(new FoodLevel(), Plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new PreventShoot(), Plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new SpawnMob(), Plugin);

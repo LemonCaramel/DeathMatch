@@ -31,3 +31,5 @@ commands:
     description: sell zombie
   버그제거:
     description: pumpkin bug
+  자살:
+    description: dayz suicide

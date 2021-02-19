@@ -7,6 +7,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
+import org.light.dayz.game.GameController;
 import org.light.source.DeathMatch;
 import org.light.source.Game.GameManager;
 import org.light.source.Game.UserMananger;
@@ -43,7 +44,7 @@ public class CommandController implements CommandExecutor, TabExecutor {
                     }
                     if (args.length >= 1 && correctArg(args[0])) {
                         if (args[0].equalsIgnoreCase("참여")) {
-                            if (GameManager.getInstance().contains(p.getUniqueId())) {
+                            if (GameManager.getInstance().contains(p.getUniqueId()) || GameController.contains(p.getUniqueId())) {
                                 p.sendMessage(first + "§c이미 참여중입니다.");
                             }
                             else {
