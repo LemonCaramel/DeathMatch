@@ -1,5 +1,6 @@
 package org.light.dayz.command;
 
+import me.DeeCaaD.CrackShotPlus.CSPapi;
 import moe.caramel.caramellibrarylegacy.api.FontAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -105,7 +106,7 @@ public class GameCommand implements CommandExecutor {
         for (int i = 0; i < 54; i++) {
             if (config.getHelpWeapon().size() == i)
                 break;
-            inventory.setItem(i, CrackShotApi.getCSWeapon(config.getHelpWeapon().get(i)));
+            inventory.setItem(i, CSPapi.updateItemStackFeaturesNonPlayer(config.getHelpWeapon().get(i), CrackShotApi.getCSWeapon(config.getHelpWeapon().get(i))));
         }
         return inventory;
     }
