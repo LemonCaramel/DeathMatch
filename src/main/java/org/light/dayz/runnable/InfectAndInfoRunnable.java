@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.light.dayz.game.GameController;
+import org.light.source.Singleton.CrackShotApi;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -20,7 +21,7 @@ public class InfectAndInfoRunnable extends BukkitRunnable {
                 if (p.hasPotionEffect(PotionEffectType.LUCK)){
                     p.damage(4.0);
                 }
-                if (p.isSneaking()) {
+                if (p.getInventory().getItemInMainHand() == null || CrackShotApi.getCSID(p.getInventory().getItemInMainHand()) == null) {
                     p.sendActionBar("§c[ §f! §c] §b" + p.getName() + " §c체력 §7: §f" + (int)p.getHealth() + " §4hp §8| §6배고픔 §7: §f" + p.getFoodLevel() + " §8| §f위치 §7: " + toLocation(p.getLocation()));
                 }
             }
