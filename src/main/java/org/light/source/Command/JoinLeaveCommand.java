@@ -4,6 +4,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.light.dayz.game.GameController;
 import org.light.source.Game.GameManager;
 import org.light.source.Log.MinimizeLogger;
 import org.light.source.Phone.PhoneObject;
@@ -23,7 +24,7 @@ public class JoinLeaveCommand implements CommandExecutor {
                     switch (s.toLowerCase()) {
                         case "join":
                         case "참여":
-                            if (GameManager.getInstance().contains(p.getUniqueId())) {
+                            if (GameManager.getInstance().contains(p.getUniqueId()) || GameController.contains(p.getUniqueId())) {
                                 p.sendMessage("§c이미 게임에 참여중입니다.");
                             }
                             else {
