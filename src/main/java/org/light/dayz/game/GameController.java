@@ -71,6 +71,7 @@ public class GameController {
             p.setHealth(20.0);
             p.setFoodLevel(20);
             p.teleport(DataManager.getInstance().getLocations()[0]);
+            p.setFireTicks(0);
             p.sendMessage(" ");
             FontAPI.sendCenteredMessage(p, "§f《 레이드 결과 》");
             p.sendMessage(" ");
