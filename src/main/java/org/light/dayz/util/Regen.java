@@ -199,21 +199,21 @@ public class Regen {
             return new ItemStack(Material.CHAINMAIL_CHESTPLATE);
         else if (rand <= 65)
             return new ItemStack(Material.CHAINMAIL_LEGGINGS);
-        else if (rand <= 70)
+        else if (rand <= 72)
             return new ItemStack(Material.CHAINMAIL_BOOTS);
-        else if (rand <= 75)
+        else if (rand <= 78)
             return new ItemStack(Material.IRON_HELMET);
-        else if (rand <= 80)
+        else if (rand <= 84)
             return new ItemStack(Material.IRON_CHESTPLATE);
-        else if (rand <= 85)
-            return new ItemStack(Material.IRON_LEGGINGS);
         else if (rand <= 90)
-            return new ItemStack(Material.IRON_BOOTS);
-        else if (rand <= 93)
-            return new ItemStack(Material.DIAMOND_HELMET);
+            return new ItemStack(Material.IRON_LEGGINGS);
         else if (rand <= 96)
-            return new ItemStack(Material.DIAMOND_CHESTPLATE);
+            return new ItemStack(Material.IRON_BOOTS);
+        else if (rand <= 97)
+            return new ItemStack(Material.DIAMOND_HELMET);
         else if (rand <= 98)
+            return new ItemStack(Material.DIAMOND_CHESTPLATE);
+        else if (rand <= 99)
             return new ItemStack(Material.DIAMOND_LEGGINGS);
         else
             return new ItemStack(Material.DIAMOND_BOOTS);
