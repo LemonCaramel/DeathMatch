@@ -28,6 +28,9 @@ public class ArmorStandInteraction implements Listener {
 
     @EventHandler (priority = EventPriority.HIGHEST)
     public void onManipulate(PlayerArmorStandManipulateEvent event) {
-        event.setCancelled(!event.getPlayer().isOp());
+        if (event.getPlayer().isSneaking())
+            event.setCancelled(true);
+        else
+            event.setCancelled(!event.getPlayer().isOp());
     }
 }
