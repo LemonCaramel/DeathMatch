@@ -60,7 +60,7 @@ public class WeatherRunnable extends BukkitRunnable {
 
             }
             catch (IOException e) {
-                e.printStackTrace();
+                Bukkit.getLogger().info("파싱 서버가 응답하지 않습니다.");
             }
         });
 
@@ -82,8 +82,11 @@ public class WeatherRunnable extends BukkitRunnable {
                         target.spawnParticle(Particle.SPIT, target.getLocation().add(new Vector(0, 1, 0)), 250, 10, 10, 10, 0.05);
                 }, 0L, 5L).getTaskId();
             }
-            for (World world : Bukkit.getWorlds())
+            for (World world : Bukkit.getWorlds()) {
+                if (world.getGameRuleValue("reducedDebugInfo") != null && world.getGameRuleValue("reducedDebugInfo").equalsIgnoreCase("false"))
+                    world.setGameRuleValue("reducedDebugInfo", "true");
                 world.setStorm(storm);
+            }
         });
 
     }

@@ -23,7 +23,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class ChestInteraction implements Listener {
 
-    public HashMap<UUID, Integer> exitTime;
+    public static HashMap<UUID, Integer> exitTime;
     private DeathMatch Plugin;
 
     public ChestInteraction(DeathMatch Plugin) {
@@ -50,7 +50,7 @@ public class ChestInteraction implements Listener {
                 int rand = random.nextInt(0, 11);
                 switch (rand) {
                     case 0:
-                        chest.getInventory().addItem(CrackShotApi.generateDayZWeapon());
+                    case 6:
                         chest.getInventory().addItem(Regen.getPotions().get(random.nextInt(0, Regen.getPotions().size())));
                         break;
                     case 1:
@@ -64,13 +64,10 @@ public class ChestInteraction implements Listener {
                         chest.getInventory().addItem(Regen.items.get(random.nextInt(0, Regen.items.size())));
                         break;
                     case 5:
-                        if (ThreadLocalRandom.current().nextInt(0, 11) < 3)
+                        if (ThreadLocalRandom.current().nextInt(0, 11) < 2)
                             chest.getInventory().addItem(CrackShotApi.generateNotOPWeapon());
                         else
                             chest.getInventory().addItem(CrackShotApi.generateDayZWeapon());
-                        break;
-                    case 6:
-                        chest.getInventory().addItem(Regen.getPotions().get(random.nextInt(0, Regen.getPotions().size())));
                         break;
                     case 8:
                         chest.getInventory().addItem(Regen.items.get(random.nextInt(0, Regen.items.size())));

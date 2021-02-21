@@ -3,6 +3,7 @@ package org.light.source.Singleton;
 import com.shampaggon.crackshot.CSDirector;
 import com.shampaggon.crackshot.CSUtility;
 import me.DeeCaaD.CrackShotPlus.CSPapi;
+import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.light.dayz.data.YamlConfig;
 
@@ -53,7 +54,7 @@ public class CrackShotApi {
     public static ItemStack generateNotOPWeapon(){
         ArrayList<String> list = new ArrayList<>(csItems.keySet());
         Collections.shuffle(list);
-        while(list.get(0) == null || list.get(0).equalsIgnoreCase("CHICKENGUN") || list.get(0).equalsIgnoreCase("C4_Ultimate_Nerf") || list.get(0).equalsIgnoreCase("DEAGLE_Golden"))
+        while(list.get(0) == null || list.get(0).equalsIgnoreCase("CHICKENGUN") || list.get(0).equalsIgnoreCase("C4_Ultimate_Nerf") || list.get(0).equalsIgnoreCase("DEAGLE_Golden") || list.get(0).equalsIgnoreCase("C4_Ultimate"))
             Collections.shuffle(list);
         return csItems.get(list.get(0));
     }

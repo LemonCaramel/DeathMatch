@@ -22,11 +22,10 @@ public class DMain {
         config.load();
         Plugin.getCommand("dayz").setExecutor(new GameCommand(config));
         Plugin.getCommand("창고").setExecutor(new ChestCommand());
-        Plugin.getCommand("드랍").setExecutor(new DropCommand());
-        Plugin.getCommand("판매").setExecutor(new SellCommand());
+        Plugin.getCommand("상점").setExecutor(new SellCommand());
         Plugin.getCommand("쓰레기통").setExecutor(new TrashCommand());
         Plugin.getCommand("버그제거").setExecutor(new BugCommand(Plugin));
-        Plugin.getCommand("자살").setExecutor(new SuicideCommand());
+        Plugin.getCommand("비상탈출").setExecutor(new EmergencyExit(Plugin));
         Bukkit.getServer().getPluginManager().registerEvents(new FoodLevel(), Plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new PreventShoot(), Plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new SpawnMob(), Plugin);
@@ -34,6 +33,7 @@ public class DMain {
         Bukkit.getServer().getPluginManager().registerEvents(new WeaponDamage(config, Plugin), Plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new ChestInteraction(Plugin), Plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new ItemInteraction(Plugin), Plugin);
+        Bukkit.getServer().getPluginManager().registerEvents(new ArmorStandInteraction(), Plugin);
         new InfectAndInfoRunnable().runTaskTimer(Plugin, 0L, 40L);
         Regen.startTask();
     }

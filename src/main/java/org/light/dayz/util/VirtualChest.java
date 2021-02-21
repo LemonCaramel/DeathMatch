@@ -16,28 +16,70 @@ import java.util.UUID;
 
 public class VirtualChest {
 
-
     public static HashMap<UUID, Inventory> chest = new HashMap<>();
     public static HashMap<UUID, Inventory> chest2 = new HashMap<>();
+    public static HashMap<UUID, Inventory> chest3 = new HashMap<>();
+    public static HashMap<UUID, Inventory> chest4 = new HashMap<>();
+    public static HashMap<UUID, Inventory> chest5 = new HashMap<>();
 
-    public static void openChest(Player p, boolean first) {
-        if (first) {
-            if (chest.containsKey(p.getUniqueId()))
-                p.openInventory(chest.get(p.getUniqueId()));
-            else {
-                Inventory inventory = Bukkit.createInventory(null, 54, "§0창고 1");
-                chest.put(p.getUniqueId(), inventory);
-                p.openInventory(inventory);
-            }
-        }
-        else {
-            if (chest2.containsKey(p.getUniqueId()))
-                p.openInventory(chest2.get(p.getUniqueId()));
-            else {
-                Inventory inventory = Bukkit.createInventory(null, 54, "§0창고 2");
-                chest2.put(p.getUniqueId(), inventory);
-                p.openInventory(inventory);
-            }
+    public enum Number {
+        ONE,
+        TWO,
+        THREE,
+        FOUR,
+        FIVE
+    }
+
+    public static void selectChest(Player p) {
+        Inventory selChest = Bukkit.createInventory(null, 9, "§0창고 선택");
+        selChest.setItem(0, Regen.createItemStack(Material.CHEST, "§c[ §f! §c] §f1번 창고", (short) 0, " ", " §8-  §f클릭시 1번 창고를 엽니다.", " "));
+        selChest.setItem(1, Regen.createItemStack(Material.CHEST, "§c[ §f1 §c] §f2번 창고", (short) 0, " ", " §8-  §f클릭시 2번 창고를 엽니다.", " "));
+        if (chest3.containsKey(p.getUniqueId()))
+            selChest.setItem(2, Regen.createItemStack(Material.CHEST, "§c[ §f1 §c] §f3번 창고", (short) 0, " ", " §8-  §f클릭시 3번 창고를 엽니다.", " "));
+        else
+            selChest.setItem(2, Regen.createItemStack(Material.BARRIER, "§c[ §f1 §c] §f3번 창고", (short) 0, " ", " §8-  §f클릭시 3번 창고를 구매합니다.", " §8-  §f가격은 §62500§f원 입니다.", " "));
+        if (chest4.containsKey(p.getUniqueId()))
+            selChest.setItem(3, Regen.createItemStack(Material.CHEST, "§c[ §f1 §c] §f4번 창고", (short) 0, " ", " §8-  §f클릭시 4번 창고를 엽니다.", " "));
+        else
+            selChest.setItem(3, Regen.createItemStack(Material.BARRIER, "§c[ §f1 §c] §f4번 창고", (short) 0, " ", " §8-  §f클릭시 4번 창고를 구매합니다.", " §8-  §f가격은 §65000§f원 입니다.", " "));
+        if (chest5.containsKey(p.getUniqueId()))
+            selChest.setItem(4, Regen.createItemStack(Material.CHEST, "§c[ §f1 §c] §f5번 창고", (short) 0, " ", " §8-  §f클릭시 5번 창고를 엽니다.", " "));
+        else
+            selChest.setItem(4, Regen.createItemStack(Material.BARRIER, "§c[ §f1 §c] §f5번 창고", (short) 0, " ", " §8-  §f클릭시 5번 창고를 구매합니다.", " §8-  §f가격은 §67500§f원 입니다.", " "));
+        p.openInventory(selChest);
+    }
+
+    public static void openChest(Player p, Number value) {
+        switch (value) {
+            case ONE:
+                if (chest.containsKey(p.getUniqueId()))
+                    p.openInventory(chest.get(p.getUniqueId()));
+                else {
+                    Inventory inventory = Bukkit.createInventory(null, 54, "§0창고 1");
+                    chest.put(p.getUniqueId(), inventory);
+                    p.openInventory(inventory);
+                }
+                break;
+            case TWO:
+                if (chest2.containsKey(p.getUniqueId()))
+                    p.openInventory(chest2.get(p.getUniqueId()));
+                else {
+                    Inventory inventory = Bukkit.createInventory(null, 54, "§0창고 2");
+                    chest2.put(p.getUniqueId(), inventory);
+                    p.openInventory(inventory);
+                }
+                break;
+            case THREE:
+                p.openInventory(chest3.get(p.getUniqueId()));
+                break;
+            case FOUR:
+                p.openInventory(chest4.get(p.getUniqueId()));
+                break;
+            case FIVE:
+                p.openInventory(chest5.get(p.getUniqueId()));
+                break;
+            default:
+                break;
         }
     }
 
@@ -55,12 +97,26 @@ public class VirtualChest {
         return list;
     }
 
-    public static void toInventory(UUID key, ArrayList<String> list, boolean first) {
+    public static void toInventory(UUID key, ArrayList<String> list, Number value) {
         Inventory inv;
-        if (first)
-            inv = Bukkit.createInventory(null, 54, "§0창고 1");
-        else
-            inv = Bukkit.createInventory(null, 54, "§0창고 2");
+        switch (value) {
+            case ONE:
+                inv = Bukkit.createInventory(null, 54, "§0창고 1");
+                break;
+            case TWO:
+                inv = Bukkit.createInventory(null, 54, "§0창고 2");
+                break;
+            case THREE:
+                inv = Bukkit.createInventory(null, 54, "§0창고 3");
+                break;
+            case FOUR:
+                inv = Bukkit.createInventory(null, 54, "§0창고 4");
+                break;
+            default:
+            case FIVE:
+                inv = Bukkit.createInventory(null, 54, "§0창고 5");
+                break;
+        }
         for (int i = 0; i < 54; i++) {
             String val = list.get(i);
             if (val.contains("AIR"))
@@ -101,10 +157,23 @@ public class VirtualChest {
                     inv.setItem(i, CSPapi.updateItemStackFeaturesNonPlayer(val, CrackShotApi.getCSWeapon(val)));
             }
         }
-        if (first)
-            chest.put(key, inv);
-        else
-            chest2.put(key, inv);
+        switch (value) {
+            case ONE:
+                chest.put(key, inv);
+                break;
+            case TWO:
+                chest2.put(key, inv);
+                break;
+            case THREE:
+                chest3.put(key, inv);
+                break;
+            case FOUR:
+                chest4.put(key, inv);
+                break;
+            case FIVE:
+                chest5.put(key, inv);
+                break;
+        }
 
     }
 

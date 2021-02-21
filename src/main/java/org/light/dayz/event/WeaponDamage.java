@@ -2,8 +2,10 @@ package org.light.dayz.event;
 
 import com.shampaggon.crackshot.events.WeaponDamageEntityEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.PigZombie;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
 import org.bukkit.event.EventHandler;
@@ -70,13 +72,28 @@ public class WeaponDamage implements Listener {
         Entity entity = event.getEntity();
         if (entity.getWorld().getName().contains("dayz")) {
             if (entity instanceof Zombie) {
-                Zombie victim = (Zombie) entity;
-                Player killer = victim.getKiller();
-                if (killer != null && GameController.contains(killer.getUniqueId())) {
-                    int zKill = config.getZKill();
-                    killer.sendActionBar("§f+ §6" + zKill + "§f포인트!");
-                    DayZData data = GameController.getData(killer.getUniqueId());
-                    data.setAccumulateMoney(data.getAccumulateMoney() + zKill);
+                if (entity instanceof PigZombie) {
+                    PigZombie victim = (PigZombie) entity;
+                    Player killer = victim.getKiller();
+                    if (killer != null && GameController.contains(killer.getUniqueId())) {
+                        ItemStack drop = new ItemStack(Material.ROTTEN_FLESH, ThreadLocalRandom.current().nextInt(0,4));
+                        int zKill = config.getZKill();
+                        killer.sendActionBar("§f+ §6" + (zKill * 2) + "§f포인트!");
+                        DayZData data = GameController.getData(killer.getUniqueId());
+                        data.setAccumulateMoney(data.getAccumulateMoney() + zKill);
+                        event.getDrops().clear();
+                        entity.getWorld().dropItem(victim.getLocation(), drop);
+                    }
+                }
+                else {
+                    Zombie victim = (Zombie) entity;
+                    Player killer = victim.getKiller();
+                    if (killer != null && GameController.contains(killer.getUniqueId())) {
+                        int zKill = config.getZKill();
+                        killer.sendActionBar("§f+ §6" + zKill + "§f포인트!");
+                        DayZData data = GameController.getData(killer.getUniqueId());
+                        data.setAccumulateMoney(data.getAccumulateMoney() + zKill);
+                    }
                 }
             }
             else if (entity instanceof Player) {

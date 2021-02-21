@@ -15,24 +15,9 @@ public class ChestCommand implements CommandExecutor {
             Player p = (Player) commandSender;
             if (GameController.contains(p.getUniqueId()) || GameManager.getInstance().contains(p.getUniqueId()))
                 p.sendMessage("§4게임에 참여중인 상태로 사용할 수 없는 명령어 입니다.");
-            else {
-                if (strings.length == 1 && (toInt(strings[0]) == 1 || toInt(strings[0]) == 2)) {
-                    VirtualChest.openChest(p, toInt(strings[0]) == 1);
-                }
-                else
-                    p.sendMessage("§c[ §f! §c] §f/창고 <1/2>");
-
-            }
+            else
+                VirtualChest.selectChest(p);
         }
         return false;
-    }
-
-    public int toInt(String val) {
-        try {
-            return Integer.parseInt(val);
-        }
-        catch (NumberFormatException e) {
-            return -1;
-        }
     }
 }

@@ -31,8 +31,10 @@ public class Regen {
     public static DeathMatch Plugin = JavaPlugin.getPlugin(DeathMatch.class);
     public static YamlConfig config = YamlConfig.instance;
     public static HashMap<UUID, Integer> kitMap = new HashMap<>();
+    public static HashMap<UUID, Integer> exitMap = new HashMap<>();
     public static HashMap<Location, Integer> chestRegen = new HashMap<>();
     public static ArrayList<ItemStack> items = new ArrayList<>(Arrays.asList(new ItemStack(Material.BREAD, 5), new ItemStack(Material.COOKED_BEEF, 2), new ItemStack(Material.APPLE, 10), new ItemStack(Material.GRILLED_PORK, 3), new ItemStack(Material.BEETROOT, 10), new ItemStack(Material.COOKED_CHICKEN, 3)));
+
     public static boolean isWeaponGet(UUID data) {
         return kitMap.containsKey(data);
     }
@@ -40,6 +42,14 @@ public class Regen {
     public static void addPlayer(UUID data) {
         if (!kitMap.containsKey(data))
             kitMap.put(data, 0);
+    }
+
+    public static void addExitPlayer(UUID data) {
+        exitMap.putIfAbsent(data, 0);
+    }
+
+    public static boolean isExitPlayer(UUID data) {
+        return exitMap.containsKey(data);
     }
 
     public static void clear() {
@@ -65,7 +75,7 @@ public class Regen {
                 World world = Bukkit.getWorld("dayz");
                 if (world != null) {
                     for (Entity entity : world.getEntities()) {
-                        if (!(entity instanceof Player) && !(entity instanceof Painting))
+                        if (!(entity instanceof Player) && !(entity instanceof Painting) && !(entity instanceof ArmorStand))
                             entity.remove();
                     }
                 }
@@ -103,6 +113,7 @@ public class Regen {
                 chestRegen.remove(location);
             delLocations.clear();
             ArrayList<UUID> delUIDs = new ArrayList<>();
+            ArrayList<UUID> delEUIDs = new ArrayList<>();
             for (UUID uuid : kitMap.keySet()) {
                 kitMap.put(uuid, kitMap.get(uuid) + 1);
                 if (kitMap.get(uuid) >= 360)
@@ -110,6 +121,13 @@ public class Regen {
             }
             for (UUID id : delUIDs)
                 kitMap.remove(id);
+            for (UUID uuid : exitMap.keySet()) {
+                exitMap.put(uuid, exitMap.get(uuid) + 1);
+                if (exitMap.get(uuid) >= 720)
+                    delEUIDs.add(uuid);
+            }
+            for (UUID id : delEUIDs)
+                exitMap.remove(id);
         }, 0L, 600L);
     }
 
@@ -209,23 +227,35 @@ public class Regen {
             return new ItemStack(Material.IRON_LEGGINGS);
         else if (rand <= 96)
             return new ItemStack(Material.IRON_BOOTS);
-        else if (rand <= 97)
-            return new ItemStack(Material.DIAMOND_HELMET);
-        else if (rand <= 98)
-            return new ItemStack(Material.DIAMOND_CHESTPLATE);
-        else if (rand <= 99)
-            return new ItemStack(Material.DIAMOND_LEGGINGS);
-        else
-            return new ItemStack(Material.DIAMOND_BOOTS);
+        else if (rand <= 97) {
+            if (ThreadLocalRandom.current().nextInt(0,3) == 0)
+                return new ItemStack(Material.DIAMOND_HELMET);
+            else
+                return new ItemStack(Material.IRON_HELMET);
+        }
+        else if (rand <= 98) {
+            if (ThreadLocalRandom.current().nextInt(0,3) == 0)
+                return new ItemStack(Material.DIAMOND_CHESTPLATE);
+            else
+                return new ItemStack(Material.IRON_CHESTPLATE);
+        }
+        else if (rand <= 99) {
+            if (ThreadLocalRandom.current().nextInt(0, 3) == 0)
+                return new ItemStack(Material.DIAMOND_LEGGINGS);
+            else
+                return new ItemStack(Material.IRON_LEGGINGS);
+        }
+        else {
+            if (ThreadLocalRandom.current().nextInt(0,3) == 0)
+                return new ItemStack(Material.DIAMOND_BOOTS);
+            else
+                return new ItemStack(Material.IRON_BOOTS);
+        }
 
     }
 
     public static ArrayList<ItemStack> getPotions() {
-        ItemStack potion1 = new ItemStack(Material.SPLASH_POTION);
-        PotionMeta meta1 = (PotionMeta) potion1.getItemMeta();
-        meta1.addCustomEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 600, 2, true, true), false);
-        potion1.setItemMeta(meta1);
-        return new ArrayList<>(Arrays.asList(potion1, createItemStack(Material.PAPER, "§c[ §f! §c] §f붕대", (short)0, " ", " §8-  §f사용시 체력을 일부 회복합니다. (사용시간 3초)", " "), createItemStack(Material.MAGMA_CREAM, "§c[ §f! §c] §f에너지 드링크", (short)0, " ", " §8-  §f사용시 이동속도가 증가합니다. (사용시간 3초)", " "), createItemStack(Material.SUGAR, "§c[ §f! §c] §f구급상자", (short)0, " ", " §8-  §f사용시 체력을 모두 회복합니다. (사용시간 5초)", " "), createItemStack(Material.END_ROD, "§c[ §f! §c] §f치료제", (short)0, " ", " §8-  §f골절도 치료가능한 치료제", " §8-  §f사용시 상태이상을 모두 제거합니다. (사용시간 3초)", " ")));
+        return new ArrayList<>(Arrays.asList(createItemStack(Material.PAPER, "§c[ §f! §c] §f붕대", (short)0, " ", " §8-  §f사용시 체력을 일부 회복합니다. (사용시간 3초)", " "), createItemStack(Material.MAGMA_CREAM, "§c[ §f! §c] §f에너지 드링크", (short)0, " ", " §8-  §f사용시 이동속도가 증가합니다. (사용시간 3초)", " "), createItemStack(Material.SUGAR, "§c[ §f! §c] §f구급상자", (short)0, " ", " §8-  §f사용시 체력을 모두 회복합니다. (사용시간 5초)", " "), createItemStack(Material.END_ROD, "§c[ §f! §c] §f치료제", (short)0, " ", " §8-  §f골절도 치료가능한 치료제", " §8-  §f사용시 상태이상을 모두 제거합니다. (사용시간 3초)", " ")));
     }
 
     public static ItemStack createItemStack(Material data, String name, short color, String... lore) {

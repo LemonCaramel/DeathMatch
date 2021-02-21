@@ -12,9 +12,9 @@ import java.util.UUID;
 
 public class ExitRunnable extends BukkitRunnable {
 
-    private HashMap<UUID, Integer> exitMap;
-    private UUID data;
-    private Location start;
+    public HashMap<UUID, Integer> exitMap;
+    public UUID data;
+    public Location start;
 
     public ExitRunnable(Location start, UUID data, HashMap<UUID, Integer> map) {
         this.exitMap = map;

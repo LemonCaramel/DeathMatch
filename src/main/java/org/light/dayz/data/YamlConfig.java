@@ -6,6 +6,7 @@ import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.light.dayz.util.VirtualChest;
 import org.light.source.DeathMatch;
+import org.light.source.Singleton.CrackShotApi;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,20 +79,45 @@ public class YamlConfig {
         locations.clear();
         VirtualChest.chest.clear();
         VirtualChest.chest2.clear();
+        VirtualChest.chest3.clear();
+        VirtualChest.chest4.clear();
+        VirtualChest.chest5.clear();
         helpWeapon.addAll(config.getStringList("first-weapon"));
         denyWeapon.addAll(config.getStringList("non-drop-weapon"));
+        CrackShotApi.generateWeaponMap();
         if (chestConfig.getConfigurationSection("chest") != null) {
             for (String key : chestConfig.getConfigurationSection("chest").getKeys(false)) {
                 UUID uid = UUID.fromString(key);
                 ArrayList<String> strings = new ArrayList<>(chestConfig.getStringList("chest." + key));
-                VirtualChest.toInventory(uid, strings, true);
+                VirtualChest.toInventory(uid, strings, VirtualChest.Number.ONE);
             }
         }
         if (chestConfig.getConfigurationSection("chest2") != null) {
             for (String key : chestConfig.getConfigurationSection("chest2").getKeys(false)) {
                 UUID uid = UUID.fromString(key);
                 ArrayList<String> strings = new ArrayList<>(chestConfig.getStringList("chest2." + key));
-                VirtualChest.toInventory(uid, strings, false);
+                VirtualChest.toInventory(uid, strings, VirtualChest.Number.TWO);
+            }
+        }
+        if (chestConfig.getConfigurationSection("chest3") != null) {
+            for (String key : chestConfig.getConfigurationSection("chest3").getKeys(false)) {
+                UUID uid = UUID.fromString(key);
+                ArrayList<String> strings = new ArrayList<>(chestConfig.getStringList("chest3." + key));
+                VirtualChest.toInventory(uid, strings, VirtualChest.Number.THREE);
+            }
+        }
+        if (chestConfig.getConfigurationSection("chest4") != null) {
+            for (String key : chestConfig.getConfigurationSection("chest4").getKeys(false)) {
+                UUID uid = UUID.fromString(key);
+                ArrayList<String> strings = new ArrayList<>(chestConfig.getStringList("chest4." + key));
+                VirtualChest.toInventory(uid, strings, VirtualChest.Number.FOUR);
+            }
+        }
+        if (chestConfig.getConfigurationSection("chest5") != null) {
+            for (String key : chestConfig.getConfigurationSection("chest5").getKeys(false)) {
+                UUID uid = UUID.fromString(key);
+                ArrayList<String> strings = new ArrayList<>(chestConfig.getStringList("chest5." + key));
+                VirtualChest.toInventory(uid, strings, VirtualChest.Number.FIVE);
             }
         }
         if (config.getConfigurationSection("location") != null)
@@ -104,6 +130,9 @@ public class YamlConfig {
     public void save() {
         chestConfig.set("chest", null);
         chestConfig.set("chest2", null);
+        chestConfig.set("chest3", null);
+        chestConfig.set("chest4", null);
+        chestConfig.set("chest5", null);
         config.set("chest-regen", regen);
         config.set("zombie-kill", zKill);
         config.set("human-kill", hKill);
@@ -119,6 +148,19 @@ public class YamlConfig {
             ArrayList<String> list = VirtualChest.toConfig(VirtualChest.chest2.get(key));
             chestConfig.set("chest2." + key.toString(), list);
         }
+        for (UUID key : VirtualChest.chest3.keySet()) {
+            ArrayList<String> list = VirtualChest.toConfig(VirtualChest.chest3.get(key));
+            chestConfig.set("chest3." + key.toString(), list);
+        }
+        for (UUID key : VirtualChest.chest4.keySet()) {
+            ArrayList<String> list = VirtualChest.toConfig(VirtualChest.chest4.get(key));
+            chestConfig.set("chest4." + key.toString(), list);
+        }
+        for (UUID key : VirtualChest.chest5.keySet()) {
+            ArrayList<String> list = VirtualChest.toConfig(VirtualChest.chest5.get(key));
+            chestConfig.set("chest5." + key.toString(), list);
+        }
+
         try {
             config.save(file);
             chestConfig.save(chestFile);

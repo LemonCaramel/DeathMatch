@@ -23,13 +23,11 @@ commands:
     description: about dayz
   창고:
     description: dayz chest
-  드랍:
-    description: drop item
   쓰레기통:
     description: trash
-  판매:
+  상점:
     description: sell zombie
   버그제거:
     description: pumpkin bug
-  자살:
-    description: dayz suicide
+  비상탈출:
+    description: emergency food

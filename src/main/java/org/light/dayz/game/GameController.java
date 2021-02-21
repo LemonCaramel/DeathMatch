@@ -39,9 +39,9 @@ public class GameController {
             if (p.getInventory().getItem(8) != null && p.getInventory().getItem(8).getType() == Material.SKULL_ITEM)
                 p.getInventory().setItem(8, new ItemStack(Material.AIR));
             p.setGameMode(GameMode.ADVENTURE);
-            p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 60, 5, true, false));
-            p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 60, 3, true, false));
-            p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 60, 5, true, false));
+            p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 140, 5, true, false));
+            p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 140, 3, true, false));
+            p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 140, 5, true, false));
             p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 999999, 100, true, false));
             p.setLevel(0);
             p.setExp(0.0f);
