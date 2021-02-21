@@ -187,11 +187,15 @@ public class InventoryClick implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onDrop(PlayerDropItemEvent event) {
         Player p = event.getPlayer();
         ItemStack stack = event.getItemDrop().getItemStack();
-        event.setCancelled(GameManager.getInstance().contains(p.getUniqueId()) || stack.getType() == Material.SKULL_ITEM || stack.getType() != Material.AIR && stack.getItemMeta().getDisplayName() != null && stack.getItemMeta().getDisplayName().equalsIgnoreCase("."));
+        if ((GameManager.getInstance().contains(p.getUniqueId()) || stack.getType() == Material.SKULL_ITEM || stack.getType() != Material.AIR && stack.getItemMeta().getDisplayName() != null && stack.getItemMeta().getDisplayName().equalsIgnoreCase(".")) || (CrackShotApi.getCSID(stack) != null && !p.isSneaking()))
+            event.setCancelled(true);
+        else
+            event.setCancelled(false);
+
     }
 
     public VirtualChest.Number toNumber(int value) {
