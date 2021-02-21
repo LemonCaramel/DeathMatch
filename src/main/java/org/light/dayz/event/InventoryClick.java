@@ -187,7 +187,7 @@ public class InventoryClick implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onDrop(PlayerDropItemEvent event) {
         Player p = event.getPlayer();
         ItemStack stack = event.getItemDrop().getItemStack();
