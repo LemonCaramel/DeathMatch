@@ -2,6 +2,7 @@ package org.light.dayz.event;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -11,6 +12,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.light.dayz.util.Regen;
 import org.light.dayz.util.VirtualChest;
 import org.light.source.Game.GameManager;
@@ -18,6 +20,8 @@ import org.light.source.Log.MinimizeLogger;
 import org.light.source.Singleton.CrackShotApi;
 import org.light.source.Singleton.EconomyApi;
 
+import java.util.ArrayList;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class InventoryClick implements Listener {
@@ -25,8 +29,16 @@ public class InventoryClick implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onClick(InventoryClickEvent event) {
         Player p = (Player) event.getWhoClicked();
-        if (event.getRawSlot() == -999)
+        if (event.getRawSlot() == -999) {
+            ItemStack trash = event.getCursor();
+            if (!GameManager.getInstance().contains(p.getUniqueId()) && CrackShotApi.getCSID(trash) != null && !p.isOp()) {
+                Item item = p.getWorld().dropItem(p.getLocation(), trash);
+                item.setVelocity(p.getLocation().getDirection());
+                p.setItemOnCursor(null);
+            }
             return;
+        }
+
         if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR && event.getCurrentItem().getItemMeta().getDisplayName() != null && event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("."))
             event.setCurrentItem(null);
         if (event.getInventory().getTitle().contains("보급품")) {
@@ -187,15 +199,16 @@ public class InventoryClick implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onDrop(PlayerDropItemEvent event) {
         Player p = event.getPlayer();
         ItemStack stack = event.getItemDrop().getItemStack();
-        if ((GameManager.getInstance().contains(p.getUniqueId()) || stack.getType() == Material.SKULL_ITEM || stack.getType() != Material.AIR && stack.getItemMeta().getDisplayName() != null && stack.getItemMeta().getDisplayName().equalsIgnoreCase(".")) || (CrackShotApi.getCSID(stack) != null && !p.isSneaking()))
-            event.setCancelled(true);
-        else
-            event.setCancelled(false);
+        event.setCancelled(GameManager.getInstance().contains(p.getUniqueId()) || stack.getType() == Material.SKULL_ITEM || checkDummy(stack));
 
+    }
+
+    public boolean checkDummy(ItemStack stack) {
+        return stack.getItemMeta().getDisplayName() != null && stack.getItemMeta().getDisplayName().equalsIgnoreCase(".");
     }
 
     public VirtualChest.Number toNumber(int value) {
