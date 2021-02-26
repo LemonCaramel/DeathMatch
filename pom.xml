@@ -6,7 +6,7 @@
 
     <groupId>org.light</groupId>
     <artifactId>DeathMatch</artifactId>
-    <version>2.5</version>
+    <version>2.8.1</version>
     <packaging>jar</packaging>
 
     <name>DeathMatch</name>
@@ -89,7 +89,7 @@
         <!-- CrackShot API -->
         <dependency>
             <groupId>com.shampaggon</groupId>
-            <artifactId>crackshot</artifactId>
+            <artifactId>CrackShot</artifactId>
             <version>0.98.9</version>
             <scope>system</scope>
             <systemPath>${project.lib.path}/CrackShot.jar</systemPath>
@@ -111,6 +111,14 @@
             <version>1.12.2-R0.1-SNAPSHOT</version>
             <scope>system</scope>
             <systemPath>${project.lib.path}/Paper.jar</systemPath>
+        </dependency>
+
+        <!-- ProtocolLib -->
+        <dependency>
+            <groupId>com.github.azbh111</groupId>
+            <artifactId>ProtocolLib</artifactId>
+            <version>4.4.0</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- caramelLibrary API -->

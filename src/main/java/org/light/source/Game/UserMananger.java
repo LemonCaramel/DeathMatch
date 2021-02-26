@@ -2,6 +2,7 @@ package org.light.source.Game;
 
 import org.light.source.Singleton.DataManager;
 
+import java.util.HashMap;
 import java.util.UUID;
 
 public class UserMananger {
@@ -12,6 +13,7 @@ public class UserMananger {
     private int killMaintain;
     private int reRoll;
     private int calcResultMoney;
+    private HashMap<UUID, Integer> damage;
 
     public UserMananger(UUID uuid) {
         this.uuid = uuid;
@@ -20,6 +22,7 @@ public class UserMananger {
         lastKillTime = 0;
         reRoll = 0;
         calcResultMoney = 0;
+        damage = new HashMap<>();
     }
 
     public int getKills() {
@@ -67,7 +70,11 @@ public class UserMananger {
     }
 
     public boolean calcKillStay() {
-        return System.currentTimeMillis() - getLastKillTime() <= DataManager.getInstance().getKillMaintain() * 1000;
+        return System.currentTimeMillis() - getLastKillTime() <= DataManager.getInstance().getKillMaintain() * 1000L;
+    }
+
+    public HashMap<UUID, Integer> getDamageMap() {
+        return damage;
     }
 
     public void reset(){
@@ -76,6 +83,7 @@ public class UserMananger {
         lastKillTime = 0;
         reRoll = 0;
         calcResultMoney = 0;
+        damage.clear();
     }
 
 }

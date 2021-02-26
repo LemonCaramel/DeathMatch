@@ -38,6 +38,9 @@ import org.light.source.Game.UserMananger;
 import org.light.source.Log.MinimizeLogger;
 import org.light.source.Singleton.*;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class EventManager implements Listener {
@@ -79,7 +82,8 @@ public class EventManager implements Listener {
                         p.getInventory().setHeldItemSlot(0);
                         p.getInventory().setItem(0, CrackShotApi.generateRandomWeapon());
                         API.getInstance().getResourceManagement().cspZoom(p, p.getInventory().getItemInMainHand());
-                    } else {
+                    }
+                    else {
                         for (UserMananger data : GameManager.getInstance().getUsers()) {
                             if (data.getUUID().equals(p.getUniqueId())) {
                                 if (data.getReRoll() >= DataManager.getInstance().getMaxReroll()) {
@@ -133,16 +137,24 @@ public class EventManager implements Listener {
 
     @EventHandler
     public void onDrop(PlayerDropItemEvent event) {
-        if (CrackShotApi.getCSID(event.getItemDrop().getItemStack()) != null || event.getItemDrop().getItemStack().getType() == Material.SKULL_ITEM)
+        if (!event.getPlayer().isOp() && GameManager.getInstance().contains(event.getPlayer().getUniqueId()))
             event.setCancelled(true);
 
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onOffhandMove(PlayerSwapHandItemsEvent event) {
         Player target = event.getPlayer();
         if (GameManager.getInstance().isGaming() && GameManager.getInstance().contains(target.getUniqueId()))
             event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onMove(PlayerMoveEvent event) {
+        if (event.getTo().clone().subtract(new Vector(0, 1, 0)).getBlock().getType() == Material.SPONGE) {
+            event.getPlayer().setVelocity(new Vector(0, 2.05, 0));
+            event.getPlayer().spawnParticle(Particle.FIREWORKS_SPARK, event.getTo(), 30, 0.1, 0.1, 0.1, 0.5);
+        }
     }
 
     @EventHandler
@@ -152,7 +164,7 @@ public class EventManager implements Listener {
             event.setCancelled(true);
             NoKnockbackObject.getInstance().setKnockBackState(event.getPlayer(), true);
         }
-        if (velocity.getY() > 0.5)
+        if (velocity.getY() > 0.5 && velocity.getY() != 2.05)
             event.setVelocity(velocity.setY(0.5));
     }
 
@@ -166,6 +178,8 @@ public class EventManager implements Listener {
         setNoDamageState(target, true);
         checkPhone(target);
         setName(target);
+        if (DataManager.getInstance().getLocations() != null && DataManager.getInstance().getLocations()[0] != null && !target.getWorld().getName().contains("lobby"))
+            target.teleport(DataManager.getInstance().getLocations()[0]);
     }
 
     @EventHandler
@@ -179,9 +193,12 @@ public class EventManager implements Listener {
     @EventHandler
     public void onDeath(PlayerDeathEvent event) {
         if (GameManager.getInstance().isGaming() && GameManager.getInstance().contains(event.getEntity().getUniqueId())) {
+            event.setKeepInventory(true);
             event.setDeathMessage("");
             event.getDrops().clear();
             addDeath(event.getEntity().getUniqueId());
+            event.getEntity().spigot().respawn();
+            resetDamage(event.getEntity());
         }
     }
 
@@ -190,26 +207,25 @@ public class EventManager implements Listener {
         if (event.getVictim() instanceof Player && GameManager.getInstance().isGaming()) {
             Player killer = event.getPlayer();
             Player victim = (Player) event.getVictim();
-            if (GameManager.getInstance().contains(killer.getUniqueId()) && GameManager.getInstance().contains(victim.getUniqueId())) {
+            addDamage(killer, victim, (int) event.getDamage());
+            if (killer.hasPotionEffect(PotionEffectType.DAMAGE_RESISTANCE))
+                event.setCancelled(true);
+            else if (GameManager.getInstance().contains(killer.getUniqueId()) && GameManager.getInstance().contains(victim.getUniqueId())) {
                 if (victim.getHealth() - event.getDamage() <= 0) {
                     int killerData = 0;
-                    ItemStack stack = CrackShotApi.getCSWeapon(event.getWeaponTitle());
-                    if (stack == null)
-                        stack = createDummyItem();
-                    if (stack.getType() == Material.IRON_AXE || stack.getType() == Material.DIAMOND_AXE)
-                        sendKillMsg(killer, victim, "§c" + killer.getName() + " §f(" + stack.getItemMeta().getDisplayName() + "§f)" + " §7メ §b" + victim.getName());
-                    else
-                        sendKillMsg(killer, victim, "§c" + killer.getName() + " §f(" + stack.getItemMeta().getDisplayName() + "§f)" + " §7➾ §b" + victim.getName());
+                    HashMap<UUID, Integer> damageMap = new HashMap<>();
                     for (UserMananger data : GameManager.getInstance().getUsers()) {
                         if (data.getUUID().equals(killer.getUniqueId())) {
                             data.setKills(data.getKills() + 1);
                             killerData = data.getKills();
+                            killer.getInventory().setItem(8, getKillItem(data.getKills()));
                         }
                         else if (data.getUUID().equals(victim.getUniqueId())) {
-                            victim.getInventory().clear();
+                            victim.getInventory().setItem(0, new ItemStack(Material.AIR));
                             event.setDamage(0.0);
                             victim.setHealth(80.0);
-                            sendRespawn(victim, killer.getName(), stack.getItemMeta().getDisplayName(), false);
+                            sendRespawn(victim);
+                            damageMap = data.getDamageMap();
                             if (victim.getName().equalsIgnoreCase(RatingManager.getInstance().getFirst())) {
                                 //1위 인경우
                                 int back, to;
@@ -222,6 +238,18 @@ public class EventManager implements Listener {
                             }
                         }
                     }
+                    damageMap.remove(killer.getUniqueId());
+                    int maxHealth = (int) victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
+                    for (UUID data : damageMap.keySet()) {
+                        if (damageMap.get(data) > maxHealth)
+                            damageMap.put(data, maxHealth);
+                    }
+                    ItemStack stack = CrackShotApi.getCSWeapon(event.getWeaponTitle()) == null ? createDummyItem() : CrackShotApi.getCSWeapon(event.getWeaponTitle());
+                    if (stack.getType() == Material.IRON_AXE || stack.getType() == Material.DIAMOND_AXE)
+                        sendKillMsg(killer, victim, "§c" + killer.getName() + " §f(" + stack.getItemMeta().getDisplayName() + "§f)" + " §7メ §b" + victim.getName(), damageMap);
+                    else
+                        sendKillMsg(killer, victim, "§c" + killer.getName() + " §f(" + stack.getItemMeta().getDisplayName() + "§f)" + " §7➾ §b" + victim.getName(), damageMap);
+
                     RatingManager.getInstance().updateRank();
                     addKill(killer.getUniqueId());
                     addDeath(victim.getUniqueId());
@@ -249,21 +277,22 @@ public class EventManager implements Listener {
 
     @EventHandler
     public void onRespawn(PlayerRespawnEvent event) {
-        Player target = event.getPlayer();
-        if (GameManager.getInstance().isGaming()) {
-            if (GameManager.getInstance().contains(target.getUniqueId())) {
-                for (UserMananger mananger : GameManager.getInstance().getUsers()) {
-                    if (mananger.getUUID().equals(target.getUniqueId())) {
-                        target.getInventory().clear();
-                        sendRespawn(target, "MineCraft", "§c<none> §7<<x>>", false);
+        Bukkit.getScheduler().runTaskLater(Plugin, () -> {
+            Player target = event.getPlayer();
+            if (GameManager.getInstance().isGaming() && GameManager.getInstance().contains(target.getUniqueId())) {
+                for (UserMananger mgr : GameManager.getInstance().getUsers()) {
+                    if (mgr.getUUID().equals(target.getUniqueId())) {
+                        target.getInventory().setItem(0, new ItemStack(Material.AIR));
+                        sendRespawn(target);
                     }
                 }
             }
-        }
-        else {
-            Bukkit.getScheduler().runTaskLater(Plugin, () -> target.teleport(DataManager.getInstance().getLocations()[0]), 1L);
-        }
+            else
+                Bukkit.getScheduler().runTaskLater(Plugin, () -> target.teleport(DataManager.getInstance().getLocations()[0]), 1L);
+        }, 1L);
+
     }
+
 
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent event) {
@@ -273,8 +302,12 @@ public class EventManager implements Listener {
 
     @EventHandler
     public void onAnyDamage(EntityDamageEvent event) {
-        if (event.getCause() == EntityDamageEvent.DamageCause.LIGHTNING || event.getCause() == EntityDamageEvent.DamageCause.FALL)
+        if (event.getCause() == EntityDamageEvent.DamageCause.LIGHTNING)
             event.setCancelled(true);
+        else if (event.getCause() == EntityDamageEvent.DamageCause.FALL && !event.getEntity().getWorld().getName().contains("dayz"))
+            event.setCancelled(true);
+        else if (event.getCause() == EntityDamageEvent.DamageCause.VOID)
+            event.setDamage(event.getDamage() * 2);
     }
 
     public void sendLevelUp(Player p, int back, int to) {
@@ -291,7 +324,7 @@ public class EventManager implements Listener {
         p.setExp(GameManager.getInstance().calcLevelProgress(to));
     }
 
-    public void sendKillMsg(Player killer, Player victim, String msg) {
+    public void sendKillMsg(Player killer, Player victim, String msg, Map<UUID, Integer> damageMap) {
         //킬당 참여보상의 1/10 지급, 연속킬시 킬보상의 1/10 * 반올림(연속킬수 / 2), 제압킬시 참여 보상의 1/5 * 연속킬 횟수지급, 전부다 합연산으로 지급
         UserMananger killManager = null, victimManager = null;
         int reward = 0;
@@ -308,7 +341,7 @@ public class EventManager implements Listener {
             reward += DataManager.getInstance().getJoinMoney() / 10;
             killManager.setKillMaintain(killManager.getKillMaintain() + 1);
             if (victimManager.getKillMaintain() >= 2) {
-                craeteKillLog("§4§oShutDown! " + msg);
+                createKillLog("§4§oShutDown! " + msg);
                 reward += DataManager.getInstance().getJoinMoney() / 5 * victimManager.getKillMaintain();
 
             }
@@ -318,24 +351,24 @@ public class EventManager implements Listener {
                     //이어갈 수 있는경우
                     if (killManager.getKillMaintain() != 1) {
                         if (killManager.getKillMaintain() == 2)
-                            craeteKillLog("§e§oDouble Kill! " + msg);
+                            createKillLog("§e§oDouble Kill! " + msg);
                         else if (killManager.getKillMaintain() == 3)
-                            craeteKillLog("§b§oTriple Kill! " + msg);
+                            createKillLog("§b§oTriple Kill! " + msg);
                         else if (killManager.getKillMaintain() == 4)
-                            craeteKillLog("§a§oQuadra Kill! " + msg);
+                            createKillLog("§a§oQuadra Kill! " + msg);
                         else if (killManager.getKillMaintain() == 5)
-                            craeteKillLog("§d§oPenta Kill! " + msg);
+                            createKillLog("§d§oPenta Kill! " + msg);
                         else if (killManager.getKillMaintain() == 6)
-                            craeteKillLog("§4§oHexa Kill! " + msg);
+                            createKillLog("§4§oHexa Kill! " + msg);
                         else
-                            craeteKillLog("§6§oLegendary! " + msg);
+                            createKillLog("§6§oLegendary! " + msg);
                         reward += DataManager.getInstance().getJoinMoney() / 10 * (int) (Math.floor((double) killManager.getKillMaintain() / 2));
                     }
                     else
-                        craeteKillLog(msg);
+                        createKillLog(msg);
                 }
                 else {
-                    craeteKillLog(msg);
+                    createKillLog(msg);
                     killManager.setKillMaintain(1);
                 }
             }
@@ -344,59 +377,54 @@ public class EventManager implements Listener {
             killer.sendTitle("", "+ " + reward + " §6포인트", 0, 20, 0);
             MinimizeLogger.getInstance().appendLog(killer.getName() + "님이 " + victim.getName() + "님을 죽여 " + reward + "원을 흭득");
             killManager.setCalcResultMoney(killManager.getCalcResultMoney() + reward);
-        }
-
-    }
-
-    public void sendRespawn(Player victim, String killerName, String WeaponName, boolean melee) {
-        //게임 끝날때 사망 리스폰 처리
-        victim.setGameMode(GameMode.SPECTATOR);
-        victim.playSound(victim.getLocation(), Sound.ENTITY_WITHER_DEATH, 1.0f, 1.0f);
-        if (melee)
-            victim.sendTitle("§c§oRespawn..", "§c" + killerName + " §7メ §6" + victim.getName(), 0, 40, 0);
-        else {
-            victim.sendTitle("§c§oRespawn..", "§c" + killerName + " §7➾ §6" + victim.getName(), 0, 40, 0);
-            victim.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText("§c§oUsing §8: " + WeaponName));
-        }
-        Bukkit.getScheduler().runTaskLater(Plugin, () -> {
-            //2초후 리스폰
-            if (GameManager.getInstance().isGaming()) {
-                if (GameManager.getInstance().contains(victim.getUniqueId())) {
-                    for (UserMananger victimgr : GameManager.getInstance().getUsers()) {
-                        if (victimgr.getUUID().equals(victim.getUniqueId())) {
-                            victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(80.0);
-                            victim.setHealthScaled(true);
-                            victim.setHealth(80.0);
-                            for (PotionEffectType type : PotionEffectType.values()) {
-                                if (type == null)
-                                    continue;
-                                if (victim.hasPotionEffect(type))
-                                    victim.removePotionEffect(type);
-                            }
-                            victim.teleport(GameManager.getInstance().getTeleportLocation(DataManager.getInstance().getLocations()[GameManager.getInstance().getRandomNumber()], DataManager.getInstance().getLocations()[GameManager.getInstance().getRandomNumber() + 1]));
-                            victim.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 60, 5, true, false));
-                            victim.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 9999, 100, true, false));
-                            if (victim.getName().equalsIgnoreCase(RatingManager.getInstance().getFirst()))
-                                victim.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 9999, 5, true, true));
-                            victim.getInventory().setItem(0, CrackShotApi.generateRandomWeapon());
-                            API.getInstance().getResourceManagement().cspZoom(victim, victim.getInventory().getItemInMainHand());
-                        }
+            for (UUID data : damageMap.keySet()) {
+                if (damageMap.get(data) != 0) {
+                    double percent = damageMap.get(data) / victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
+                    int assistReward = (int) (reward / 2 * percent);
+                    Player target = Bukkit.getPlayer(data);
+                    if (target != null) {
+                        target.sendMessage("§6[ §f! §6] §bAssist! §6 +" + assistReward + " 포인트");
+                        MinimizeLogger.getInstance().appendLog(target.getName() + "님이 어시스트로 " + assistReward + "원 흭득");
+                        for (UserMananger value : GameManager.getInstance().getUsers())
+                            if (value.getUUID().equals(data))
+                                value.setCalcResultMoney(value.getCalcResultMoney() + assistReward);
                     }
-                    victim.setGameMode(GameMode.ADVENTURE);
-                }
-                else {
-                    victim.teleport(DataManager.getInstance().getLocations()[0]);
-                    victim.setGameMode(GameMode.ADVENTURE);
                 }
             }
-            else {
-                victim.teleport(DataManager.getInstance().getLocations()[0]);
-                victim.setGameMode(GameMode.ADVENTURE);
-            }
-        }, 20L);
+            victimManager.getDamageMap().clear();
+        }
+
     }
 
-    private void craeteKillLog(String message) {
+    public void sendRespawn(Player victim) {
+        //게임 끝날때 사망 리스폰 처리
+        victim.playSound(victim.getLocation(), Sound.ENTITY_WITHER_DEATH, 1.0f, 1.0f);
+        //즉시 리스폰
+        if (GameManager.getInstance().isGaming() && GameManager.getInstance().contains(victim.getUniqueId())) {
+            for (UserMananger mgr : GameManager.getInstance().getUsers()) {
+                if (mgr.getUUID().equals(victim.getUniqueId())) {
+                    victim.getInventory().setHeldItemSlot(4);
+                    victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(80.0);
+                    victim.setHealthScaled(true);
+                    victim.setHealth(80.0);
+                    victim.getActivePotionEffects().forEach(data -> victim.removePotionEffect(data.getType()));
+                    victim.teleport(GameManager.getInstance().getTeleportLocation(DataManager.getInstance().getLocations()[GameManager.getInstance().getRandomNumber()], DataManager.getInstance().getLocations()[GameManager.getInstance().getRandomNumber() + 1]));
+                    victim.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 60, 2, true, false), false);
+                    victim.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, 60, 1, true, false), false);
+                    victim.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 60, 5, true, false));
+                    victim.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 9999, 100, true, false));
+                    victim.getInventory().setHelmet(new ItemStack(Material.AIR));
+                    if (victim.getName().equalsIgnoreCase(RatingManager.getInstance().getFirst()))
+                        victim.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 9999, 5, true, true));
+                    victim.getInventory().setItem(0, CrackShotApi.generateRandomWeapon());
+                }
+            }
+        }
+        else
+            victim.teleport(DataManager.getInstance().getLocations()[0]);
+    }
+
+    private void createKillLog(String message) {
         ObjectArrayList<UUID> list = new ObjectArrayList<>();
         StringBuilder builder = new StringBuilder();
         String stripMsg = ChatColor.stripColor(message);
@@ -459,8 +487,33 @@ public class EventManager implements Listener {
         inv.setItem(51, previous);
     }
 
-    private void setName(Player p){
+    private void setName(Player p) {
         KillDeathManager.getInstance().getValue(p.getUniqueId()).setName(p.getName());
+    }
+
+    private ItemStack getKillItem(int amount) {
+        ItemStack kill = new ItemStack(Material.NETHER_STAR, amount);
+        ItemMeta meta = kill.getItemMeta();
+        meta.setDisplayName("§6[ §f! §6] §cKill Stack");
+        meta.setLore(Arrays.asList(" ", " §8-  §f현재 당신의 킬 횟수입니다.", " "));
+        kill.setItemMeta(meta);
+        return kill;
+    }
+
+    private void addDamage(Player killer, Player victim, int damage) {
+        for (UserMananger manager : GameManager.getInstance().getUsers()) {
+            if (manager.getUUID().equals(victim.getUniqueId())) {
+                HashMap<UUID, Integer> damageMap = manager.getDamageMap();
+                if (damageMap.containsKey(killer.getUniqueId()))
+                    damageMap.put(killer.getUniqueId(), damageMap.get(killer.getUniqueId()) + damage);
+                else
+                    damageMap.put(killer.getUniqueId(), damage);
+            }
+        }
+    }
+
+    private void resetDamage(Player victim) {
+        GameManager.getInstance().getUsers().stream().filter(data -> data.getUUID().equals(victim.getUniqueId())).forEach(data -> data.getDamageMap().clear());
     }
 
 }

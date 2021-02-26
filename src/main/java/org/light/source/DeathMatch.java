@@ -1,7 +1,12 @@
 package org.light.source;
 
+import com.comphenix.protocol.PacketType;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.light.dayz.DMain;
 import org.light.source.Command.CommandController;
+import org.light.source.Command.HologramCommand;
 import org.light.source.Command.JoinLeaveCommand;
 import org.light.source.Command.KillDeathCommand;
 import org.light.source.Game.AfkManager;
@@ -11,9 +16,17 @@ import org.light.source.Runnable.WeatherRunnable;
 import org.light.source.Singleton.CrackShotApi;
 import org.light.source.Singleton.FileManager;
 import org.light.source.Singleton.KillDeathFileManager;
-import org.light.source.Singleton.WorldManager;
+import com.comphenix.protocol.ProtocolLibrary;
+import org.light.source.packet.SneakAdapter;
 
 public class DeathMatch extends JavaPlugin {
+
+    private final DMain main;
+
+    public DeathMatch() {
+        super();
+        main = new DMain(this);
+    }
 
     @Override
     public void onEnable(){
@@ -21,13 +34,12 @@ public class DeathMatch extends JavaPlugin {
         loadCommand();
         getServer().getPluginManager().registerEvents(new EventManager(this), this);
         FileManager.getInstance().load();
-        CrackShotApi.generateWeaponMap();
-        WorldManager.getInstance().loadWorld();
         MinimizeLogger.getInstance().logStart();
         KillDeathFileManager.getInstance().load();
         new AfkManager().runTaskTimer(this, 0L, 20L);
         new WeatherRunnable(this);
-
+        Bukkit.getScheduler().runTaskLater(this, () -> ProtocolLibrary.getProtocolManager().addPacketListener(new SneakAdapter(this, PacketType.Play.Server.ENTITY_METADATA)), 60L);
+        main.makeEnable();
     }
 
     @Override
@@ -36,6 +48,7 @@ public class DeathMatch extends JavaPlugin {
         FileManager.getInstance().save();
         MinimizeLogger.getInstance().forceSaveLog();
         KillDeathFileManager.getInstance().save();
+        main.makeDisable();
     }
 
     public void loadCommand(){
@@ -46,5 +59,6 @@ public class DeathMatch extends JavaPlugin {
         getCommand("나가기").setExecutor(joinCommand);
         getCommand("킬뎃").setExecutor(killDeathCommand);
         getCommand("랭크").setExecutor(killDeathCommand);
+        getCommand("hd").setExecutor(new HologramCommand());
     }
 }

@@ -3,22 +3,27 @@ package org.light.source.Singleton;
 import com.shampaggon.crackshot.CSDirector;
 import com.shampaggon.crackshot.CSUtility;
 import me.DeeCaaD.CrackShotPlus.CSPapi;
+import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
+import org.light.dayz.data.YamlConfig;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 public class CrackShotApi {
 
     private static CSUtility utility;
     private static Map<String, ItemStack> csItems;
+    private static HashMap<String, ItemStack> nonSkinItems;
 
     static {
         utility = new CSUtility();
         csItems = new HashMap<>();
+        nonSkinItems = new HashMap<>();
     }
 
     public static ItemStack getCSWeapon(String WeaponName){
@@ -49,15 +54,28 @@ public class CrackShotApi {
     public static ItemStack generateNotOPWeapon(){
         ArrayList<String> list = new ArrayList<>(csItems.keySet());
         Collections.shuffle(list);
-        while(list.get(0) == null || list.get(0).equalsIgnoreCase("CHICKENGUN") || list.get(0).equalsIgnoreCase("C4_Ultimate"))
+        while(list.get(0) == null || list.get(0).equalsIgnoreCase("CHICKENGUN") || list.get(0).equalsIgnoreCase("C4_Ultimate_Nerf") || list.get(0).equalsIgnoreCase("DEAGLE_Golden") || list.get(0).equalsIgnoreCase("C4_Ultimate"))
             Collections.shuffle(list);
         return csItems.get(list.get(0));
     }
 
+    public static ItemStack generateDayZWeapon() {
+        if (YamlConfig.instance.getDenyWeapon().size() == 0)
+            return generateNotOPWeapon();
+        else {
+            int rand = ThreadLocalRandom.current().nextInt(0, nonSkinItems.size());
+            String key = new ArrayList<>(nonSkinItems.keySet()).get(rand);
+            return nonSkinItems.get(key);
+        }
+    }
+
     public static void generateWeaponMap() {
         csItems.clear();
+        nonSkinItems.clear();
         for (String weapon : getPlugin().wlist.values())
             csItems.put(weapon, CSPapi.updateItemStackFeaturesNonPlayer(weapon, getCSWeapon(weapon)));
+        for (String weapons : getPlugin().wlist.values().stream().filter(data -> data != null && !data.contains("_") && !YamlConfig.instance.getDenyWeapon().contains(data)).collect(Collectors.toList()))
+            nonSkinItems.put(weapons, CSPapi.updateItemStackFeaturesNonPlayer(weapons, getCSWeapon(weapons)));
     }
 
 }

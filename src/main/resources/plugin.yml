@@ -17,3 +17,17 @@ commands:
   킬뎃:
     aliases: [kd]
     description: K/D
+  hd:
+    description: hologram
+  dayz:
+    description: about dayz
+  창고:
+    description: dayz chest
+  쓰레기통:
+    description: trash
+  상점:
+    description: sell zombie
+  버그제거:
+    description: pumpkin bug
+  비상탈출:
+    description: emergency food

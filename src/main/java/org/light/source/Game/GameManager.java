@@ -2,6 +2,7 @@ package org.light.source.Game;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import moe.caramel.caramellibrarylegacy.api.API;
+import moe.caramel.caramellibrarylegacy.api.FontAPI;
 import moe.caramel.caramellibrarylegacy.user.CaramelUserData;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -182,6 +183,10 @@ public class GameManager {
         p.setLevel(0);
         p.setExp(0.0f);
         TeamManager.getInstance().addPlayer(p);
+        p.sendMessage(" ");
+        FontAPI.sendCenteredMessage(p, "§f이번맵은 §6" + DataManager.getInstance().getLocations()[randomMap].getWorld().getName() + "§f입니다.");
+        FontAPI.sendCenteredMessage(p, "§c" + DataManager.getInstance().getTime() + "§f초 동안 §6Lv." + DataManager.getInstance().getRounds() + "§f을 달성할경우 승리합니다.");
+        p.sendMessage(" ");
         if (CaramelUserData.getData().getUser(p.getUniqueId()) == null) {
             Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(Plugin, () -> {
                 if (CaramelUserData.getData().getUser(p.getUniqueId()) != null)
@@ -299,9 +304,13 @@ public class GameManager {
     }
 
     public void selectRandomMap() {
-        randomMap = ThreadLocalRandom.current().nextInt(1, DataManager.getInstance().getLocationAmount());
-        while (randomMap % 2 != 1)
+        if (DataManager.getInstance().getLocationAmount() == 0)
+            randomMap = 1;
+        else {
             randomMap = ThreadLocalRandom.current().nextInt(1, DataManager.getInstance().getLocationAmount());
+            while (randomMap % 2 != 1)
+                randomMap = ThreadLocalRandom.current().nextInt(1, DataManager.getInstance().getLocationAmount());
+        }
     }
 
     public void flushData() {
