@@ -14,7 +14,7 @@ public class ChestCommand implements CommandExecutor {
         if (commandSender instanceof Player) {
             Player p = (Player) commandSender;
             if (GameController.contains(p.getUniqueId()) || GameManager.getInstance().contains(p.getUniqueId()))
-                p.sendMessage("§4게임에 참여중인 상태로 사용할 수 없는 명령어 입니다.");
+                p.sendMessage("§4게임에 참여 중인 상태로 사용할 수 없는 명령어입니다.");
             else
                 VirtualChest.selectChest(p);
         }

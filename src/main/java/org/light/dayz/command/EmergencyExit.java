@@ -25,13 +25,13 @@ public class EmergencyExit implements CommandExecutor {
             Player p = (Player) commandSender;
             if (GameController.contains(p.getUniqueId()) && DataManager.getInstance().getLocations() != null && DataManager.getInstance().getLocations()[0] != null) {
                 if (ChestInteraction.exitTime.containsKey(p.getUniqueId()))
-                    p.sendMessage("§c[ §f! §c] §c이미 탈출중입니다.");
+                    p.sendMessage("§c[ §f! §c] §c이미 탈출 중입니다.");
                 else if (Regen.isExitPlayer(p.getUniqueId()))
-                    p.sendMessage("§c[ §f! §c] §b이미 사용한 커맨드 입니다.");
+                    p.sendMessage("§c[ §f! §c] §b이미 사용한 명령어입니다.");
                 else {
                     Regen.addExitPlayer(p.getUniqueId());
                     ChestInteraction.exitTime.put(p.getUniqueId(), 0);
-                    p.sendMessage("§c[ §f! §c] §f10m이상 떨어지지 마세요.");
+                    p.sendMessage("§c[ §f! §c] §f10 블록 이상 떨어지지 마세요.");
                     new EmergencyExitRunnable(p.getLocation(), p.getUniqueId()).runTaskTimer(Plugin, 0L, 20L);
                 }
 

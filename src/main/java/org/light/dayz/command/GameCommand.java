@@ -35,7 +35,7 @@ public class GameCommand implements CommandExecutor {
                 checkKit(p);
             else {
                 if (!p.isOp())
-                    p.sendMessage("§c[ §f! §c] §f/dayz 참여/보급품");
+                    p.sendMessage("§c[ §f! §c] §f/dayz [참여/보급품]");
                 else {
                     if (strings.length == 1 && strings[0].equalsIgnoreCase("목록"))
                         locationInfo(p);
@@ -60,7 +60,7 @@ public class GameCommand implements CommandExecutor {
                         p.sendMessage("§b콘피그가 로드되었습니다.");
                     }
                     else
-                        p.sendMessage("§c[ §f! §c] §f/dayz 참여/보급품/목록/추가/삭제/이동/저장/리로드");
+                        p.sendMessage("§c[ §f! §c] §f/dayz [참여/보급품/목록/추가/삭제/이동/저장/리로드]");
                 }
             }
             return true;
