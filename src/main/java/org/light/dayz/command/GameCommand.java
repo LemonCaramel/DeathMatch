@@ -7,8 +7,10 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.util.StringUtil;
 import org.light.dayz.data.YamlConfig;
 import org.light.dayz.game.GameController;
 import org.light.dayz.util.Regen;
@@ -17,10 +19,12 @@ import org.light.source.Singleton.CrackShotApi;
 import org.light.source.Singleton.DataManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-public class GameCommand implements CommandExecutor {
+public class GameCommand implements CommandExecutor, TabExecutor {
 
-    private YamlConfig config;
+    private final YamlConfig config;
 
     public GameCommand(YamlConfig config) {
         this.config = config;
@@ -35,7 +39,7 @@ public class GameCommand implements CommandExecutor {
                 checkKit(p);
             else {
                 if (!p.isOp())
-                    p.sendMessage("§c[ §f! §c] §f/dayz 참여/보급품");
+                    p.sendMessage("§c[ §f! §c] §f/dayz [참여/보급품]");
                 else {
                     if (strings.length == 1 && strings[0].equalsIgnoreCase("목록"))
                         locationInfo(p);
@@ -60,7 +64,7 @@ public class GameCommand implements CommandExecutor {
                         p.sendMessage("§b콘피그가 로드되었습니다.");
                     }
                     else
-                        p.sendMessage("§c[ §f! §c] §f/dayz 참여/보급품/목록/추가/삭제/이동/저장/리로드");
+                        p.sendMessage("§c[ §f! §c] §f/dayz [참여/보급품/목록/추가/삭제/이동/저장/리로드]");
                 }
             }
             return true;
@@ -110,4 +114,21 @@ public class GameCommand implements CommandExecutor {
         }
         return inventory;
     }
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (args.length == 1) {
+            List<String> completions = new ArrayList<>();
+            List<String> tabComplete = new ArrayList<>(Arrays.asList("참여", "보급품"));
+            if (sender.isOp())
+                tabComplete.addAll(Arrays.asList("목록", "추가", "삭제", "이동", "저장", "리로드"));
+            StringUtil.copyPartialMatches(args[0], tabComplete, completions);
+
+            if (sender instanceof Player && ((Player) sender).getProtocolVersion() > 340)
+                return tabComplete;
+            else return completions;
+        }
+        else return null;
+    }
+
 }
