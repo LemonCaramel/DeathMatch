@@ -7,6 +7,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
+import org.bukkit.util.StringUtil;
 import org.light.dayz.game.GameController;
 import org.light.source.DeathMatch;
 import org.light.source.Game.GameManager;
@@ -21,15 +22,15 @@ import java.util.List;
 
 public class CommandController implements CommandExecutor, TabExecutor {
 
-    private DeathMatch Plugin;
-    private static String first;
+    private final DeathMatch plugin;
+    private static final String first;
 
     static {
         first = "§c[ §fDeathMatch §6] ";
     }
 
-    public CommandController(DeathMatch Plugin) {
-        this.Plugin = Plugin;
+    public CommandController(DeathMatch plugin) {
+        this.plugin = plugin;
     }
 
     @Override
@@ -336,21 +337,36 @@ public class CommandController implements CommandExecutor, TabExecutor {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
+            List<String> completions = new ArrayList<>();
             List<String> tabComplete = new ArrayList<>(Arrays.asList("참여", "정보", "나가기"));
             if (sender.hasPermission("DeathMatch.Control"))
                 tabComplete.addAll(Arrays.asList("관리", "설정", "강제종료", "리로드", "저장"));
-            return tabComplete;
+            StringUtil.copyPartialMatches(args[0], tabComplete, completions);
+
+            if (sender instanceof Player && ((Player) sender).getProtocolVersion() > 340)
+                return tabComplete;
+            else return completions;
         }
         else if (args.length == 2) {
             if (!sender.hasPermission("DeathMatch.Control")) return null;
+            List<String> completions = new ArrayList<>(), tabComplete = new ArrayList<>();
             switch (args[0]) {
                 case "설정":
-                    return new ArrayList<>(Arrays.asList("라운드", "킬", "시간", "최소인원", "위치", "월드추가",
+                    tabComplete.addAll(Arrays.asList("라운드", "킬", "시간", "최소인원", "위치", "월드추가",
                             "월드삭제", "저장", "리로드"));
+                    break;
                 case "관리":
-                    return new ArrayList<>(Arrays.asList("확인", "추방"));
+                    tabComplete.addAll(Arrays.asList("확인", "추방"));
+                    break;
                 default:
                     return null;
+            }
+
+            if (sender instanceof Player && ((Player) sender).getProtocolVersion() > 340)
+                return tabComplete;
+            else {
+                StringUtil.copyPartialMatches(args[1], tabComplete, completions);
+                return completions;
             }
         }
         else return null;
