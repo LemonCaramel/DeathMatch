@@ -34,7 +34,9 @@ public class ChestInteraction implements Listener {
     @EventHandler
     public void onClick(PlayerInteractEvent event) {
         Player p = event.getPlayer();
-        if (p.getWorld().getName().contains("dayz") && GameController.contains(p.getUniqueId()) && event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock() != null && event.getClickedBlock().getType() == Material.CHEST) {
+        if (p.getWorld().getName().contains("dayz")
+                && GameController.contains(p.getUniqueId()) && event.getAction() == Action.RIGHT_CLICK_BLOCK
+                && event.getClickedBlock() != null && event.getClickedBlock().getType() == Material.CHEST) {
             if (Regen.chestRegen.containsKey(event.getClickedBlock().getLocation())) {
                 int amount = YamlConfig.instance.getRegen() - Regen.chestRegen.get(event.getClickedBlock().getLocation());
                 if (amount == 0)
@@ -47,7 +49,7 @@ public class ChestInteraction implements Listener {
                 ThreadLocalRandom random = ThreadLocalRandom.current();
                 Chest chest = (Chest) event.getClickedBlock().getState();
                 chest.getBlockInventory().clear();
-                int rand = random.nextInt(0, 11);
+                int rand = random.nextInt(0, 15);
                 switch (rand) {
                     case 0:
                     case 6:
@@ -64,6 +66,8 @@ public class ChestInteraction implements Listener {
                         chest.getInventory().addItem(Regen.items.get(random.nextInt(0, Regen.items.size())));
                         break;
                     case 5:
+                    case 11:
+                    case 14:
                         if (ThreadLocalRandom.current().nextInt(0, 11) < 2)
                             chest.getInventory().addItem(CrackShotApi.generateNotOPWeapon());
                         else
@@ -78,8 +82,6 @@ public class ChestInteraction implements Listener {
                         chest.getInventory().addItem(Regen.getPotions().get(random.nextInt(0, Regen.getPotions().size())));
                         break;
                     default:
-                    case 10:
-                        chest.getInventory().addItem(CrackShotApi.generateDayZWeapon());
                         break;
                 }
             }
