@@ -21,11 +21,11 @@ public class DMain {
     public void makeEnable() {
         config.load();
         Plugin.getCommand("dayz").setExecutor(new GameCommand(config));
-        Plugin.getCommand("창고").setExecutor(new ChestCommand());
-        Plugin.getCommand("상점").setExecutor(new SellCommand());
-        Plugin.getCommand("쓰레기통").setExecutor(new TrashCommand());
-        Plugin.getCommand("버그제거").setExecutor(new BugCommand(Plugin));
-        Plugin.getCommand("비상탈출").setExecutor(new EmergencyExit(Plugin));
+        Plugin.getCommand("chest").setExecutor(new ChestCommand());
+        Plugin.getCommand("shop").setExecutor(new SellCommand());
+        Plugin.getCommand("trash").setExecutor(new TrashCommand());
+        Plugin.getCommand("bugremover").setExecutor(new BugCommand(Plugin));
+        Plugin.getCommand("emergency").setExecutor(new EmergencyExit(Plugin));
         Bukkit.getServer().getPluginManager().registerEvents(new FoodLevel(), Plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new PreventShoot(), Plugin);
         Bukkit.getServer().getPluginManager().registerEvents(new SpawnMob(), Plugin);

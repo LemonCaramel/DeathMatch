@@ -54,11 +54,11 @@ public class DeathMatch extends JavaPlugin {
     public void loadCommand(){
         JoinLeaveCommand joinCommand = new JoinLeaveCommand();
         KillDeathCommand killDeathCommand = new KillDeathCommand();
-        getCommand("데스매치").setExecutor(new CommandController(this));
-        getCommand("참여").setExecutor(joinCommand);
-        getCommand("나가기").setExecutor(joinCommand);
-        getCommand("킬뎃").setExecutor(killDeathCommand);
-        getCommand("랭크").setExecutor(killDeathCommand);
+        getCommand("deathmatch").setExecutor(new CommandController(this));
+        getCommand("join").setExecutor(joinCommand);
+        getCommand("leave").setExecutor(joinCommand);
+        getCommand("kd").setExecutor(killDeathCommand);
+        getCommand("rank").setExecutor(killDeathCommand);
         getCommand("hd").setExecutor(new HologramCommand());
     }
 }
