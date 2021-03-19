@@ -192,7 +192,11 @@ public class InventoryClick implements Listener {
                 }
             }
         }
-        else if (!GameManager.getInstance().contains(event.getWhoClicked().getUniqueId()) && event.getClickedInventory() != null && event.getClickedInventory().getTitle() != null && !event.getClickedInventory().getTitle().contains("채널")) {
+        else if (!GameManager.getInstance().contains(event.getWhoClicked().getUniqueId())
+                && event.getClickedInventory() != null
+                && event.getClickedInventory().getTitle() != null
+                && !event.getClickedInventory().getTitle().contains("채널")
+                && !checkDeathMatchTitle(event.getClickedInventory().getTitle())) {
             event.setCancelled(false);
             if (p.getInventory().getItemInOffHand() != null || p.getInventory().getItemInOffHand().getType() != Material.AIR)
                 p.getInventory().setItemInOffHand(null);
@@ -209,6 +213,10 @@ public class InventoryClick implements Listener {
 
     public boolean checkDummy(ItemStack stack) {
         return stack.getItemMeta().getDisplayName() != null && stack.getItemMeta().getDisplayName().equalsIgnoreCase(".");
+    }
+
+    public boolean checkDeathMatchTitle(String title) {
+        return title.contains("랭크");
     }
 
     public VirtualChest.Number toNumber(int value) {
