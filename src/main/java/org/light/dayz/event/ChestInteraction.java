@@ -66,13 +66,14 @@ public class ChestInteraction implements Listener {
                         chest.getInventory().addItem(Regen.items.get(random.nextInt(0, Regen.items.size())));
                         break;
                     case 5:
-                    case 11:
-                    case 14:
                         if (ThreadLocalRandom.current().nextInt(0, 11) < 2)
                             chest.getInventory().addItem(CrackShotApi.generateNotOPWeapon());
                         else
                             chest.getInventory().addItem(CrackShotApi.generateDayZWeapon());
                         break;
+                    case 11:
+                    case 14:
+                        chest.getInventory().addItem(CrackShotApi.generateDayZWeapon());
                     case 8:
                         chest.getInventory().addItem(Regen.items.get(random.nextInt(0, Regen.items.size())));
                         chest.getInventory().addItem(Regen.items.get(random.nextInt(0, Regen.items.size())));
