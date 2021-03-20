@@ -1,6 +1,6 @@
 package org.light.dayz.event;
 
-import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
@@ -8,7 +8,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemStack;
 import org.light.dayz.data.YamlConfig;
 import org.light.dayz.game.GameController;
 import org.light.dayz.runnable.ExitRunnable;
@@ -16,7 +15,6 @@ import org.light.dayz.util.Regen;
 import org.light.source.DeathMatch;
 import org.light.source.Singleton.CrackShotApi;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
@@ -37,8 +35,9 @@ public class ChestInteraction implements Listener {
         if (p.getWorld().getName().contains("dayz")
                 && GameController.contains(p.getUniqueId()) && event.getAction() == Action.RIGHT_CLICK_BLOCK
                 && event.getClickedBlock() != null && event.getClickedBlock().getType() == Material.CHEST) {
-            if (Regen.chestRegen.containsKey(event.getClickedBlock().getLocation())) {
-                int amount = YamlConfig.instance.getRegen() - Regen.chestRegen.get(event.getClickedBlock().getLocation());
+            Location location = event.getClickedBlock().getLocation(), regenChest = checkRegen(location);
+            if (regenChest != null) {
+                int amount = YamlConfig.instance.getRegen() - Regen.chestRegen.get(regenChest);
                 if (amount == 0)
                     p.sendMessage("§c[ §f! §c] §f이미 누군가가 털어간 상자입니다. §b곧 리젠됩니다.");
                 else
@@ -87,6 +86,16 @@ public class ChestInteraction implements Listener {
                 }
             }
         }
+    }
+
+    private Location checkRegen(Location location) {
+        Location[] arrays = new Location[]{location, location.clone().subtract(1, 0, 0),
+                location.clone().add(1, 0, 0), location.clone().subtract(0, 0, 1),
+                location.clone().add(0, 0, 1)};
+        for (Location _temp : arrays)
+            if (_temp.getBlock().getType() == Material.CHEST && Regen.chestRegen.containsKey(_temp))
+                return _temp;
+        return null;
     }
 
     @EventHandler
