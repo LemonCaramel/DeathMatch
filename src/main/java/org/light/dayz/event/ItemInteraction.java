@@ -61,7 +61,7 @@ public class ItemInteraction implements Listener {
                     if (name.contains("구급상자")) {
                         p.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 100, 1, true, false), false);
                         p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 100, 100, true, false), false);
-                        p.sendMessage("§c[ §f! §c] §f구급상자를 사용중입니다.. (5초, 3칸이상 멀어질시 취소)");
+                        p.sendMessage("§c[ §f! §c] §f구급 상자를 사용 중입니다.. (5초 | 3칸이상 멀어질시 취소)");
                         Bukkit.getScheduler().runTaskLater(Plugin, () -> {
                             if (GameController.contains(p.getUniqueId()) && loc.distance(p.getLocation()) <= 3.0) {
                                 p.addPotionEffect(new PotionEffect(PotionEffectType.HEAL, 1, 5, true, true), true);
@@ -77,7 +77,7 @@ public class ItemInteraction implements Listener {
                     else {
                         p.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 60, 1, true, false), false);
                         p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 100, true, false), false);
-                        p.sendMessage("§c[ §f! §c] §f아이템을 사용중입니다.. (5초, 3칸이상 멀어질시 취소)");
+                        p.sendMessage("§c[ §f! §c] §f아이템을 사용 중입니다.. (5초 | 3칸이상 멀어질시 취소)");
                         Bukkit.getScheduler().runTaskLater(Plugin, () -> {
                             if (GameController.contains(p.getUniqueId()) && loc.distance(p.getLocation()) <= 3.0) {
                                 if (name.contains("붕대"))

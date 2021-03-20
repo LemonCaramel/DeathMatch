@@ -78,7 +78,7 @@ public class WeaponDamage implements Listener {
                     if (killer != null && GameController.contains(killer.getUniqueId())) {
                         ItemStack drop = new ItemStack(Material.ROTTEN_FLESH, ThreadLocalRandom.current().nextInt(0,4));
                         int zKill = config.getZKill();
-                        killer.sendActionBar("§f+ §6" + (zKill * 2) + "§f포인트!");
+                        killer.sendActionBar("§f+ §6" + (zKill * 2) + " §f포인트!");
                         DayZData data = GameController.getData(killer.getUniqueId());
                         data.setAccumulateMoney(data.getAccumulateMoney() + zKill);
                         event.getDrops().clear();
@@ -90,7 +90,7 @@ public class WeaponDamage implements Listener {
                     Player killer = victim.getKiller();
                     if (killer != null && GameController.contains(killer.getUniqueId())) {
                         int zKill = config.getZKill();
-                        killer.sendActionBar("§f+ §6" + zKill + "§f포인트!");
+                        killer.sendActionBar("§f+ §6" + zKill + " §f포인트!");
                         DayZData data = GameController.getData(killer.getUniqueId());
                         data.setAccumulateMoney(data.getAccumulateMoney() + zKill);
                     }
@@ -125,7 +125,7 @@ public class WeaponDamage implements Listener {
             Player p = (Player) event.getEntity();
             if (event.getCause() == EntityDamageEvent.DamageCause.FALL && event.getFinalDamage() >= 7) {
                 p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 1200, 4, true, true), true);
-                p.sendMessage("§c[ §f! §c] §f높은곳에서 떨어져 골절상태가 되었습니다. 치료제를 이용하여 상태이상을 제거할 수 있습니다.");
+                p.sendMessage("§c[ §f! §c] §f높은 곳에서 떨어져 골절 상태가 되었습니다. 치료제를 이용하여 상태이상을 제거할 수 있습니다.");
             }
         }
     }
@@ -137,7 +137,7 @@ public class WeaponDamage implements Listener {
             ThreadLocalRandom random = ThreadLocalRandom.current();
             if (random.nextInt(0, 101) == 0) {
                 victim.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, 1200, 1, true, false), true);
-                victim.sendMessage("§c[ §f! §c] §f좀비에게 물려 §c감염§f상태가 되어 3초마다 데미지를 입게 됩니다. 치료제를 사용하십시오");
+                victim.sendMessage("§c[ §f! §c] §f좀비에게 물려 §c감염 §f상태가 되어 3초마다 피해를 입게 됩니다. 치료제를 사용하십시오.");
             }
         }
     }
