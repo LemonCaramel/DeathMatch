@@ -42,7 +42,7 @@ public class ChestInteraction implements Listener {
                 if (amount == 0)
                     p.sendMessage("§c[ §f! §c] §f이미 누군가가 털어간 상자입니다. §b곧 리젠됩니다.");
                 else
-                    p.sendMessage("§c[ §f! §c] §f이미 누군가가 털어간 상자입니다. §b" + amount / 2 + "분 " + (amount % 2 == 0 ? 0 : 30) + "초후 리젠됩니다.");
+                    p.sendMessage("§c[ §f! §c] §f이미 누군가가 털어간 상자입니다. §b" + amount / 2 + "분 " + (amount % 2 == 0 ? 0 : 30) + "초 후 리젠됩니다.");
             }
             else {
                 Regen.chestRegen.put(event.getClickedBlock().getLocation(), 0);
