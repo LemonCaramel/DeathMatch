@@ -9,10 +9,11 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.light.dayz.util.Regen;
 import org.light.dayz.util.VirtualChest;
 import org.light.source.Game.GameManager;
@@ -20,8 +21,6 @@ import org.light.source.Log.MinimizeLogger;
 import org.light.source.Singleton.CrackShotApi;
 import org.light.source.Singleton.EconomyApi;
 
-import java.util.ArrayList;
-import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class InventoryClick implements Listener {
@@ -36,6 +35,11 @@ public class InventoryClick implements Listener {
                 item.setVelocity(p.getLocation().getDirection());
                 p.setItemOnCursor(null);
             }
+            return;
+        }
+
+        if (event.getSlotType() == InventoryType.SlotType.QUICKBAR && event.getSlot() == 40) {
+            event.setCancelled(true);
             return;
         }
 
@@ -201,6 +205,13 @@ public class InventoryClick implements Listener {
             if (p.getInventory().getItemInOffHand() != null || p.getInventory().getItemInOffHand().getType() != Material.AIR)
                 p.getInventory().setItemInOffHand(null);
         }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onInventoryDrag(InventoryDragEvent event) {
+        // 이게 왜 CRAFTING으로 분류되는지는 모르겠음
+        if (event.getInventory().getType() == InventoryType.CRAFTING && event.getRawSlots().contains(45))
+            event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.HIGH)

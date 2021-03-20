@@ -70,9 +70,9 @@ public class EventManager implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         Player p = (Player) event.getWhoClicked();
+        if (event.getRawSlot() == -999)
+            return;
         if (GameManager.getInstance().contains(p.getUniqueId()) && GameManager.getInstance().isGaming()) {
-            if (event.getRawSlot() == -999)
-                return;
             event.setCancelled(true);
             if (event.getClick() == ClickType.MIDDLE && event.getCurrentItem() != null) {
                 CSDirector director = CrackShotApi.getPlugin();
@@ -108,8 +108,6 @@ public class EventManager implements Listener {
             }
         }
         else if (!GameManager.getInstance().contains(p.getUniqueId()) && event.getInventory().getTitle().contains("랭크")) {
-            if (event.getRawSlot() == -999)
-                return;
             event.setCancelled(true);
             if (event.getCurrentItem() != null && event.getRawSlot() == 51) {
                 //다음페이지 (서로 위치 바꾸기)
