@@ -33,7 +33,7 @@ public class EmergencyExitRunnable extends ExitRunnable {
                 cancel();
             }
             else
-                p.sendTitle("§c[ §f! §c] §b탈출!", "§6" + (10 - count) + "§f초 후 탈출합니다.", 0, 25, 0);
+                p.sendTitle("§c[ §f! §c] §b탈출!", "§6" + (20 - count) + "§f초 후 탈출합니다.", 0, 25, 0);
             count++;
         }
     }

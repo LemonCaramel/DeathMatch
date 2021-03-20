@@ -41,7 +41,7 @@ public class ExitRunnable extends BukkitRunnable {
                 cancel();
             }
             else {
-                p.sendTitle("§c[ §f! §c] §b탈출!", "§6" + (5 - value) + "§f초 후 탈출합니다.", 0, 25, 0);
+                p.sendTitle("§c[ §f! §c] §b탈출!", "§6" + (10 - value) + "§f초 후 탈출합니다.", 0, 25, 0);
                 exitMap.put(data, value + 1);
             }
         }
