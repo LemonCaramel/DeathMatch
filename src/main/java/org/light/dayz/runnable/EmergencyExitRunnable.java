@@ -25,15 +25,15 @@ public class EmergencyExitRunnable extends ExitRunnable {
         if (p == null || !GameController.contains(p.getUniqueId()) || p.getLocation().distance(start) >= 10.0 || !p.getWorld().getName().equalsIgnoreCase("dayz")) {
             cancel();
             if (p != null && p.getLocation().distance(start) >= 10.0)
-                p.sendMessage("§c[ §f! §c] §c탈출 위치로부터 10m이상 떨어져 탈출이 취소되었습니다.");
+                p.sendMessage("§c[ §f! §c] §c탈출 위치로부터 10m 이상 떨어져 탈출이 취소되었습니다.");
         }
         else {
-            if (count >= 10) {
+            if (count >= 20) {
                 GameController.removePlayer(p, true);
                 cancel();
             }
             else
-                p.sendTitle("§c[ §f! §c] §b탈출!", "§6" + (10 - count) + "§f초후 탈출합니다.", 0, 25, 0);
+                p.sendTitle("§c[ §f! §c] §b탈출!", "§6" + (10 - count) + "§f초 후 탈출합니다.", 0, 25, 0);
             count++;
         }
     }

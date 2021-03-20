@@ -46,9 +46,12 @@ public class GameController {
             p.setLevel(0);
             p.setExp(0.0f);
             p.sendMessage(" ");
-            FontAPI.sendCenteredMessage(p, "§f좀비와 다른 생존자들을 피해 아이템을 흭득하고 대치하며 탈출구§7(신호기, 우클릭 시 탈출 가능)§f로 탈출하세요");
-            FontAPI.sendCenteredMessage(p, "§b탈출 시 파밍 한 모든 아이템이 보존되며, 그 이외의 경우 아이템이 전부 드랍됩니다.");
-            FontAPI.sendCenteredMessage(p, "§c좀비나 생존자를 죽일 경우 포인트가 추가로 지급됩니다. §7(단, 탈출 시 보상 흭득 가능)");
+            FontAPI.sendCenteredMessage(p, "§f좀비와 다른 생존자들을 피해 아이템을 흭득하고");
+            FontAPI.sendCenteredMessage(p, "§f대치하며 탈출구§7(신호기, 우클릭 시 탈출 가능)§f로 탈출하세요");
+            FontAPI.sendCenteredMessage(p, "§b탈출 시 파밍 한 모든 아이템이 보존되며,");
+            FontAPI.sendCenteredMessage(p, "§b그 이외의 경우 아이템이 전부 드랍됩니다.");
+            FontAPI.sendCenteredMessage(p, "§c좀비나 생존자를 죽일 경우 포인트가 추가로 지급됩니다.");
+            FontAPI.sendCenteredMessage(p, "§7(단, 탈출 시 보상 흭득 가능)");
             p.sendMessage(" ");
             team.addPlayer(p);
             p.teleport(getRandomLocation());

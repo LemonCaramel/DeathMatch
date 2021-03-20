@@ -22,13 +22,13 @@ public class InfectAndInfoRunnable extends BukkitRunnable {
                     p.damage(4.0);
                 }
                 if (p.getInventory().getItemInMainHand() == null || CrackShotApi.getCSID(p.getInventory().getItemInMainHand()) == null) {
-                    p.sendActionBar("§c[ §f! §c] §b" + p.getName() + " §c체력 §7: §f" + (int)p.getHealth() + " §4hp §8| §6배고픔 §7: §f" + p.getFoodLevel() + " §8| §f위치 §7: " + toLocation(p.getLocation()));
+                    p.sendActionBar("§b[" + p.getName() + "] §c체력§7: §f" + (int)p.getHealth() + " §4hp §8| §6배고픔§7: §f" + p.getFoodLevel() + " §8| §f위치§7: " + toLocation(p.getLocation()));
                 }
             }
         }
     }
 
     public String toLocation(Location loc) {
-        return "§7[ §fX : " + (int)loc.getX() + " §fY : " + (int)loc.getY() + " §fZ : " + (int)loc.getZ() + " §7]";
+        return "§7[ §fX: " + (int)loc.getX() + " §fY: " + (int)loc.getY() + " §fZ: " + (int)loc.getZ() + " §7]";
     }
 }

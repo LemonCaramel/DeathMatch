@@ -30,18 +30,18 @@ public class ExitRunnable extends BukkitRunnable {
             exitMap.remove(data);
             cancel();
             if (p != null && p.getLocation().distance(start) >= 5.0) {
-                p.sendMessage("§c[ §f! §c] §c탈출 위치로부터 5m이상 떨어져 탈출이 취소되었습니다.");
+                p.sendMessage("§c[ §f! §c] §c탈출 위치로부터 5m 이상 떨어져 탈출이 취소되었습니다.");
 
             }
         }
         else {
-            if (value >= 5) {
+            if (value >= 10) {
                 GameController.removePlayer(p, true);
                 exitMap.remove(p.getUniqueId());
                 cancel();
             }
             else {
-                p.sendTitle("§c[ §f! §c] §b탈출!", "§6" + (5 - value) + "§f초후 탈출합니다.", 0, 25, 0);
+                p.sendTitle("§c[ §f! §c] §b탈출!", "§6" + (5 - value) + "§f초 후 탈출합니다.", 0, 25, 0);
                 exitMap.put(data, value + 1);
             }
         }
