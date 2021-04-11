@@ -7,10 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -27,6 +24,7 @@ public class InventoryClick implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onClick(InventoryClickEvent event) {
+        ItemStack stack = event.getCurrentItem();
         Player p = (Player) event.getWhoClicked();
         if (event.getRawSlot() == -999) {
             ItemStack trash = event.getCursor();
@@ -38,17 +36,34 @@ public class InventoryClick implements Listener {
             return;
         }
 
+        System.out.println(event.getSlotType());
+        if (event.getSlotType() == InventoryType.SlotType.ARMOR && event.getSlot() == 39) {
+            if (stack != null && stack.getType() == Material.PUMPKIN) {
+                event.setCancelled(true);
+                p.closeInventory(InventoryCloseEvent.Reason.CANT_USE);
+                return;
+            }
+        }
+
+        if (stack != null && stack.hasItemMeta() && stack.getItemMeta().hasDisplayName() && stack.getType() == Material.PUMPKIN
+                && stack.getItemMeta().getDisplayName().equalsIgnoreCase("§cCSP§7_§cPUMPKIN")) {
+            event.getCurrentItem().setType(Material.AIR);
+            event.setCancelled(true);
+            p.closeInventory(InventoryCloseEvent.Reason.CANT_USE);
+        }
+
+
         if (event.getSlotType() == InventoryType.SlotType.QUICKBAR && event.getSlot() == 40) {
             event.setCancelled(true);
             return;
         }
 
-        if (event.getCurrentItem() != null && event.getCurrentItem().getType() != Material.AIR && event.getCurrentItem().getItemMeta().getDisplayName() != null && event.getCurrentItem().getItemMeta().getDisplayName().equalsIgnoreCase("."))
+        if (stack != null && stack.getType() != Material.AIR && stack.getItemMeta().getDisplayName() != null && stack.getItemMeta().getDisplayName().equalsIgnoreCase("."))
             event.setCurrentItem(null);
         if (event.getInventory().getTitle().contains("보급품")) {
             event.setCancelled(true);
-            if (CrackShotApi.getCSID(event.getCurrentItem()) != null) {
-                if (p.getInventory().addItem(event.getCurrentItem()).isEmpty()) {
+            if (CrackShotApi.getCSID(stack) != null) {
+                if (p.getInventory().addItem(stack).isEmpty()) {
                     p.sendMessage("§c[ §f! §c] §f보급품을 선택하였습니다.");
                     Regen.addPlayer(p.getUniqueId());
                     p.closeInventory();
@@ -60,7 +75,6 @@ public class InventoryClick implements Listener {
         }
 
         else if (event.getInventory().getTitle().contains("창고 선택")) {
-            ItemStack stack = event.getCurrentItem();
             event.setCancelled(true);
             if (event.getRawSlot() >= 0 && event.getRawSlot() <= 4) {
                 if (stack.getType() == Material.CHEST)
@@ -106,7 +120,6 @@ public class InventoryClick implements Listener {
             }
         }
         else if (event.getInventory().getTitle().contains("상점")) {
-            ItemStack stack = event.getCurrentItem();
             event.setCancelled(true);
             if (event.getRawSlot() >= 0 && event.getRawSlot() <= 9) {
                 if (stack.getType() == Material.ROTTEN_FLESH) {
