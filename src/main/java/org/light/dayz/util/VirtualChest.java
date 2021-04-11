@@ -32,20 +32,20 @@ public class VirtualChest {
 
     public static void selectChest(Player p) {
         Inventory selChest = Bukkit.createInventory(null, 9, "§0창고 선택");
-        selChest.setItem(0, Regen.createItemStack(Material.CHEST, "§c[ §f! §c] §f1번 창고", (short) 0, " ", " §8-  §f클릭시 1번 창고를 엽니다.", " "));
-        selChest.setItem(1, Regen.createItemStack(Material.CHEST, "§c[ §f1 §c] §f2번 창고", (short) 0, " ", " §8-  §f클릭시 2번 창고를 엽니다.", " "));
+        selChest.setItem(0, Regen.createItemStack(Material.CHEST, "§c[ §f! §c] §f1번 창고", (short) 0, " ", " §8-  §f클릭 시 1번 창고를 엽니다.", " "));
+        selChest.setItem(1, Regen.createItemStack(Material.CHEST, "§c[ §f1 §c] §f2번 창고", (short) 0, " ", " §8-  §f클릭 시 2번 창고를 엽니다.", " "));
         if (chest3.containsKey(p.getUniqueId()))
-            selChest.setItem(2, Regen.createItemStack(Material.CHEST, "§c[ §f1 §c] §f3번 창고", (short) 0, " ", " §8-  §f클릭시 3번 창고를 엽니다.", " "));
+            selChest.setItem(2, Regen.createItemStack(Material.CHEST, "§c[ §f1 §c] §f3번 창고", (short) 0, " ", " §8-  §f클릭 시 3번 창고를 엽니다.", " "));
         else
-            selChest.setItem(2, Regen.createItemStack(Material.BARRIER, "§c[ §f1 §c] §f3번 창고", (short) 0, " ", " §8-  §f클릭시 3번 창고를 구매합니다.", " §8-  §f가격은 §62500§f원 입니다.", " "));
+            selChest.setItem(2, Regen.createItemStack(Material.BARRIER, "§c[ §f1 §c] §f3번 창고", (short) 0, " ", " §8-  §f클릭 시 3번 창고를 구매합니다.", " §8-  §f가격은 §62500§f원 입니다.", " "));
         if (chest4.containsKey(p.getUniqueId()))
-            selChest.setItem(3, Regen.createItemStack(Material.CHEST, "§c[ §f1 §c] §f4번 창고", (short) 0, " ", " §8-  §f클릭시 4번 창고를 엽니다.", " "));
+            selChest.setItem(3, Regen.createItemStack(Material.CHEST, "§c[ §f1 §c] §f4번 창고", (short) 0, " ", " §8-  §f클릭 시 4번 창고를 엽니다.", " "));
         else
-            selChest.setItem(3, Regen.createItemStack(Material.BARRIER, "§c[ §f1 §c] §f4번 창고", (short) 0, " ", " §8-  §f클릭시 4번 창고를 구매합니다.", " §8-  §f가격은 §65000§f원 입니다.", " "));
+            selChest.setItem(3, Regen.createItemStack(Material.BARRIER, "§c[ §f1 §c] §f4번 창고", (short) 0, " ", " §8-  §f클릭 시 4번 창고를 구매합니다.", " §8-  §f가격은 §65000§f원 입니다.", " "));
         if (chest5.containsKey(p.getUniqueId()))
-            selChest.setItem(4, Regen.createItemStack(Material.CHEST, "§c[ §f1 §c] §f5번 창고", (short) 0, " ", " §8-  §f클릭시 5번 창고를 엽니다.", " "));
+            selChest.setItem(4, Regen.createItemStack(Material.CHEST, "§c[ §f1 §c] §f5번 창고", (short) 0, " ", " §8-  §f클릭 시 5번 창고를 엽니다.", " "));
         else
-            selChest.setItem(4, Regen.createItemStack(Material.BARRIER, "§c[ §f1 §c] §f5번 창고", (short) 0, " ", " §8-  §f클릭시 5번 창고를 구매합니다.", " §8-  §f가격은 §67500§f원 입니다.", " "));
+            selChest.setItem(4, Regen.createItemStack(Material.BARRIER, "§c[ §f1 §c] §f5번 창고", (short) 0, " ", " §8-  §f클릭 시 5번 창고를 구매합니다.", " §8-  §f가격은 §67500§f원 입니다.", " "));
         p.openInventory(selChest);
     }
 
@@ -130,17 +130,17 @@ public class VirtualChest {
                     if (material == Material.PAPER || material == Material.MAGMA_CREAM || material == Material.SUGAR || material == Material.END_ROD) {
                         switch (material) {
                             case PAPER:
-                                inv.setItem(i, Regen.createItemStack(Material.PAPER, "§c[ §f! §c] §f붕대", (short) 0, amount, " ", " §8-  §f사용시 체력을 일부 회복합니다. (사용시간 3초)", " "));
+                                inv.setItem(i, Regen.createItemStack(Material.PAPER, "§c[ §f! §c] §f붕대", (short) 0, amount, " ", " §8-  §f사용 시 체력을 일부 회복합니다. (사용시간 3초)", " "));
                                 break;
                             case MAGMA_CREAM:
-                                inv.setItem(i, Regen.createItemStack(Material.MAGMA_CREAM, "§c[ §f! §c] §f에너지 드링크", (short) 0, amount, " ", " §8-  §f사용시 이동속도가 증가합니다. (사용시간 3초)", " "));
+                                inv.setItem(i, Regen.createItemStack(Material.MAGMA_CREAM, "§c[ §f! §c] §f에너지 드링크", (short) 0, amount, " ", " §8-  §f사용 시 이동속도가 증가합니다. (사용시간 3초)", " "));
                                 break;
                             case SUGAR:
-                                inv.setItem(i, Regen.createItemStack(Material.SUGAR, "§c[ §f! §c] §f구급상자", (short) 0, amount, " ", " §8-  §f사용시 체력을 모두 회복합니다. (사용시간 5초)", " "));
+                                inv.setItem(i, Regen.createItemStack(Material.SUGAR, "§c[ §f! §c] §f구급상자", (short) 0, amount, " ", " §8-  §f사용 시 체력을 모두 회복합니다. (사용시간 5초)", " "));
                                 break;
                             default:
                             case END_ROD:
-                                inv.setItem(i, Regen.createItemStack(Material.END_ROD, "§c[ §f! §c] §f치료제", (short) 0, amount, " ", " §8-  §f골절도 치료가능한 치료제", " §8-  §f사용시 상태이상을 모두 제거합니다. (사용시간 3초)", " "));
+                                inv.setItem(i, Regen.createItemStack(Material.END_ROD, "§c[ §f! §c] §f치료제", (short) 0, amount, " ", " §8-  §f골절도 치료가능한 치료제", " §8-  §f사용 시 상태이상을 모두 제거합니다. (사용시간 3초)", " "));
                                 break;
                         }
                     }
