@@ -36,7 +36,6 @@ public class InventoryClick implements Listener {
             return;
         }
 
-        System.out.println(event.getSlotType());
         if (event.getSlotType() == InventoryType.SlotType.ARMOR && event.getSlot() == 39) {
             if (stack != null && stack.getType() == Material.PUMPKIN) {
                 event.setCancelled(true);
