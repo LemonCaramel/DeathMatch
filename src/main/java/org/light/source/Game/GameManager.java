@@ -31,6 +31,7 @@ public class GameManager {
     private int randomMap;
     private WaitTimer timer;
     private MainTimer gameTimer;
+    private State gameState; // caramel
 
     static {
         manager = new GameManager();
@@ -40,11 +41,11 @@ public class GameManager {
         users = new ObjectArrayList<>();
         isGaming = false;
         Plugin = JavaPlugin.getPlugin(DeathMatch.class);
-        Bukkit.getScheduler().runTaskTimerAsynchronously(Plugin, this::sendScore, 0L, 20L);
         timer = new WaitTimer(Plugin);
         gameTimer = null;
         new TimeRunnable(Plugin);
         selectRandomMap();
+        this.gameState = State.WAIT; // caramel
     }
 
     public static GameManager getInstance() {
@@ -65,6 +66,7 @@ public class GameManager {
         }
         else {
             users.add(new UserMananger(p.getUniqueId()));
+            refreshState(); // caramel
             sendMessage(" §6§l참여 §7§l》" + "§b" + p.getName());
             if (timer.isRunning())
                 timer.returnBossbarInstance().addPlayer(p);
@@ -81,6 +83,7 @@ public class GameManager {
     public void removePlayer(Player p) {
         sendMessage(" §c§l퇴장 §7§l《 " + "§b" + p.getName());
         users.removeIf(data -> data.getUUID().equals(p.getUniqueId()));
+        refreshState(); // caramel
         TeamManager.getInstance().removePlayer(p);
         if (isGaming()) {
             RatingManager.getInstance().updateRank();
@@ -94,19 +97,6 @@ public class GameManager {
             stop();
         }
         //게임 시작전인지 게임 중인지
-    }
-
-    public void sendScore() {
-        Bukkit.getScheduler().runTask(Plugin, () -> {
-                    if (!isGaming && (getUserCount() < DataManager.getInstance().getMinimumUser() || DataManager.getInstance().getMinimumUser() == 0))
-                        ScoreboardObject.getInstance().sendScoreboard(1);
-                    else if (!isGaming && getUserCount() >= DataManager.getInstance().getMinimumUser())
-                        ScoreboardObject.getInstance().sendScoreboard(2);
-                    else
-                        ScoreboardObject.getInstance().sendScoreboard(3);
-                }
-        );
-
     }
 
     public int getUserCount() {
@@ -132,6 +122,7 @@ public class GameManager {
     public void start() {
         if (!isGaming) {
             setGameState(true);
+            refreshState(); // caramel
             gameTimer = new MainTimer(DataManager.getInstance().getTime(), users);
             gameTimer.runTaskTimer(Plugin, 0L, 20L);
             Bukkit.getServer().getScheduler().runTask(Plugin, () -> users.forEach(data -> setPlayer(Bukkit.getPlayer(data.getUUID()))));
@@ -316,4 +307,33 @@ public class GameManager {
     public void flushData() {
         getUsers().forEach(UserMananger::reset);
     }
+
+
+    // caramel start
+    private void refreshState() {
+        if (!this.isGaming()) {
+            if (users.size() < DataManager.getInstance().getMinimumUser()
+                    || DataManager.getInstance().getMinimumUser() == 0) this.gameState = State.WAIT;
+            else this.gameState = State.READY;
+        } else this.gameState = State.START;
+    }
+
+    public State getGameState() {
+        return gameState;
+    }
+
+    public enum State {
+        WAIT("대기 중..."), READY("준비 중..."), START("게임 중...");
+
+        private String state;
+
+        State(String state) {
+            this.state = state;
+        }
+
+        public String getState() {
+            return state;
+        }
+    }
+    // caramel end
 }
