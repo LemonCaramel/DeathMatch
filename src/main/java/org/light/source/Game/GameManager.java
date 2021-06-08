@@ -133,6 +133,7 @@ public class GameManager {
     public void stop() {
         if (isGaming()) {
             setGameState(false);
+            refreshState(); // caramel
             for (UserMananger data : users) {
                 Player target = Bukkit.getPlayer(data.getUUID());
                 setNormalPlayer(target);
