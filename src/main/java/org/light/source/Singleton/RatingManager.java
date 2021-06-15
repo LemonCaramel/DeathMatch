@@ -50,9 +50,10 @@ public class RatingManager {
 
     public void updateRank(){
         clear();
-        for (UserMananger mananger : GameManager.getInstance().getUsers()){
-            Player target = Bukkit.getServer().getPlayer(mananger.getUUID());
-            int kill = mananger.getKills();
+        for (UserMananger manager : GameManager.getInstance().getUsers()){
+            Player target = Bukkit.getServer().getPlayer(manager.getUUID());
+            if (target == null || !target.isOnline()) return;
+            int kill = manager.getKills();
             if (strings[0] == null || kills[0] < kill){
                 if (strings[0] != null){
                     if (strings[1] == null){

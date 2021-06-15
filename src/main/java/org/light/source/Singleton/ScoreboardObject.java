@@ -1,9 +1,11 @@
 package org.light.source.Singleton;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.RenderType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.light.source.DeathMatch;
 
@@ -12,7 +14,7 @@ public class ScoreboardObject {
     private static final ScoreboardObject instance;
     private final Scoreboard wait;
     private final Objective readyObject;
-    private DeathMatch plugin;
+    private final DeathMatch plugin;
 
     static {
         instance = new ScoreboardObject(DeathMatch.instance);
@@ -20,11 +22,11 @@ public class ScoreboardObject {
 
     private ScoreboardObject(DeathMatch plugin) {
         this.plugin = plugin;
-        wait = Bukkit.getScoreboardManager().getNewScoreboard();
-        readyObject = wait.registerNewObjective("score", "dummy");
-        readyObject.setDisplaySlot(DisplaySlot.SIDEBAR);
-        readyObject.getScore("Intializing...").setScore(-1024);
-        readyObject.setDisplayName("caramel.moe");
+        this.wait = Bukkit.getScoreboardManager().getNewScoreboard();
+        this.readyObject = this.wait.registerNewObjective("score", "dummy",
+                Component.text("caramel.moe"), RenderType.INTEGER);
+        this.readyObject.setDisplaySlot(DisplaySlot.SIDEBAR);
+        this.readyObject.getScore("Intializing...").setScore(-1024);
     }
 
     public static ScoreboardObject getInstance() {
@@ -32,15 +34,15 @@ public class ScoreboardObject {
     }
 
     public Objective getReadyObject() {
-        return readyObject;
+        return this.readyObject;
     }
 
     public Scoreboard getObject() {
-        return wait;
+        return this.wait;
     }
 
     public void setScoreboard(Player p) {
-        p.setScoreboard(wait);
+        p.setScoreboard(this.wait);
         new moe.caramel.caramellibrarylegacy.api.score.Scoreboard(ScoreboardObject.getInstance().getReadyObject(), p)
                 .setHandler(this.plugin.getScoreBoardManager())
                 .setUpdateInterval(20L)

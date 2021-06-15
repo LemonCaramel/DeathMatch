@@ -51,22 +51,6 @@ public class EventManager implements Listener {
         this.Plugin = Plugin;
     }
 
-
-    @EventHandler
-    public void onChat(AsyncPlayerChatEvent event) {
-        if (event.getMessage().contains("ChatCraft")) {
-            event.setCancelled(true);
-            Player target = event.getPlayer();
-            if (!PhoneManager.getInstance().contains(target.getUniqueId())) {
-                PhoneManager.getInstance().addObject(target.getUniqueId(), true);
-                Bukkit.broadcastMessage("§6" + target.getName() + "§f님이 §b모바일로 접속하여 참여가 제한되었습니다.");
-            }
-            else
-                target.sendMessage("§c고의로 치지마세요..");
-
-        }
-    }
-
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         Player p = (Player) event.getWhoClicked();
@@ -107,26 +91,25 @@ public class EventManager implements Listener {
                 }
             }
         }
-        else if (!GameManager.getInstance().contains(p.getUniqueId()) && event.getInventory().getTitle().contains("랭크")) {
+        else if (!GameManager.getInstance().contains(p.getUniqueId()) && event.getView().getTitle().contains("랭크")) {
             event.setCancelled(true);
             if (event.getCurrentItem() != null && event.getRawSlot() == 51) {
                 //다음페이지 (서로 위치 바꾸기)
                 ItemStack stack = event.getCurrentItem();
-                if (stack.getItemMeta().getDisplayName() != null) {
-                    int i = 0;
-                    flushData(event.getInventory());
-                    if (stack.getItemMeta().getDisplayName().contains("뎃")) {
-                        //킬랭킹
-                        for (ItemStack st : KillDeathCommand.createKillDeathRank())
-                            event.getInventory().setItem(i++, st);
-                    }
-                    else {
-                        //킬뎃 랭킹
-                        for (ItemStack st : KillDeathCommand.createKillRank())
-                            event.getInventory().setItem(i++, st);
-                    }
-                    swapItem(event.getInventory());
+                stack.getItemMeta().getDisplayName();
+                int i = 0;
+                flushData(event.getInventory());
+                if (stack.getItemMeta().getDisplayName().contains("뎃")) {
+                    //킬랭킹
+                    for (ItemStack st : KillDeathCommand.createKillDeathRank())
+                        event.getInventory().setItem(i++, st);
                 }
+                else {
+                    //킬뎃 랭킹
+                    for (ItemStack st : KillDeathCommand.createKillRank())
+                        event.getInventory().setItem(i++, st);
+                }
+                swapItem(event.getInventory());
             }
             //제발 돌아가라 흑흑
         }
@@ -147,13 +130,14 @@ public class EventManager implements Listener {
             event.setCancelled(true);
     }
 
-    @EventHandler
+    // OBB - Temporarily Disable
+    /*@EventHandler
     public void onMove(PlayerMoveEvent event) {
         if (event.getTo().clone().subtract(new Vector(0, 1, 0)).getBlock().getType() == Material.SPONGE) {
             event.getPlayer().setVelocity(new Vector(0, 2.05, 0));
             event.getPlayer().spawnParticle(Particle.FIREWORKS_SPARK, event.getTo(), 30, 0.1, 0.1, 0.1, 0.5);
         }
-    }
+    }*/
 
     @EventHandler
     public void onVelocity(PlayerVelocityEvent event) {
@@ -174,7 +158,6 @@ public class EventManager implements Listener {
         API.giveChannel(target, 8);
         TeamManager.getInstance().removePlayer(target);
         setNoDamageState(target, true);
-        checkPhone(target);
         setName(target);
         if (DataManager.getInstance().getLocations() != null && DataManager.getInstance().getLocations()[0] != null && !target.getWorld().getName().contains("lobby"))
             target.teleport(DataManager.getInstance().getLocations()[0]);
@@ -185,7 +168,6 @@ public class EventManager implements Listener {
         Player p = event.getPlayer();
         if (GameManager.getInstance().contains(p.getUniqueId()))
             GameManager.getInstance().removePlayer(p);
-        PhoneManager.getInstance().getPhoneObjects().removeIf(phoneObject -> phoneObject.getUuid().equals(p.getUniqueId()));
     }
 
     @EventHandler
@@ -317,7 +299,7 @@ public class EventManager implements Listener {
 
     public void sendLevelDown(Player p, int back, int to) {
         p.sendTitle("§cLevel Down..", "§6" + back + " §f=> §b" + to, 5, 50, 5);
-        p.playSound(p.getLocation(), Sound.BLOCK_NOTE_PLING, 1.0f, 1.0f);
+        p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1.0f, 1.0f);
         p.setLevel(to);
         p.setExp(GameManager.getInstance().calcLevelProgress(to));
     }
@@ -453,13 +435,6 @@ public class EventManager implements Listener {
             if (CaramelUserData.getData().getUser(target.getUniqueId()) != null && !GameManager.getInstance().contains(target.getUniqueId()))
                 CaramelUserData.getData().getUser(target.getUniqueId()).setInvincibility(state);
         }, 20L);
-    }
-
-    private void checkPhone(Player target) {
-        Bukkit.getScheduler().runTaskLater(Plugin, () -> {
-            if (!PhoneManager.getInstance().contains(target.getUniqueId()))
-                PhoneManager.getInstance().addObject(target.getUniqueId(), false);
-        }, 40L);
     }
 
     private void flushData(Inventory inv) {

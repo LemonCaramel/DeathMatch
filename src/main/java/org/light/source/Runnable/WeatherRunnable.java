@@ -1,6 +1,7 @@
 package org.light.source.Runnable;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -38,6 +39,7 @@ public class WeatherRunnable extends BukkitRunnable {
     public void run() {
         Bukkit.getScheduler().runTaskAsynchronously(Plugin, () -> {
             try {
+                // TODO Division - Check for memory leaks
                 String temp;
                 link = new URL("http://api.openweathermap.org/data/2.5/weather?q=seoul&appid=933774ae4221314db7a4f320f0db1d05");
                 reader = new BufferedReader(new InputStreamReader(link.openStream()));
@@ -83,8 +85,8 @@ public class WeatherRunnable extends BukkitRunnable {
                 }, 0L, 5L).getTaskId();
             }
             for (World world : Bukkit.getWorlds()) {
-                if (world.getGameRuleValue("reducedDebugInfo") != null && world.getGameRuleValue("reducedDebugInfo").equalsIgnoreCase("false"))
-                    world.setGameRuleValue("reducedDebugInfo", "true");
+                if (world.getGameRuleValue(GameRule.REDUCED_DEBUG_INFO) != null && !world.getGameRuleValue(GameRule.REDUCED_DEBUG_INFO))
+                    world.setGameRule(GameRule.REDUCED_DEBUG_INFO, true);
                 world.setStorm(storm);
             }
         });

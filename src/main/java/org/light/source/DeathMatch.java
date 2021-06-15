@@ -23,6 +23,8 @@ import com.comphenix.protocol.ProtocolLibrary;
 import org.light.source.Singleton.ScoreboardObject;
 import org.light.source.packet.SneakAdapter;
 
+import java.util.Objects;
+
 public class DeathMatch extends JavaPlugin {
 
     public static DeathMatch instance;
@@ -77,12 +79,12 @@ public class DeathMatch extends JavaPlugin {
     public void loadCommand(){
         JoinLeaveCommand joinCommand = new JoinLeaveCommand();
         KillDeathCommand killDeathCommand = new KillDeathCommand();
-        getCommand("deathmatch").setExecutor(new CommandController(this));
-        getCommand("join").setExecutor(joinCommand);
-        getCommand("leave").setExecutor(joinCommand);
-        getCommand("kd").setExecutor(killDeathCommand);
-        getCommand("rank").setExecutor(killDeathCommand);
-        getCommand("hd").setExecutor(new HologramCommand());
+        Objects.requireNonNull(getCommand("deathmatch")).setExecutor(new CommandController(this));
+        Objects.requireNonNull(getCommand("join")).setExecutor(joinCommand);
+        Objects.requireNonNull(getCommand("leave")).setExecutor(joinCommand);
+        Objects.requireNonNull(getCommand("kd")).setExecutor(killDeathCommand);
+        Objects.requireNonNull(getCommand("rank")).setExecutor(killDeathCommand);
+        Objects.requireNonNull(getCommand("hd")).setExecutor(new HologramCommand());
     }
 
     public ScoreBoardManager getScoreBoardManager() {

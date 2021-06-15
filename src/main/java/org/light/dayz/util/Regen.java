@@ -22,6 +22,7 @@ import org.light.source.Singleton.CrackShotApi;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -33,7 +34,7 @@ public class Regen {
     public static HashMap<UUID, Integer> kitMap = new HashMap<>();
     public static HashMap<UUID, Integer> exitMap = new HashMap<>();
     public static HashMap<Location, Integer> chestRegen = new HashMap<>();
-    public static ArrayList<ItemStack> items = new ArrayList<>(Arrays.asList(new ItemStack(Material.BREAD, 5), new ItemStack(Material.COOKED_BEEF, 2), new ItemStack(Material.APPLE, 10), new ItemStack(Material.GRILLED_PORK, 3), new ItemStack(Material.BEETROOT, 10), new ItemStack(Material.COOKED_CHICKEN, 3)));
+    public static List<ItemStack> items = new ArrayList<>(Arrays.asList(new ItemStack(Material.BREAD, 5), new ItemStack(Material.COOKED_BEEF, 2), new ItemStack(Material.APPLE, 10), new ItemStack(Material.COOKED_PORKCHOP, 3), new ItemStack(Material.BEETROOT, 10), new ItemStack(Material.COOKED_CHICKEN, 3)));
 
     public static boolean isWeaponGet(UUID data) {
         return kitMap.containsKey(data);

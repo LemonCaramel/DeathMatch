@@ -29,6 +29,7 @@ public class MainTimer extends BukkitRunnable {
         if (now == 0){
             for (UserMananger mgr : users){
                 Player target = Bukkit.getServer().getPlayer(mgr.getUUID());
+                if (target == null || !target.isOnline()) continue;
                 bossBar.setProgress(1.0f);
                 bossBar.addPlayer(target);
                 bossBar.setTitle("§5Timer §7: §6" + maxSecond + "§f초");
@@ -39,6 +40,7 @@ public class MainTimer extends BukkitRunnable {
             //우승자 가리기
             for (UserMananger mgr : users){
                 Player target = Bukkit.getServer().getPlayer(mgr.getUUID());
+                if (target != null && target.isOnline())
                 target.sendMessage("§b시간이 다 되어 게임이 종료되었습니다!");
             }
             GameManager.getInstance().stop();
@@ -49,6 +51,7 @@ public class MainTimer extends BukkitRunnable {
             if (maxSecond - now <= 5){
                 for (UserMananger mgr : users){
                     Player target = Bukkit.getServer().getPlayer(mgr.getUUID());
+                    if (target != null && target.isOnline())
                     target.sendMessage("§f게임 종료까지 §6" + (maxSecond-now) + "§f초 남았습니다!");
                 }
             }

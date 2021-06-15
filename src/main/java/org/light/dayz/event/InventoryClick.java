@@ -57,9 +57,9 @@ public class InventoryClick implements Listener {
             return;
         }
 
-        if (stack != null && stack.getType() != Material.AIR && stack.getItemMeta().getDisplayName() != null && stack.getItemMeta().getDisplayName().equalsIgnoreCase("."))
+        if (stack != null && stack.getType() != Material.AIR && stack.getItemMeta().getDisplayName().equalsIgnoreCase("."))
             event.setCurrentItem(null);
-        if (event.getInventory().getTitle().contains("보급품")) {
+        if (event.getView().getTitle().contains("보급품")) {
             event.setCancelled(true);
             if (CrackShotApi.getCSID(stack) != null) {
                 if (p.getInventory().addItem(stack).isEmpty()) {
@@ -73,7 +73,7 @@ public class InventoryClick implements Listener {
             }
         }
 
-        else if (event.getInventory().getTitle().contains("창고 선택")) {
+        else if (event.getView().getTitle().contains("창고 선택")) {
             event.setCancelled(true);
             if (event.getRawSlot() >= 0 && event.getRawSlot() <= 4) {
                 if (stack.getType() == Material.CHEST)
@@ -118,7 +118,7 @@ public class InventoryClick implements Listener {
                 }
             }
         }
-        else if (event.getInventory().getTitle().contains("상점")) {
+        else if (event.getView().getTitle().contains("상점")) {
             event.setCancelled(true);
             if (event.getRawSlot() >= 0 && event.getRawSlot() <= 9) {
                 if (stack.getType() == Material.ROTTEN_FLESH) {
@@ -209,12 +209,10 @@ public class InventoryClick implements Listener {
             }
         }
         else if (!GameManager.getInstance().contains(event.getWhoClicked().getUniqueId())
-                && event.getClickedInventory() != null
-                && event.getClickedInventory().getTitle() != null
-                && !event.getClickedInventory().getTitle().contains("채널")
-                && !checkDeathMatchTitle(event.getClickedInventory().getTitle())) {
+                && !event.getView().getTitle().contains("채널")
+                && !checkDeathMatchTitle(event.getView().getTitle())) {
             event.setCancelled(false);
-            if (p.getInventory().getItemInOffHand() != null || p.getInventory().getItemInOffHand().getType() != Material.AIR)
+            if (p.getInventory().getItemInOffHand().getType() != Material.AIR)
                 p.getInventory().setItemInOffHand(null);
         }
     }
@@ -230,12 +228,12 @@ public class InventoryClick implements Listener {
     public void onDrop(PlayerDropItemEvent event) {
         Player p = event.getPlayer();
         ItemStack stack = event.getItemDrop().getItemStack();
-        event.setCancelled(GameManager.getInstance().contains(p.getUniqueId()) || stack.getType() == Material.SKULL_ITEM || checkDummy(stack));
+        event.setCancelled(GameManager.getInstance().contains(p.getUniqueId()) || stack.getType() == Material.PLAYER_HEAD || checkDummy(stack));
 
     }
 
     public boolean checkDummy(ItemStack stack) {
-        return stack.getItemMeta().getDisplayName() != null && stack.getItemMeta().getDisplayName().equalsIgnoreCase(".");
+        return stack.getItemMeta().getDisplayName().equalsIgnoreCase(".");
     }
 
     public boolean checkDeathMatchTitle(String title) {

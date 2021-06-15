@@ -13,7 +13,6 @@ import org.light.source.DeathMatch;
 import org.light.source.Game.GameManager;
 import org.light.source.Game.UserMananger;
 import org.light.source.Log.MinimizeLogger;
-import org.light.source.Phone.PhoneObject;
 import org.light.source.Singleton.*;
 
 import java.util.ArrayList;
@@ -38,220 +37,211 @@ public class CommandController implements CommandExecutor, TabExecutor {
         if (s.equalsIgnoreCase("데스매치")) {
             if (sender instanceof Player) {
                 Player p = (Player) sender;
-                if (PhoneManager.getInstance().contains(p.getUniqueId())) {
-                    if (checkPhone(p)) {
-                        p.sendMessage(first + " §c모바일로는 플레이가 불가능합니다.");
-                        return true;
-                    }
-                    if (args.length >= 1 && correctArg(args[0])) {
-                        if (args[0].equalsIgnoreCase("참여")) {
-                            if (GameManager.getInstance().contains(p.getUniqueId()) || GameController.contains(p.getUniqueId())) {
-                                p.sendMessage(first + "§c이미 참여중입니다.");
-                            }
-                            else {
-                                GameManager.getInstance().addPlayer(p);
-                                MinimizeLogger.getInstance().appendLog(p.getName() + "님이 데스매치에 참여함");
-                            }
-                        }
-                        else if (args[0].equalsIgnoreCase("정보")) {
-                            currentGameInfo(p);
-                        }
-                        else if (args[0].equalsIgnoreCase("나가기")) {
-                            if (GameManager.getInstance().contains(p.getUniqueId())) {
-                                GameManager.getInstance().removePlayer(p);
-                                MinimizeLogger.getInstance().appendLog(p.getName() + "님이 데스매치에서 퇴장함");
-                            }
-                            else {
-                                p.sendMessage(first + "§6게임에 참여하지 않으셨습니다.");
-                            }
+                if (args.length >= 1 && correctArg(args[0])) {
+                    if (args[0].equalsIgnoreCase("참여")) {
+                        if (GameManager.getInstance().contains(p.getUniqueId()) || GameController.contains(p.getUniqueId())) {
+                            p.sendMessage(first + "§c이미 참여중입니다.");
                         }
                         else {
-                            if (p.hasPermission("DeathMatch.Control")) {
-                                if (args[0].equalsIgnoreCase("관리")) {
-                                    if (args.length >= 2 && (args[1].equalsIgnoreCase("확인") || args[1].equalsIgnoreCase("추방"))) {
-                                        if (args[1].equalsIgnoreCase("확인")) {
-                                            currentDataInfo(p);
-                                        }
-                                        else if (args[1].equalsIgnoreCase("추방")) {
-                                            if (args.length == 3) {
-                                                Player target = Bukkit.getServer().getPlayer(args[2]);
-                                                if (target == null || !GameManager.getInstance().contains(target.getUniqueId()))
-                                                    p.sendMessage(first + "§4해당 플레이어는 온라인이 아니거나 게임에 참여하지 않은 상태입니다.");
-                                                else {
-                                                    GameManager.getInstance().removePlayer(target);
-                                                    MinimizeLogger.getInstance().appendLog(p.getName() + "님이 " + target.getName() + "님을 추방함");
-                                                }
-                                            }
-                                            else {
-                                                p.sendMessage(first + "§c추방할 플레이어를 입력해주세요");
-                                            }
-                                        }
-                                    }
-                                    else {
-                                        settingInfo(p);
-                                    }
-                                }
-                                else if (args[0].equalsIgnoreCase("설정")) {
-                                    if (args.length >= 2 && (args[1].equalsIgnoreCase("라운드") || args[1].equalsIgnoreCase("킬") || args[1].equalsIgnoreCase("시간") || args[1].equalsIgnoreCase("최소인원") || args[1].equalsIgnoreCase("위치") || args[1].equalsIgnoreCase("월드추가") || args[1].equalsIgnoreCase("월드삭제") || args[1].equalsIgnoreCase("월드이동"))) {
-                                        if (args[1].equalsIgnoreCase("라운드")) {
-                                            if (args.length != 3)
-                                                p.sendMessage(first + "§c/데스매치 설정 라운드 <수치>");
-                                            else {
-                                                try {
-                                                    int value = Integer.parseInt(args[2]);
-                                                    if (value <= 0)
-                                                        p.sendMessage(first + "§c수치는 0이하의 값으로 설정할 수 없습니다..");
-                                                    else {
-                                                        DataManager.getInstance().setRounds(value);
-                                                        p.sendMessage(first + "§f데스매치 라운드 수가 §6" + value + "§f라운드로 지정되었습니다.");
-                                                    }
-                                                }
-                                                catch (NumberFormatException e) {
-                                                    p.sendMessage(first + "§c올바른 수치를 입력해주세요.");
-                                                }
-                                            }
-                                        }
-                                        else if (args[1].equalsIgnoreCase("킬")) {
-                                            if (args.length != 3)
-                                                p.sendMessage(first + "§c/데스매치 설정 킬 <수치>");
-                                            else {
-                                                try {
-                                                    int value = Integer.parseInt(args[2]);
-                                                    if (value <= 1)
-                                                        p.sendMessage(first + "§c수치는 1이하의 값으로 설정할 수 없습니다..");
-                                                    else {
-                                                        DataManager.getInstance().setKilltolevel(value);
-                                                        p.sendMessage(first + "§f데스매치 레벨업당 킬수가 §6" + value + "§f킬로 지정되었습니다.");
-                                                    }
-                                                }
-                                                catch (NumberFormatException e) {
-                                                    p.sendMessage(first + "§c올바른 수치를 입력해주세요.");
-                                                }
-                                            }
-                                        }
-                                        else if (args[1].equalsIgnoreCase("시간")) {
-                                            if (args.length != 3)
-                                                p.sendMessage(first + "§c/데스매치 설정 시간 <수치>");
-                                            else {
-                                                try {
-                                                    int value = Integer.parseInt(args[2]);
-                                                    if (value <= 9)
-                                                        p.sendMessage(first + "§c수치는 9이하의 값으로 설정할 수 없습니다..");
-                                                    else {
-                                                        DataManager.getInstance().setTime(value);
-                                                        p.sendMessage(first + "§f데스매치 시간이 §6" + value + "§f초로 지정되었습니다.");
-                                                    }
-                                                }
-                                                catch (NumberFormatException e) {
-                                                    p.sendMessage(first + "§c올바른 수치를 입력해주세요.");
-                                                }
-                                            }
-                                        }
-                                        else if (args[1].equalsIgnoreCase("최소인원")) {
-                                            if (args.length != 3)
-                                                p.sendMessage(first + "§c/데스매치 설정 최소인원 <수치>");
-                                            else {
-                                                try {
-                                                    int value = Integer.parseInt(args[2]);
-                                                    if (value <= 1)
-                                                        p.sendMessage(first + "§c수치는 1이하의 값으로 설정할 수 없습니다..");
-                                                    else {
-                                                        DataManager.getInstance().setMinimumUser(value);
-                                                        p.sendMessage(first + "§f데스매치 최소인원이 §6" + value + "§f명 으로 지정되었습니다.");
-                                                    }
-                                                }
-                                                catch (NumberFormatException e) {
-                                                    p.sendMessage(first + "§c올바른 수치를 입력해주세요.");
-                                                }
-                                            }
-                                        }
-                                        else if (args[1].equalsIgnoreCase("위치")) {
-                                            if (args.length != 3)
-                                                p.sendMessage(first + "§c/데스매치 설정 위치 <1~21>, 1은 스폰");
-                                            else {
-                                                try {
-                                                    int value = Integer.parseInt(args[2]);
-                                                    if (value < 1 || value > 21)
-                                                        p.sendMessage(first + "§c위치 값은 1~21이 와야합니다.");
-                                                    else {
-                                                        DataManager.getInstance().setLocations(p.getLocation(), value);
-                                                        p.sendMessage(first + "§f데스매치 구역 " + value + "이 §6" + locationToString(p.getLocation()) + "§f으로 지정되었습니다.");
-                                                    }
-                                                }
-                                                catch (NumberFormatException e) {
-                                                    p.sendMessage(first + "§c올바른 수치를 입력해주세요.");
-                                                }
-                                            }
-                                        }
-                                        else if (args[1].equalsIgnoreCase("월드추가")) {
-                                            if (args.length != 3)
-                                                p.sendMessage(first + "§c/데스매치 설정 월드추가 이름");
-                                            else {
-                                                if (WorldManager.getInstance().containWorld(args[2]))
-                                                    p.sendMessage(first + "§c이미 추가된 월드입니다.");
-                                                else {
-                                                    WorldManager.getInstance().addWorld(args[2]);
-                                                    p.sendMessage(first + "§f월드 §b" + args[2] + "§f가 추가되었습니다. 리로드시 월드가 로드됩니다.");
-                                                }
-                                            }
-                                        }
-                                        else if (args[1].equalsIgnoreCase("월드삭제")) {
-                                            if (args.length != 3)
-                                                p.sendMessage(first + "§c/데스매치 설정 월드삭제 이름");
-                                            else {
-                                                if (WorldManager.getInstance().containWorld(args[2])) {
-                                                    WorldManager.getInstance().removeWorld(args[2]);
-                                                    p.sendMessage(first + "§f월드 §b" + args[2] + "§f가 제거되었습니다.");
-                                                }
-                                                else
-                                                    p.sendMessage(first + "§c존재하지 않는 월드입니다.");
-
-                                            }
-                                        }
-                                        else if (args[1].equalsIgnoreCase("월드이동")) {
-                                            if (args.length != 3)
-                                                p.sendMessage(first + "§b/데스매치 설정 월드이동 <월드>");
-                                            else {
-                                                if (Bukkit.getWorld(args[2]) != null)
-                                                    p.teleport(new Location(Bukkit.getWorld(args[2]), 0, 60, 0));
-                                                else
-                                                    p.sendMessage(first + "§c존재하지 않는 월드입니다.");
-                                            }
-                                        }
-                                    }
-                                    else {
-                                        valuesettinginfo(p);
-                                    }
-                                }
-                                else if (args[0].equalsIgnoreCase("강제종료")) {
-                                    if (GameManager.getInstance().isGaming()) {
-                                        Bukkit.broadcastMessage(first + "§4관리자에 의해 데스매치가 강제종료 되었습니다.");
-                                        GameManager.getInstance().stop();
-                                        MinimizeLogger.getInstance().appendLog(p.getName() + "님이 데스매치를 강제종료함");
-                                    }
-                                }
-                                else if (args[0].equalsIgnoreCase("리로드")) {
-                                    DataManager.getInstance().flushLocation();
-                                    FileManager.getInstance().load();
-                                    CrackShotApi.generateWeaponMap();
-                                    p.sendMessage(first + "§f콘피그 파일 및 무기 목록이 리로드 되었습니다.");
-                                }
-                                else if (args[0].equalsIgnoreCase("저장")) {
-                                    FileManager.getInstance().save();
-                                    p.sendMessage(first + "§c파일이 성공적으로 저장되었습니다.");
-                                }
-                            }
-                            else {
-                                info(p);
-                            }
+                            GameManager.getInstance().addPlayer(p);
+                            MinimizeLogger.getInstance().appendLog(p.getName() + "님이 데스매치에 참여함");
+                        }
+                    }
+                    else if (args[0].equalsIgnoreCase("정보")) {
+                        currentGameInfo(p);
+                    }
+                    else if (args[0].equalsIgnoreCase("나가기")) {
+                        if (GameManager.getInstance().contains(p.getUniqueId())) {
+                            GameManager.getInstance().removePlayer(p);
+                            MinimizeLogger.getInstance().appendLog(p.getName() + "님이 데스매치에서 퇴장함");
+                        }
+                        else {
+                            p.sendMessage(first + "§6게임에 참여하지 않으셨습니다.");
                         }
                     }
                     else {
-                        info(p);
+                        if (p.hasPermission("DeathMatch.Control")) {
+                            if (args[0].equalsIgnoreCase("관리")) {
+                                if (args.length >= 2 && (args[1].equalsIgnoreCase("확인") || args[1].equalsIgnoreCase("추방"))) {
+                                    if (args[1].equalsIgnoreCase("확인")) {
+                                        currentDataInfo(p);
+                                    }
+                                    else if (args[1].equalsIgnoreCase("추방")) {
+                                        if (args.length == 3) {
+                                            Player target = Bukkit.getServer().getPlayer(args[2]);
+                                            if (target == null || !GameManager.getInstance().contains(target.getUniqueId()))
+                                                p.sendMessage(first + "§4해당 플레이어는 온라인이 아니거나 게임에 참여하지 않은 상태입니다.");
+                                            else {
+                                                GameManager.getInstance().removePlayer(target);
+                                                MinimizeLogger.getInstance().appendLog(p.getName() + "님이 " + target.getName() + "님을 추방함");
+                                            }
+                                        }
+                                        else {
+                                            p.sendMessage(first + "§c추방할 플레이어를 입력해주세요");
+                                        }
+                                    }
+                                }
+                                else {
+                                    settingInfo(p);
+                                }
+                            }
+                            else if (args[0].equalsIgnoreCase("설정")) {
+                                if (args.length >= 2 && (args[1].equalsIgnoreCase("라운드") || args[1].equalsIgnoreCase("킬") || args[1].equalsIgnoreCase("시간") || args[1].equalsIgnoreCase("최소인원") || args[1].equalsIgnoreCase("위치") || args[1].equalsIgnoreCase("월드추가") || args[1].equalsIgnoreCase("월드삭제") || args[1].equalsIgnoreCase("월드이동"))) {
+                                    if (args[1].equalsIgnoreCase("라운드")) {
+                                        if (args.length != 3)
+                                            p.sendMessage(first + "§c/데스매치 설정 라운드 <수치>");
+                                        else {
+                                            try {
+                                                int value = Integer.parseInt(args[2]);
+                                                if (value <= 0)
+                                                    p.sendMessage(first + "§c수치는 0이하의 값으로 설정할 수 없습니다..");
+                                                else {
+                                                    DataManager.getInstance().setRounds(value);
+                                                    p.sendMessage(first + "§f데스매치 라운드 수가 §6" + value + "§f라운드로 지정되었습니다.");
+                                                }
+                                            }
+                                            catch (NumberFormatException e) {
+                                                p.sendMessage(first + "§c올바른 수치를 입력해주세요.");
+                                            }
+                                        }
+                                    }
+                                    else if (args[1].equalsIgnoreCase("킬")) {
+                                        if (args.length != 3)
+                                            p.sendMessage(first + "§c/데스매치 설정 킬 <수치>");
+                                        else {
+                                            try {
+                                                int value = Integer.parseInt(args[2]);
+                                                if (value <= 1)
+                                                    p.sendMessage(first + "§c수치는 1이하의 값으로 설정할 수 없습니다..");
+                                                else {
+                                                    DataManager.getInstance().setKilltolevel(value);
+                                                    p.sendMessage(first + "§f데스매치 레벨업당 킬수가 §6" + value + "§f킬로 지정되었습니다.");
+                                                }
+                                            }
+                                            catch (NumberFormatException e) {
+                                                p.sendMessage(first + "§c올바른 수치를 입력해주세요.");
+                                            }
+                                        }
+                                    }
+                                    else if (args[1].equalsIgnoreCase("시간")) {
+                                        if (args.length != 3)
+                                            p.sendMessage(first + "§c/데스매치 설정 시간 <수치>");
+                                        else {
+                                            try {
+                                                int value = Integer.parseInt(args[2]);
+                                                if (value <= 9)
+                                                    p.sendMessage(first + "§c수치는 9이하의 값으로 설정할 수 없습니다..");
+                                                else {
+                                                    DataManager.getInstance().setTime(value);
+                                                    p.sendMessage(first + "§f데스매치 시간이 §6" + value + "§f초로 지정되었습니다.");
+                                                }
+                                            }
+                                            catch (NumberFormatException e) {
+                                                p.sendMessage(first + "§c올바른 수치를 입력해주세요.");
+                                            }
+                                        }
+                                    }
+                                    else if (args[1].equalsIgnoreCase("최소인원")) {
+                                        if (args.length != 3)
+                                            p.sendMessage(first + "§c/데스매치 설정 최소인원 <수치>");
+                                        else {
+                                            try {
+                                                int value = Integer.parseInt(args[2]);
+                                                if (value <= 1)
+                                                    p.sendMessage(first + "§c수치는 1이하의 값으로 설정할 수 없습니다..");
+                                                else {
+                                                    DataManager.getInstance().setMinimumUser(value);
+                                                    p.sendMessage(first + "§f데스매치 최소인원이 §6" + value + "§f명 으로 지정되었습니다.");
+                                                }
+                                            }
+                                            catch (NumberFormatException e) {
+                                                p.sendMessage(first + "§c올바른 수치를 입력해주세요.");
+                                            }
+                                        }
+                                    }
+                                    else if (args[1].equalsIgnoreCase("위치")) {
+                                        if (args.length != 3)
+                                            p.sendMessage(first + "§c/데스매치 설정 위치 <1~21>, 1은 스폰");
+                                        else {
+                                            try {
+                                                int value = Integer.parseInt(args[2]);
+                                                if (value < 1 || value > 21)
+                                                    p.sendMessage(first + "§c위치 값은 1~21이 와야합니다.");
+                                                else {
+                                                    DataManager.getInstance().setLocations(p.getLocation(), value);
+                                                    p.sendMessage(first + "§f데스매치 구역 " + value + "이 §6" + locationToString(p.getLocation()) + "§f으로 지정되었습니다.");
+                                                }
+                                            }
+                                            catch (NumberFormatException e) {
+                                                p.sendMessage(first + "§c올바른 수치를 입력해주세요.");
+                                            }
+                                        }
+                                    }
+                                    else if (args[1].equalsIgnoreCase("월드추가")) {
+                                        if (args.length != 3)
+                                            p.sendMessage(first + "§c/데스매치 설정 월드추가 이름");
+                                        else {
+                                            if (WorldManager.getInstance().containWorld(args[2]))
+                                                p.sendMessage(first + "§c이미 추가된 월드입니다.");
+                                            else {
+                                                WorldManager.getInstance().addWorld(args[2]);
+                                                p.sendMessage(first + "§f월드 §b" + args[2] + "§f가 추가되었습니다. 리로드시 월드가 로드됩니다.");
+                                            }
+                                        }
+                                    }
+                                    else if (args[1].equalsIgnoreCase("월드삭제")) {
+                                        if (args.length != 3)
+                                            p.sendMessage(first + "§c/데스매치 설정 월드삭제 이름");
+                                        else {
+                                            if (WorldManager.getInstance().containWorld(args[2])) {
+                                                WorldManager.getInstance().removeWorld(args[2]);
+                                                p.sendMessage(first + "§f월드 §b" + args[2] + "§f가 제거되었습니다.");
+                                            }
+                                            else
+                                                p.sendMessage(first + "§c존재하지 않는 월드입니다.");
+
+                                        }
+                                    }
+                                    else if (args[1].equalsIgnoreCase("월드이동")) {
+                                        if (args.length != 3)
+                                            p.sendMessage(first + "§b/데스매치 설정 월드이동 <월드>");
+                                        else {
+                                            if (Bukkit.getWorld(args[2]) != null)
+                                                p.teleport(new Location(Bukkit.getWorld(args[2]), 0, 60, 0));
+                                            else
+                                                p.sendMessage(first + "§c존재하지 않는 월드입니다.");
+                                        }
+                                    }
+                                }
+                                else {
+                                    valuesettinginfo(p);
+                                }
+                            }
+                            else if (args[0].equalsIgnoreCase("강제종료")) {
+                                if (GameManager.getInstance().isGaming()) {
+                                    Bukkit.broadcastMessage(first + "§4관리자에 의해 데스매치가 강제종료 되었습니다.");
+                                    GameManager.getInstance().stop();
+                                    MinimizeLogger.getInstance().appendLog(p.getName() + "님이 데스매치를 강제종료함");
+                                }
+                            }
+                            else if (args[0].equalsIgnoreCase("리로드")) {
+                                DataManager.getInstance().flushLocation();
+                                FileManager.getInstance().load();
+                                CrackShotApi.generateWeaponMap();
+                                p.sendMessage(first + "§f콘피그 파일 및 무기 목록이 리로드 되었습니다.");
+                            }
+                            else if (args[0].equalsIgnoreCase("저장")) {
+                                FileManager.getInstance().save();
+                                p.sendMessage(first + "§c파일이 성공적으로 저장되었습니다.");
+                            }
+                        }
+                        else {
+                            info(p);
+                        }
                     }
                 }
                 else {
-                    p.sendMessage(first + "§f데이터 로딩중입니다. 잠시만 기다려주세요.");
+                    info(p);
                 }
             }
             else {
@@ -324,14 +314,6 @@ public class CommandController implements CommandExecutor, TabExecutor {
 
     public String locationToString(Location loc) {
         return "§7[ §fX : " + Math.round(loc.getX()) + ", Y : " + Math.round(loc.getY()) + ", Z : " + Math.round(loc.getZ()) + ", World : " + loc.getWorld().getName() + " §7]";
-    }
-
-    public boolean checkPhone(Player p) {
-        for (PhoneObject object : PhoneManager.getInstance().getPhoneObjects()) {
-            if (object.getUuid().equals(p.getUniqueId()))
-                return object.getPhoneState();
-        }
-        return true;
     }
 
     @Override

@@ -52,6 +52,7 @@ public class WaitTimer extends BukkitRunnable {
         else if (countValue <= 5) {
             GameManager.getInstance().getUsers().forEach(data -> {
                 Player target = Bukkit.getPlayer(data.getUUID());
+                if (target == null || !target.isOnline()) return;
                 if (countValue == 5) {
                     int randomMap;
                     randomMap = GameManager.getInstance().getRandomNumber();

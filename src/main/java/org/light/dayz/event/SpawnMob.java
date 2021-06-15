@@ -55,7 +55,7 @@ public class SpawnMob implements Listener {
                 zombie.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(80.0);
                 zombie.setHealth(80.0);
                 zombie.setBaby(false);
-                zombie.getEquipment().setHelmet(new ItemStack(Material.GOLD_HELMET));
+                zombie.getEquipment().setHelmet(new ItemStack(Material.GOLDEN_HELMET));
                 zombie.setSilent(true);
                 zombie.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 999999, 0, true, false), false);
             }

@@ -51,8 +51,8 @@ public class KillDeathCommand implements CommandExecutor {
         int i;
         ItemStack dummy, kill, kd;
         dummy = createDummyItem();
-        kill = InventoryFactory.createItemStack(Material.STAINED_GLASS_PANE, "§b킬 랭킹 페이지", new String[]{"", " §7- §b킬 랭킹 페이지 입니다.", " "}, (short) 11);
-        kd = InventoryFactory.createItemStack(Material.STAINED_GLASS_PANE, "§c킬뎃 랭킹 페이지", new String[]{"", " §7- §c킬뎃 랭킹 페이지 입니다.", " "}, (short) 14);
+        kill = InventoryFactory.createItemStack(Material.BLUE_STAINED_GLASS_PANE, "§b킬 랭킹 페이지", new String[]{"", " §7- §b킬 랭킹 페이지 입니다.", " "}, (short) 0);
+        kd = InventoryFactory.createItemStack(Material.RED_STAINED_GLASS_PANE, "§c킬뎃 랭킹 페이지", new String[]{"", " §7- §c킬뎃 랭킹 페이지 입니다.", " "}, (short) 0);
         Inventory inventory = InventoryFactory.createInventory("§0랭크", 54);
         for (i = 45; i < 54; i++)
             inventory.setItem(i, dummy);
@@ -65,7 +65,7 @@ public class KillDeathCommand implements CommandExecutor {
     }
 
     public ItemStack createDummyItem() {
-        return InventoryFactory.createItemStack(Material.STAINED_GLASS_PANE, "§f", null, (short) 7);
+        return InventoryFactory.createItemStack(Material.GRAY_STAINED_GLASS_PANE, "§f", null, (short) 0);
     }
 
     public static ObjectArrayList<ItemStack> createKillRank() {
@@ -84,7 +84,7 @@ public class KillDeathCommand implements CommandExecutor {
             name = object.name == null ? "§cOffline" : "§b" + object.name;
             kill = object.kill;
             death = object.death;
-            stackList.add(InventoryFactory.createItemStack(Material.SIGN, name, new String[]{" ", " §7- §4Kill §7: §c" + kill + " §4§lKills", " §7- §8Death §7: §f" + death + " §c§lDeaths", " "}, (short) 0));
+            stackList.add(InventoryFactory.createItemStack(Material.OAK_SIGN, name, new String[]{" ", " §7- §4Kill §7: §c" + kill + " §4§lKills", " §7- §8Death §7: §f" + death + " §c§lDeaths", " "}, (short) 0));
             i++;
             if (i == 45)
                 break;
@@ -118,7 +118,7 @@ public class KillDeathCommand implements CommandExecutor {
             if (death == 0)
                 death = 1;
             kd = Math.floor(((double) kill / death) * 10) / 10.0;
-            stackList.add(InventoryFactory.createItemStack(Material.SIGN, name, new String[]{" ", " §7- §4Kill §7: §c" + kill + " §4§lKills", " §7- §8Death §7: §f" + death + " §c§lDeaths", " §7- §cK§7/§8D §7: §c" + kd, " "}, (short) 0));
+            stackList.add(InventoryFactory.createItemStack(Material.OAK_SIGN, name, new String[]{" ", " §7- §4Kill §7: §c" + kill + " §4§lKills", " §7- §8Death §7: §f" + death + " §c§lDeaths", " §7- §cK§7/§8D §7: §c" + kd, " "}, (short) 0));
             i++;
             if (i == 45)
                 break;

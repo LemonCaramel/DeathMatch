@@ -1,30 +1,31 @@
 package org.light.dayz.team;
 
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
 import org.light.source.Singleton.ScoreboardObject;
 
 public class TeamData {
 
-    private Team dayzTeam;
+    private final Team dayzTeam;
 
     public TeamData() {
-         dayzTeam = ScoreboardObject.getInstance().getObject().registerNewTeam("dayz");
-         setTeam(dayzTeam);
+         this.dayzTeam = ScoreboardObject.getInstance().getObject().registerNewTeam("dayz");
+         setTeam(this.dayzTeam);
     }
 
     private void setTeam(Team team){
-        team.setPrefix("§c");
+        team.color(NamedTextColor.RED);
         team.setAllowFriendlyFire(true);
         team.setCanSeeFriendlyInvisibles(true);
         team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
     }
 
     public void removePlayer(Player p){
-        dayzTeam.removeEntry(p.getName());
+        this.dayzTeam.removeEntry(p.getName());
     }
 
     public void addPlayer(Player p){
-        dayzTeam.addEntry(p.getName());
+        this.dayzTeam.addEntry(p.getName());
     }
 }

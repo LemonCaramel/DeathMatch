@@ -36,7 +36,7 @@ public class GameController {
             p.setHealthScaled(true);
             p.setHealth(80.0);
             p.setFoodLevel(20);
-            if (p.getInventory().getItem(8) != null && p.getInventory().getItem(8).getType() == Material.SKULL_ITEM)
+            if (p.getInventory().getItem(8) != null && p.getInventory().getItem(8).getType() == Material.PLAYER_HEAD)
                 p.getInventory().setItem(8, new ItemStack(Material.AIR));
             p.setGameMode(GameMode.ADVENTURE);
             p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 140, 5, true, false));

@@ -1,11 +1,12 @@
 package org.light.source.Singleton;
 
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
 
 public class TeamManager {
 
-    private static TeamManager instance;
+    private static final TeamManager instance;
     private Team joinTeam;
 
     static {
@@ -27,17 +28,17 @@ public class TeamManager {
     }
 
     private void setTeam(Team team){
-        team.setPrefix("§b");
+        team.color(NamedTextColor.AQUA);
         team.setAllowFriendlyFire(true);
         team.setCanSeeFriendlyInvisibles(true);
         team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
     }
 
     public void removePlayer(Player p){
-        joinTeam.removeEntry(p.getName());
+        this.joinTeam.removeEntry(p.getName());
     }
 
     public void addPlayer(Player p){
-        joinTeam.addEntry(p.getName());
+        this.joinTeam.addEntry(p.getName());
     }
 }
