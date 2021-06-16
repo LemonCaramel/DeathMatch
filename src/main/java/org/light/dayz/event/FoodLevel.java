@@ -12,7 +12,7 @@ public class FoodLevel implements Listener {
     @EventHandler (priority = EventPriority.HIGHEST)
     public void onFood(FoodLevelChangeEvent event) {
         World world = event.getEntity().getWorld();
-        if (world.getName().contains("dayz"))
+        if (world.getName().contains("dayz_"))
             event.setCancelled(false);
     }
 

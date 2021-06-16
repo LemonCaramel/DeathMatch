@@ -91,7 +91,7 @@ public class Regen {
                 Location min = p.getLocation().clone().subtract(new Vector(30, 1, 30));
                 Location max = p.getLocation().clone().add(new Vector(30, 1, 30));
                 for (int i = 0; i < 2; i++) {
-                    if (p.getWorld().getName().contains("dayz")) {
+                    if (p.getWorld().getName().contains("dayz_")) {
                         Zombie zombie = (Zombie) p.getWorld().spawnEntity(getSpawnLocation(min, max), EntityType.ZOMBIE);
                         zombie.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(30.0);
                         zombie.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40.0);

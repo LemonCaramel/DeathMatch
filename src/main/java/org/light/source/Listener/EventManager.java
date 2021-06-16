@@ -284,7 +284,7 @@ public class EventManager implements Listener {
     public void onAnyDamage(EntityDamageEvent event) {
         if (event.getCause() == EntityDamageEvent.DamageCause.LIGHTNING)
             event.setCancelled(true);
-        else if (event.getCause() == EntityDamageEvent.DamageCause.FALL && !event.getEntity().getWorld().getName().contains("dayz"))
+        else if (event.getCause() == EntityDamageEvent.DamageCause.FALL && !event.getEntity().getWorld().getName().contains("dayz_"))
             event.setCancelled(true);
         else if (event.getCause() == EntityDamageEvent.DamageCause.VOID)
             event.setDamage(event.getDamage() * 2);

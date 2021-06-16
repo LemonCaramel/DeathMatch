@@ -32,7 +32,7 @@ public class ChestInteraction implements Listener {
     @EventHandler
     public void onClick(PlayerInteractEvent event) {
         Player p = event.getPlayer();
-        if (p.getWorld().getName().contains("dayz")
+        if (p.getWorld().getName().contains("dayz_")
                 && GameController.contains(p.getUniqueId()) && event.getAction() == Action.RIGHT_CLICK_BLOCK
                 && event.getClickedBlock() != null && event.getClickedBlock().getType() == Material.CHEST) {
             Location location = event.getClickedBlock().getLocation(), regenChest = checkRegen(location);
@@ -101,7 +101,7 @@ public class ChestInteraction implements Listener {
     @EventHandler
     public void exit(PlayerInteractEvent event) {
         Player p = event.getPlayer();
-        if (p.getWorld().getName().contains("dayz") && GameController.contains(p.getUniqueId()) && event.getClickedBlock() != null && event.getClickedBlock().getType() == Material.BEACON) {
+        if (p.getWorld().getName().contains("dayz_") && GameController.contains(p.getUniqueId()) && event.getClickedBlock() != null && event.getClickedBlock().getType() == Material.BEACON) {
             event.setCancelled(true);
             if (!exitTime.containsKey(p.getUniqueId())) {
                 exitTime.put(p.getUniqueId(), 0);

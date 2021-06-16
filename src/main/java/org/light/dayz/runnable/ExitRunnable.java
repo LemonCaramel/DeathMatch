@@ -26,7 +26,7 @@ public class ExitRunnable extends BukkitRunnable {
     public void run() {
         Player p = Bukkit.getPlayer(data);
         int value = exitMap.get(data);
-        if (p == null || !GameController.contains(p.getUniqueId()) || p.getLocation().distance(start) >= 5.0 || !p.getWorld().getName().equalsIgnoreCase("dayz")) {
+        if (p == null || !GameController.contains(p.getUniqueId()) || p.getLocation().distance(start) >= 5.0 || !p.getWorld().getName().contains("dayz_")) {
             exitMap.remove(data);
             cancel();
             if (p != null && p.getLocation().distance(start) >= 5.0) {

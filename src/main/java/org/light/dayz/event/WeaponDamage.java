@@ -38,7 +38,7 @@ public class WeaponDamage implements Listener {
     public void onWeaponDamage(WeaponDamageEntityEvent event) {
         World world = event.getPlayer().getWorld();
         Player shooter = event.getPlayer();
-        if (world.getName().contains("dayz")) {
+        if (world.getName().contains("dayz_")) {
             if (GameController.contains(shooter.getUniqueId()) && event.getVictim() instanceof Player && GameController.contains(event.getVictim().getUniqueId())) {
                 Player victim = (Player) event.getVictim();
                 if (shooter.hasPotionEffect(PotionEffectType.INVISIBILITY) || shooter.getUniqueId().equals(victim.getUniqueId()))
@@ -70,7 +70,7 @@ public class WeaponDamage implements Listener {
     public void onDeath(EntityDeathEvent event) {
         //그외 사유로 죽었을때
         Entity entity = event.getEntity();
-        if (entity.getWorld().getName().contains("dayz")) {
+        if (entity.getWorld().getName().contains("dayz_")) {
             if (entity instanceof Zombie) {
                 if (entity instanceof PigZombie) {
                     PigZombie victim = (PigZombie) entity;
@@ -121,7 +121,7 @@ public class WeaponDamage implements Listener {
 
     @EventHandler
     public void onFallDamage(EntityDamageEvent event) {
-        if (event.getEntity() instanceof Player && event.getEntity().getWorld().getName().contains("dayz")) {
+        if (event.getEntity() instanceof Player && event.getEntity().getWorld().getName().contains("dayz_")) {
             Player p = (Player) event.getEntity();
             if (event.getCause() == EntityDamageEvent.DamageCause.FALL && event.getFinalDamage() >= 7) {
                 p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 1200, 4, true, true), true);

@@ -22,7 +22,7 @@ public class EmergencyExitRunnable extends ExitRunnable {
     @Override
     public void run() {
         Player p = Bukkit.getPlayer(data);
-        if (p == null || !GameController.contains(p.getUniqueId()) || p.getLocation().distance(start) >= 10.0 || !p.getWorld().getName().equalsIgnoreCase("dayz")) {
+        if (p == null || !GameController.contains(p.getUniqueId()) || p.getLocation().distance(start) >= 10.0 || !p.getWorld().getName().contains("dayz_")) {
             cancel();
             if (p != null && p.getLocation().distance(start) >= 10.0)
                 p.sendMessage("§c[ §f! §c] §c탈출 위치로부터 10m 이상 떨어져 탈출이 취소되었습니다.");

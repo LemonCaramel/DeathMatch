@@ -27,7 +27,7 @@ public class TimeRunnable extends BukkitRunnable {
         int hour;
         hour = Integer.parseInt(format.format(Calendar.getInstance().getTime())) % 24;
         Bukkit.getWorlds().forEach(world -> {
-            if (!world.getName().contains("dayz"))
+            if (!world.getName().contains("dayz_"))
             world.setTime(times[hour]);
         });
     }

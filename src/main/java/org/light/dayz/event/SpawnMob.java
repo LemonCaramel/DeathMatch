@@ -21,7 +21,7 @@ public class SpawnMob implements Listener {
     @EventHandler
     public void onMobSpawn(CreatureSpawnEvent event) {
         World world = event.getLocation().getWorld();
-        if (world.getName().contains("dayz") && event.getEntityType() != EntityType.ZOMBIE && event.getEntityType() != EntityType.PIG_ZOMBIE && event.getEntityType() != EntityType.ARMOR_STAND) {
+        if (world.getName().contains("dayz_") && event.getEntityType() != EntityType.ZOMBIE && event.getEntityType() != EntityType.PIG_ZOMBIE && event.getEntityType() != EntityType.ARMOR_STAND) {
             event.setCancelled(true);
             Zombie zombie = (Zombie) world.spawnEntity(event.getLocation(), EntityType.ZOMBIE);
             zombie.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(30.0);
