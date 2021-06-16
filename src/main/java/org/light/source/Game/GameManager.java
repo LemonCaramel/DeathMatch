@@ -84,6 +84,7 @@ public class GameManager {
         sendMessage(" §c§l퇴장 §7§l《 " + "§b" + p.getName());
         users.removeIf(data -> data.getUUID().equals(p.getUniqueId()));
         refreshState(); // caramel
+        gameTimer.getbossbarInstance().removePlayer(p);
         TeamManager.getInstance().removePlayer(p);
         if (isGaming()) {
             RatingManager.getInstance().updateRank();
