@@ -84,10 +84,12 @@ public class GameManager {
         sendMessage(" §c§l퇴장 §7§l《 " + "§b" + p.getName());
         users.removeIf(data -> data.getUUID().equals(p.getUniqueId()));
         refreshState(); // caramel
-        gameTimer.getbossbarInstance().removePlayer(p);
         TeamManager.getInstance().removePlayer(p);
+        if (timer.isRunning())
+            timer.returnBossbarInstance().removePlayer(p);
         if (isGaming()) {
             RatingManager.getInstance().updateRank();
+            gameTimer.getbossbarInstance().removePlayer(p);
             setNormalPlayer(p);
         }
         if (!p.getWorld().getName().equalsIgnoreCase(DataManager.getInstance().getLocations()[0].getWorld().getName()))
