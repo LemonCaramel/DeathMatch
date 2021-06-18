@@ -130,14 +130,13 @@ public class EventManager implements Listener {
             event.setCancelled(true);
     }
 
-    // OBB - Temporarily Disable
-    /*@EventHandler
+    @EventHandler
     public void onMove(PlayerMoveEvent event) {
         if (event.getTo().clone().subtract(new Vector(0, 1, 0)).getBlock().getType() == Material.SPONGE) {
             event.getPlayer().setVelocity(new Vector(0, 2.05, 0));
             event.getPlayer().spawnParticle(Particle.FIREWORKS_SPARK, event.getTo(), 30, 0.1, 0.1, 0.1, 0.5);
         }
-    }*/
+    }
 
     @EventHandler
     public void onVelocity(PlayerVelocityEvent event) {
