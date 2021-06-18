@@ -6,7 +6,7 @@
 
     <groupId>org.light</groupId>
     <artifactId>DeathMatch</artifactId>
-    <version>2.10.1</version>
+    <version>2.10.2</version>
     <packaging>jar</packaging>
 
     <name>DeathMatch</name>
@@ -76,22 +76,12 @@
     </repositories>
 
     <dependencies>
-        <!-- Paper API -->
-        <!-- Daydream 1.15.2 is 99% compatible with the Paper 1.16.5 API. -->
-        <!--dependency>
-            <groupId>com.destroystokyo.paper</groupId>
-            <artifactId>paper-api</artifactId>
-            <version>1.16.5-R0.1-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency-->
-
-        <!-- NMS -->
+        <!-- Daydream API / Daydream 1.15.2 is 99% compatible with the Paper 1.16.5 API. -->
         <dependency>
             <groupId>moe.caramel</groupId>
-            <artifactId>daydream</artifactId>
+            <artifactId>daydream-api</artifactId>
             <version>1.15.2-R0.1-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>${project.lib.path}/daydream-1.15.2.jar</systemPath>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Vault API -->
