@@ -84,6 +84,14 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- fastutil API -->
+        <dependency>
+            <groupId>it.unimi.dsi</groupId>
+            <artifactId>fastutil</artifactId>
+            <version>8.2.2</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Vault API -->
         <dependency> <!-- We're moving to our own library soon. -->
             <groupId>com.github.MilkBowl</groupId>
