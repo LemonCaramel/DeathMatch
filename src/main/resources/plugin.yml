@@ -1,7 +1,7 @@
 main: org.light.source.DeathMatch
 name: DeathMatch
 version: ${project.version}
-depend: [CrackShot, Vault, ProtocolLib, caramelLibraryLegacy]
+depend: [CrackShot, CrackShotPlus, Vault, ProtocolLib, caramelLibraryLegacy]
 api-version: 1.15
 commands:
   deathmatch:
