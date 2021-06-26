@@ -61,7 +61,7 @@ public class InventoryClick implements Listener {
             event.setCurrentItem(null);
         if (event.getView().getTitle().contains("보급품")) {
             event.setCancelled(true);
-            if (CrackShotApi.getCSID(stack) != null) {
+            if (CrackShotApi.getCSID(stack) != null && event.getClick() == ClickType.LEFT) {
                 if (p.getInventory().addItem(stack).isEmpty()) {
                     p.sendMessage("§c[ §f! §c] §f보급품을 선택하였습니다.");
                     Regen.addPlayer(p.getUniqueId());
