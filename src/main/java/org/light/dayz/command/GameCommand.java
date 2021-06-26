@@ -63,8 +63,12 @@ public class GameCommand implements CommandExecutor, TabExecutor {
                         config.load();
                         p.sendMessage("§b콘피그가 로드되었습니다.");
                     }
+                    else if (strings.length == 1 && strings[0].equalsIgnoreCase("초기화")) {
+                        Regen.clear();
+                        p.sendMessage("§b보급품 맵이 초기화되었습니다.");
+                    }
                     else
-                        p.sendMessage("§c[ §f! §c] §f/dayz [참여/보급품/목록/추가/삭제/이동/저장/리로드]");
+                        p.sendMessage("§c[ §f! §c] §f/dayz [참여/보급품/목록/추가/삭제/이동/저장/초기화/리로드]");
                 }
             }
             return true;
@@ -121,7 +125,7 @@ public class GameCommand implements CommandExecutor, TabExecutor {
             List<String> completions = new ArrayList<>();
             List<String> tabComplete = new ArrayList<>(Arrays.asList("참여", "보급품"));
             if (sender.isOp())
-                tabComplete.addAll(Arrays.asList("목록", "추가", "삭제", "이동", "저장", "리로드"));
+                tabComplete.addAll(Arrays.asList("목록", "추가", "삭제", "이동", "저장", "초기화", "리로드"));
             StringUtil.copyPartialMatches(args[0], tabComplete, completions);
 
             if (sender instanceof Player && ((Player) sender).getProtocolVersion() > 340)
