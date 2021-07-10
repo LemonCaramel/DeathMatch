@@ -212,7 +212,7 @@ public class EventManager implements Listener {
                         else if (data.getUUID().equals(victim.getUniqueId())) {
                             victim.getInventory().setItem(0, new ItemStack(Material.AIR));
                             event.setDamage(0.0);
-                            victim.setHealth(80.0);
+                            victim.setHealth(100.0);
                             sendRespawn(victim);
                             damageMap = data.getDamageMap();
                             if (victim.getName().equalsIgnoreCase(RatingManager.getInstance().getFirst())) {
@@ -395,7 +395,7 @@ public class EventManager implements Listener {
                     victim.getInventory().setHeldItemSlot(4);
                     victim.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(80.0);
                     victim.setHealthScaled(true);
-                    victim.setHealth(80.0);
+                    victim.setHealth(100.0);
                     victim.getActivePotionEffects().forEach(data -> victim.removePotionEffect(data.getType()));
                     victim.teleport(GameManager.getInstance().getTeleportLocation(DataManager.getInstance().getLocations()[GameManager.getInstance().getRandomNumber()], DataManager.getInstance().getLocations()[GameManager.getInstance().getRandomNumber() + 1]));
                     victim.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 60, 2, true, false), false);

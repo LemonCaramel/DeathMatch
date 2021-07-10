@@ -32,9 +32,9 @@ public class GameController {
     public static void addPlayer(Player p) {
         if (!contains(p.getUniqueId()) && canStart() && !GameManager.getInstance().contains(p.getUniqueId())) {
             addData(p.getUniqueId());
-            p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(80.0);
+            p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(100.0);
             p.setHealthScaled(true);
-            p.setHealth(80.0);
+            p.setHealth(100.0);
             p.setFoodLevel(20);
             if (p.getInventory().getItem(8) != null && p.getInventory().getItem(8).getType() == Material.PLAYER_HEAD)
                 p.getInventory().setItem(8, new ItemStack(Material.AIR));
