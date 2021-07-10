@@ -25,8 +25,8 @@ public class SpawnMob implements Listener {
             event.setCancelled(true);
             Zombie zombie = (Zombie) world.spawnEntity(event.getLocation(), EntityType.ZOMBIE);
             zombie.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(30.0);
-            zombie.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(80.0);
-            zombie.setHealth(80.0);
+            zombie.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(60.0);
+            zombie.setHealth(60.0);
             zombie.getEquipment().setHelmet(new ItemStack(Material.LEATHER_HELMET));
             zombie.setSilent(true);
             zombie.setBaby(false);
@@ -38,8 +38,8 @@ public class SpawnMob implements Listener {
             Zombie zombie = (Zombie) event.getEntity();
             if (zombie.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).getBaseValue() != 30.0) {
                 zombie.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(30.0);
-                zombie.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(80.0);
-                zombie.setHealth(80.0);
+                zombie.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(60.0);
+                zombie.setHealth(60.0);
                 zombie.getEquipment().setHelmet(new ItemStack(Material.LEATHER_HELMET));
                 zombie.setSilent(true);
                 zombie.setBaby(false);
